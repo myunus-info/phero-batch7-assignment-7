@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { useGetMe, useLogout } from "@/hooks";
 import { UserRole } from "@/types";
 import Logo from "@/assets/svg/Logo";
@@ -25,20 +23,11 @@ export default function Header() {
 
   const { data, isLoading } = useGetMe();
   const { mutate: logout } = useLogout();
-  const queryClient = useQueryClient();
 
   const role = (data?.role || (data as unknown as { data?: { role: UserRole } })?.data?.role) as UserRole | undefined;
 
   const handleLogout = () => {
-    logout(undefined, {
-      onSuccess: () => {
-        toast.success("Logged out successfully");
-        queryClient.removeQueries({ queryKey: ["me"] });
-      },
-      onError: () => {
-        toast.error("Logout failed. Something went wrong.");
-      },
-    });
+    logout();
   };
 
   return (
@@ -52,7 +41,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
-          {publicRoutes.map((route) => (
+          {publicRoutes.map(route => (
             <Link key={route.url} href={route.url} className="transition-colors hover:text-emerald-400">
               {route.name}
             </Link>

@@ -43,12 +43,12 @@ export function DemoLoginCards() {
   return (
     <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/50 p-4">
       <div className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400">
-        <Sparkles className="h-4 w-4 text-emerald-400" />
+        {/* <Sparkles className="h-4 w-4 text-emerald-400" /> */}
         <span>One-Click Demo Accounts</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-        {demoAccounts.map((account) => {
+        {demoAccounts.map(account => {
           const Icon = account.icon;
           return (
             <button
@@ -65,7 +65,7 @@ export function DemoLoginCards() {
                 <Icon className="h-3.5 w-3.5 text-slate-400 group-hover:text-slate-200 transition-colors" />
               </div>
               <p className="text-[11px] text-slate-400 line-clamp-2 mt-1">{account.desc}</p>
-              <span className="mt-2 text-[11px] font-mono text-emerald-400 font-medium group-hover:underline">
+              <span className="mt-2 text-[11px] font-mono text-emerald-400 font-medium group-hover:underline cursor-pointer">
                 Quick Log In →
               </span>
             </button>

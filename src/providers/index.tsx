@@ -10,7 +10,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           {children}
           <Toaster
-            position="top-right"
+            position="bottom-right"
             richColors
             theme="dark"
             closeButton

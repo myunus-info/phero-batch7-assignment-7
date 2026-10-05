@@ -3,20 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
-import { useLogin, useGoogleOAuth } from "@/hooks/auth.hook";
+import { useLogin } from "@/hooks/auth.hook";
 import { loginSchema } from "@/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { DemoLoginCards } from "./DemoLoginCards";
-import { GoogleLogin } from "@react-oauth/google";
 import { Eye, EyeClosed } from "lucide-react";
+import GoogleLoginComponent from "./GoogleLogin";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
-  const googleOAuthMutation = useGoogleOAuth();
 
   const form = useForm({
     defaultValues: {
@@ -51,7 +50,7 @@ export function LoginForm() {
       </div>
 
       <form
-        onSubmit={(e) => {
+        onSubmit={e => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
@@ -60,7 +59,7 @@ export function LoginForm() {
       >
         <FieldGroup>
           <form.Field name="email">
-            {(field) => {
+            {field => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
@@ -72,7 +71,7 @@ export function LoginForm() {
                     type="email"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={e => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     placeholder="name@company.com"
                     autoComplete="off"
@@ -85,7 +84,7 @@ export function LoginForm() {
           </form.Field>
 
           <form.Field name="password">
-            {(field) => {
+            {field => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
@@ -98,7 +97,7 @@ export function LoginForm() {
                       type={showPassword ? "text" : "password"}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={e => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder="••••••••"
                       autoComplete="off"
@@ -109,7 +108,7 @@ export function LoginForm() {
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 hover:text-slate-200 transition-colors"
                       type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     >
                       {showPassword ? <EyeClosed className="size-4" /> : <Eye className="size-4" />}
                     </button>
@@ -138,24 +137,17 @@ export function LoginForm() {
       </form>
 
       {/* Google OAuth Login */}
-      <div className="flex flex-col items-center justify-center pt-2">
-        <GoogleLogin
-          onSuccess={(credentialResponse) => {
-            if (credentialResponse.credential) {
-              googleOAuthMutation.mutate({
-                idToken: credentialResponse.credential,
-                token: credentialResponse.credential,
-              });
-            }
-          }}
-          onError={() => {
-            console.error("Google Login Failed");
-          }}
-          theme="filled_black"
-          shape="rectangular"
-          text="signin_with"
-        />
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-800" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-[#090d16] px-2 text-slate-500 font-medium">Or </span>
+        </div>
       </div>
+
+      <GoogleLoginComponent />
 
       <div className="text-center text-sm text-slate-400">
         Don&apos;t have an account?{" "}
