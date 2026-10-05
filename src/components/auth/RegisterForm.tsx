@@ -226,7 +226,7 @@ export function RegisterForm() {
       </form>
 
       {/* Google OAuth Login */}
-      <div className="relative">
+      {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-800" />
         </div>
@@ -235,7 +235,32 @@ export function RegisterForm() {
         </div>
       </div>
 
-      <GoogleLoginComponent />
+      <GoogleLoginComponent /> */}
+
+      {/* Google OAuth Signup */}
+      <form.Subscribe selector={state => state.values.role}>
+        {currentRole => (
+          <div className="flex flex-col items-center justify-center pt-2 space-y-3">
+            <div className="relative w-full flex items-center justify-center mb-5">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-800" />
+              </div>
+              <div className="relative px-3 bg-[#090d16] text-xs text-slate-400">
+                Or sign up with Google as{" "}
+                <span
+                  className={
+                    currentRole === "RECRUITER" ? "text-cyan-400 font-semibold" : "text-emerald-400 font-semibold"
+                  }
+                >
+                  {currentRole === "RECRUITER" ? "Recruiter" : "Candidate"}
+                </span>
+              </div>
+            </div>
+
+            <GoogleLoginComponent role={currentRole} text="signup_with" />
+          </div>
+        )}
+      </form.Subscribe>
 
       <div className="text-center text-sm text-slate-400">
         Already have an account?{" "}

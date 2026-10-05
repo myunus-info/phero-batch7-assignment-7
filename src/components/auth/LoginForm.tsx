@@ -147,7 +147,10 @@ export function LoginForm() {
         </div>
       </div>
 
-      <GoogleLoginComponent />
+      {/* Google OAuth Login */}
+      <div className="flex flex-col items-center justify-center">
+        <GoogleLoginComponent text="signin_with" />
+      </div>
 
       <div className="text-center text-sm text-slate-400">
         Don&apos;t have an account?{" "}

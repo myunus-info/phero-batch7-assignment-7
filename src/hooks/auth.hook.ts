@@ -64,6 +64,7 @@ export function useGoogleOAuth() {
 
 export function useLogout() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: () => logoutUser(),
@@ -71,6 +72,7 @@ export function useLogout() {
       queryClient.setQueryData(["me"], null);
       queryClient.clear();
       toast.success("Signed out successfully");
+      router.replace("/login");
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Failed to sign out");

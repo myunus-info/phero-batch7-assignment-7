@@ -27,7 +27,6 @@ export interface IRegisterPayload {
 
 export interface IGoogleLoginPayload {
   idToken?: string;
-  token?: string;
   role?: UserRole;
 }
 
