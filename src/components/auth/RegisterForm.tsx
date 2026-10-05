@@ -12,6 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { GoogleLogin } from "@react-oauth/google";
 import { Briefcase, Code2, Eye, EyeClosed } from "lucide-react";
 import { UserRole } from "@/types/auth.type";
+import GoogleLoginComponent from "./GoogleLogin";
 
 export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,8 +49,8 @@ export function RegisterForm() {
       </div>
 
       {/* Role Picker Tabs */}
-      <form.Subscribe selector={(state) => state.values.role}>
-        {(currentRole) => (
+      <form.Subscribe selector={state => state.values.role}>
+        {currentRole => (
           <div className="grid grid-cols-2 gap-3 p-1 rounded-xl bg-slate-900 border border-slate-800">
             <button
               type="button"
@@ -78,7 +79,7 @@ export function RegisterForm() {
       </form.Subscribe>
 
       <form
-        onSubmit={(e) => {
+        onSubmit={e => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
@@ -87,7 +88,7 @@ export function RegisterForm() {
       >
         <FieldGroup>
           <form.Field name="name">
-            {(field) => {
+            {field => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
@@ -100,7 +101,7 @@ export function RegisterForm() {
                     placeholder="Ada Lovelace"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={e => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     autoComplete="name"
                     disabled={registerMutation.isPending}
@@ -112,7 +113,7 @@ export function RegisterForm() {
           </form.Field>
 
           <form.Field name="email">
-            {(field) => {
+            {field => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
@@ -125,7 +126,7 @@ export function RegisterForm() {
                     placeholder="name@company.com"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={e => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     autoComplete="email"
                     disabled={registerMutation.isPending}
@@ -136,11 +137,11 @@ export function RegisterForm() {
             }}
           </form.Field>
 
-          <form.Subscribe selector={(state) => state.values.role}>
-            {(currentRole) =>
+          <form.Subscribe selector={state => state.values.role}>
+            {currentRole =>
               currentRole === "RECRUITER" ? (
                 <form.Field name="companyName">
-                  {(field) => {
+                  {field => {
                     const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
                     return (
@@ -153,7 +154,7 @@ export function RegisterForm() {
                           placeholder="Acme Corporation"
                           value={field.state.value}
                           onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value)}
+                          onChange={e => field.handleChange(e.target.value)}
                           aria-invalid={isInvalid}
                           autoComplete="organization"
                           disabled={registerMutation.isPending}
@@ -168,7 +169,7 @@ export function RegisterForm() {
           </form.Subscribe>
 
           <form.Field name="password">
-            {(field) => {
+            {field => {
               const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
@@ -182,7 +183,7 @@ export function RegisterForm() {
                       placeholder="••••••••"
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={e => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       autoComplete="new-password"
                       className="pr-10"
@@ -191,7 +192,7 @@ export function RegisterForm() {
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 hover:text-slate-200 transition-colors"
                       type="button"
-                      onClick={() => setShowPassword((prev) => !prev)}
+                      onClick={() => setShowPassword(prev => !prev)}
                     >
                       {showPassword ? <EyeClosed className="size-4" /> : <Eye className="size-4" />}
                     </button>
@@ -203,8 +204,8 @@ export function RegisterForm() {
             }}
           </form.Field>
 
-          <form.Subscribe selector={(state) => state.values.role}>
-            {(currentRole) => (
+          <form.Subscribe selector={state => state.values.role}>
+            {currentRole => (
               <Button
                 type="submit"
                 variant={currentRole === "RECRUITER" ? "cyan" : "emerald"}
@@ -225,24 +226,16 @@ export function RegisterForm() {
       </form>
 
       {/* Google OAuth Login */}
-      <div className="flex flex-col items-center justify-center pt-2">
-        <GoogleLogin
-          onSuccess={(credentialResponse) => {
-            if (credentialResponse.credential) {
-              googleOAuthMutation.mutate({
-                idToken: credentialResponse.credential,
-                token: credentialResponse.credential,
-              });
-            }
-          }}
-          onError={() => {
-            console.error("Google Login Failed");
-          }}
-          theme="filled_black"
-          shape="rectangular"
-          text="signup_with"
-        />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-slate-800" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-[#090d16] px-2 text-slate-500 font-medium">Or </span>
+        </div>
       </div>
+
+      <GoogleLoginComponent />
 
       <div className="text-center text-sm text-slate-400">
         Already have an account?{" "}
