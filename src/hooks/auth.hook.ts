@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { getMe, googleLoginUser, loginUser, logoutUser, registerUser } from "@/api/auth.api";
 import { IGoogleLoginPayload, ILoginPayload, IRegisterPayload } from "@/types";
+import { useRouter } from "next/navigation";
 
 export function useGetMe() {
   return useQuery({
@@ -31,10 +32,13 @@ export function useLogin() {
 }
 
 export function useRegister() {
+  const router = useRouter();
+
   return useMutation({
     mutationFn: (payload: IRegisterPayload) => registerUser(payload),
     onSuccess: res => {
       toast.success(res.message || "Account registered successfully! Please log in.");
+      router.replace("/login");
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Registration failed");
