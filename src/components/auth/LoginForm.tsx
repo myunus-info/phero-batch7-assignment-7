@@ -128,10 +128,10 @@ export function LoginForm() {
           >
             {loginMutation.isPending ? (
               <>
-                <Spinner size="sm" /> Submitting
+                <Spinner size="sm" /> Signing in
               </>
             ) : (
-              "Sign In"
+              "Sign in"
             )}
           </Button>
         </FieldGroup>
