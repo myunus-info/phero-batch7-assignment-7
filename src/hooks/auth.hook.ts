@@ -18,12 +18,21 @@ export function useGetMe() {
 
 export function useLogin() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (payload: ILoginPayload) => loginUser(payload),
     onSuccess: res => {
       toast.success(res.message || "Signed in successfully!");
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      const role = res?.data?.user?.role;
+      if (role === "ADMIN") {
+        router.push("/dashboard/admin");
+      } else if (role === "RECRUITER") {
+        router.push("/dashboard/recruiter");
+      } else {
+        router.push("/dashboard/candidate");
+      }
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Invalid credentials");
@@ -48,6 +57,7 @@ export function useRegister() {
 
 export function useGoogleOAuth() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: (payload: IGoogleLoginPayload) => googleLoginUser(payload),
@@ -55,6 +65,14 @@ export function useGoogleOAuth() {
       console.log(res);
       toast.success(res.message || "Signed in with Google!");
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      const role = res?.data?.user?.role;
+      if (role === "ADMIN") {
+        router.push("/dashboard/admin");
+      } else if (role === "RECRUITER") {
+        router.push("/dashboard/recruiter");
+      } else {
+        router.push("/dashboard/candidate");
+      }
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Google sign-in failed");

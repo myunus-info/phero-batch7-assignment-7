@@ -7,12 +7,12 @@ export const candidateRoutes: SidebarItems = [
     items: [
       {
         title: "My Assessments",
-        url: "/candidate",
+        url: "/dashboard/candidate",
         icon: LayoutDashboard,
       },
       {
         title: "Profile & Skills",
-        url: "/candidate/profile",
+        url: "/dashboard/candidate/profile",
         icon: UserCheck,
       },
     ],

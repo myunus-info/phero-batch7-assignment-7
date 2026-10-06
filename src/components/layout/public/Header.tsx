@@ -16,9 +16,9 @@ export default function Header() {
   ];
 
   const dashboardRoutes: Record<UserRole, string> = {
-    ADMIN: "/admin",
-    RECRUITER: "/recruiter",
-    CANDIDATE: "/candidate",
+    ADMIN: "/dashboard/admin",
+    RECRUITER: "/dashboard/recruiter",
+    CANDIDATE: "/dashboard/candidate",
   };
 
   const { data, isLoading } = useGetMe();

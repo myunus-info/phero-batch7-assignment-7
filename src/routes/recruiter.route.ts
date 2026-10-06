@@ -7,22 +7,22 @@ export const recruiterRoutes: SidebarItems = [
     items: [
       {
         title: "Overview",
-        url: "/recruiter",
+        url: "/dashboard/recruiter",
         icon: LayoutDashboard,
       },
       {
         title: "Problem Studio",
-        url: "/recruiter/problems",
+        url: "/dashboard/recruiter/problems",
         icon: FileCode2,
       },
       {
         title: "Assessments",
-        url: "/recruiter/assessments",
+        url: "/dashboard/recruiter/assessments",
         icon: ClipboardList,
       },
       {
         title: "Credits & Billing",
-        url: "/recruiter/billing",
+        url: "/dashboard/recruiter/billing",
         icon: CreditCard,
       },
     ],

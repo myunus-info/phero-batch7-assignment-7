@@ -7,17 +7,17 @@ export const adminRoutes: SidebarItems = [
     items: [
       {
         title: "Dashboard",
-        url: "/admin",
+        url: "/dashboard/admin",
         icon: LayoutDashboard,
       },
       {
         title: "User Management",
-        url: "/admin/users",
+        url: "/dashboard/admin/users",
         icon: Users,
       },
       {
         title: "Audit Logs",
-        url: "/admin/audit-logs",
+        url: "/dashboard/admin/audit-logs",
         icon: History,
       },
     ],
