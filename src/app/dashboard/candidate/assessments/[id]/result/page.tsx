@@ -29,7 +29,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
           <p className="text-sm text-slate-400">
             You must complete and submit the assessment before viewing scorecard results.
           </p>
-          <Link href="/candidate">
+          <Link href="/dashboard/candidate">
             <Button variant="outline">Back to Candidate Portal</Button>
           </Link>
         </div>
@@ -44,7 +44,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
           <Link
-            href="/candidate"
+            href="/dashboard/candidate"
             className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -133,7 +133,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
         </div>
 
         <div className="pt-4 flex justify-end">
-          <Link href="/candidate">
+          <Link href="/dashboard/candidate">
             <Button variant="emerald">Return to Dashboard</Button>
           </Link>
         </div>

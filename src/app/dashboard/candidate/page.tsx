@@ -77,7 +77,7 @@ export default function CandidateDashboardPage() {
 
                     <div className="pt-4 border-t border-slate-800 flex justify-end">
                       {isCompleted ? (
-                        <Link href={`/candidate/assessments/${ca.assessmentId}/result`}>
+                        <Link href={`/dashboard/candidate/assessments/${ca.assessmentId}/result`}>
                           <Button variant="outline" size="sm" className="gap-2 text-xs">
                             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                             <span>View Scorecard</span>
