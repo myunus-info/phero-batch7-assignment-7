@@ -1,8 +1,7 @@
 "use client";
 
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetAllAssessments } from "@/hooks/assessment.hook";
-import { useGetMe } from "@/hooks/auth.hook";
+import { useGetAllAssessments, useGetMe } from "@/hooks";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FileCheck2, Plus, Users, Coins, ArrowRight, Clock } from "lucide-react";
@@ -22,8 +21,8 @@ export default function RecruiterDashboardPage() {
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Recruiter Dashboard</h1>
-            <p className="text-sm text-slate-400">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Recruiter Dashboard</h1>
+            <p className="text-sm text-muted-foreground">
               Welcome back, {user?.name}. Monitor active technical assessments and invitations.
             </p>
           </div>
@@ -46,43 +45,49 @@ export default function RecruiterDashboardPage() {
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-2 shadow-sm transition-colors duration-200">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Credit Balance</span>
-              <Coins className="h-4 w-4 text-cyan-400" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Credit Balance
+              </span>
+              <Coins className="h-4 w-4 text-cyan-500" />
             </div>
-            <p className="text-2xl font-bold text-white">{credits} Credits</p>
-            <p className="text-xs text-slate-400">1 credit = 1 candidate assessment invite</p>
+            <p className="text-2xl font-bold text-foreground">{credits} Credits</p>
+            <p className="text-xs text-muted-foreground">1 credit = 1 candidate assessment invite</p>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-2 shadow-sm transition-colors duration-200">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Assessments</span>
-              <FileCheck2 className="h-4 w-4 text-emerald-400" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Total Assessments
+              </span>
+              <FileCheck2 className="h-4 w-4 text-emerald-500" />
             </div>
-            <p className="text-2xl font-bold text-white">{assessmentsData?.meta?.total || 0}</p>
-            <p className="text-xs text-slate-400">Configured technical screens</p>
+            <p className="text-2xl font-bold text-foreground">{assessmentsData?.meta?.total || 0}</p>
+            <p className="text-xs text-muted-foreground">Configured technical screens</p>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-2">
+          <div className="rounded-xl border border-border bg-card p-5 space-y-2 shadow-sm transition-colors duration-200">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Company Workspace</span>
-              <Users className="h-4 w-4 text-indigo-400" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Company Workspace
+              </span>
+              <Users className="h-4 w-4 text-indigo-500" />
             </div>
-            <p className="text-2xl font-bold text-white truncate">
+            <p className="text-2xl font-bold text-foreground truncate">
               {user?.recruiterProfile?.companyName || "Organization"}
             </p>
-            <p className="text-xs text-slate-400">Active hiring portal</p>
+            <p className="text-xs text-muted-foreground">Active hiring portal</p>
           </div>
         </div>
 
         {/* Recent Assessments Section */}
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-6 space-y-4">
+        <div className="rounded-xl border border-border bg-card p-6 space-y-4 shadow-sm transition-colors duration-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-white">Active Assessments</h3>
+            <h3 className="text-lg font-semibold text-foreground">Active Assessments</h3>
             <Link
               href="/dashboard/recruiter/assessments"
-              className="text-xs font-medium text-emerald-400 hover:underline flex items-center space-x-1"
+              className="text-xs font-medium text-emerald-500 hover:underline flex items-center space-x-1"
             >
               <span>View All</span>
               <ArrowRight className="h-3.5 w-3.5" />
@@ -90,10 +95,10 @@ export default function RecruiterDashboardPage() {
           </div>
 
           {isLoading ? (
-            <p className="text-sm text-slate-500 py-6 text-center">Loading assessments...</p>
+            <p className="text-sm text-muted-foreground py-6 text-center">Loading assessments...</p>
           ) : assessments.length === 0 ? (
             <div className="text-center py-8 space-y-3">
-              <p className="text-sm text-slate-400">No assessments created yet.</p>
+              <p className="text-sm text-muted-foreground">No assessments created yet.</p>
               <Link href="/dashboard/recruiter/assessments/create">
                 <Button variant="emerald" size="sm">
                   Create Your First Assessment
@@ -105,19 +110,19 @@ export default function RecruiterDashboardPage() {
               {assessments.map(a => (
                 <div
                   key={a.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border border-slate-800 bg-slate-950 gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg border border-border bg-muted/30 gap-4"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
                       <Link
                         href={`/dashboard/recruiter/assessments/${a.id}`}
-                        className="font-semibold text-white hover:text-emerald-400 transition-colors"
+                        className="font-semibold text-foreground hover:text-emerald-500 transition-colors"
                       >
                         {a.title}
                       </Link>
                       <StatusBadge status={a.status} />
                     </div>
-                    <div className="flex items-center space-x-4 text-xs text-slate-400">
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                       <span className="flex items-center space-x-1">
                         <Clock className="h-3 w-3" />
                         <span>{a.durationMinutes} min</span>

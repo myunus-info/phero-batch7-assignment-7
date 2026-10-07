@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useCreateProblem, useUpdateProblem } from "@/hooks/problem.hook";
+import { useCreateProblem, useUpdateProblem } from "@/hooks";
 import { createProblemFormSchema } from "@/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { DifficultyLevel, ProblemType, ITestCase, IMcqOption, IProblem } from "@/types/problem.type";
+import { DifficultyLevel, ProblemType, ITestCase, IMcqOption, IProblem } from "@/types";
 import { Plus, Trash2, Code2, ListChecks, Check } from "lucide-react";
 
 interface ProblemFormProps {
@@ -123,8 +123,8 @@ export function ProblemForm({
       className="space-y-8 max-w-4xl"
     >
       {/* Basic Info */}
-      <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
-        <h2 className="text-lg font-semibold text-white">Problem Details</h2>
+      <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-foreground">Problem Details</h2>
 
         <FieldGroup>
           <form.Field name="title">
@@ -225,8 +225,8 @@ export function ProblemForm({
       </div>
 
       {/* Description */}
-      <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
-        <h2 className="text-lg font-semibold text-white">Problem Statement</h2>
+      <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-foreground">Problem Statement</h2>
 
         <FieldGroup>
           <form.Field name="description">
@@ -262,10 +262,10 @@ export function ProblemForm({
       <form.Subscribe selector={state => state.values.type}>
         {problemType =>
           problemType === "CODING" ? (
-            <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+            <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
               <div className="flex items-center space-x-2">
-                <Code2 className="h-5 w-5 text-emerald-400" />
-                <h2 className="text-lg font-semibold text-white">Execution Limits</h2>
+                <Code2 className="h-5 w-5 text-emerald-500" />
+                <h2 className="text-lg font-semibold text-foreground">Execution Limits</h2>
               </div>
 
               <FieldGroup>
@@ -354,11 +354,11 @@ export function ProblemForm({
                 };
 
                 return (
-                  <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+                  <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-lg font-semibold text-white">Automated Test Cases</h2>
-                        <p className="text-sm text-slate-400">
+                        <h2 className="text-lg font-semibold text-foreground">Automated Test Cases</h2>
+                        <p className="text-sm text-muted-foreground">
                           Configure input and expected output pairs used by the judge.
                         </p>
                       </div>
@@ -370,13 +370,13 @@ export function ProblemForm({
 
                     <div className="space-y-4 pt-2">
                       {testCases.map((tc, index) => (
-                        <div key={index} className="p-4 rounded-lg border border-slate-800 bg-slate-950/60 space-y-3">
+                        <div key={index} className="p-4 rounded-lg border border-border bg-muted/40 space-y-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
+                            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
                               Test Case #{index + 1}
                             </span>
                             <div className="flex items-center space-x-3">
-                              <label className="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer select-none">
+                              <label className="flex items-center space-x-2 text-xs text-foreground cursor-pointer select-none">
                                 <input
                                   type="checkbox"
                                   checked={tc.isHidden}
@@ -385,7 +385,7 @@ export function ProblemForm({
                                       isHidden: e.target.checked,
                                     })
                                   }
-                                  className="rounded border-slate-700 bg-slate-900 text-emerald-500"
+                                  className="rounded border-border bg-background text-emerald-500"
                                 />
                                 <span>Hidden from candidate</span>
                               </label>
@@ -394,7 +394,7 @@ export function ProblemForm({
                                 <button
                                   type="button"
                                   onClick={() => removeTestCase(index)}
-                                  className="text-slate-500 hover:text-red-400 transition-colors p-1"
+                                  className="text-muted-foreground hover:text-red-500 transition-colors p-1"
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </button>
@@ -414,7 +414,7 @@ export function ProblemForm({
                                     input: e.target.value,
                                   })
                                 }
-                                className="font-mono text-xs bg-slate-900"
+                                className="font-mono text-xs bg-background"
                                 required
                               />
                             </div>
@@ -429,7 +429,7 @@ export function ProblemForm({
                                     expectedOutput: e.target.value,
                                   })
                                 }
-                                className="font-mono text-xs bg-slate-900"
+                                className="font-mono text-xs bg-background"
                                 required
                               />
                             </div>
@@ -481,13 +481,13 @@ export function ProblemForm({
                 };
 
                 return (
-                  <div className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+                  <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <ListChecks className="h-5 w-5 text-cyan-400" />
+                        <ListChecks className="h-5 w-5 text-cyan-500" />
                         <div>
-                          <h2 className="text-lg font-semibold text-white">Multiple Choice Options</h2>
-                          <p className="text-sm text-slate-400">
+                          <h2 className="text-lg font-semibold text-foreground">Multiple Choice Options</h2>
+                          <p className="text-sm text-muted-foreground">
                             Specify candidate answer choices and mark the correct answer.
                           </p>
                         </div>
@@ -502,7 +502,7 @@ export function ProblemForm({
                       {options.map((opt, index) => (
                         <div
                           key={index}
-                          className="flex items-center space-x-3 p-3 rounded-lg border border-slate-800 bg-slate-950/60"
+                          className="flex items-center space-x-3 p-3 rounded-lg border border-border bg-muted/40"
                         >
                           <button
                             type="button"
@@ -510,7 +510,7 @@ export function ProblemForm({
                             className={`p-1.5 rounded-full border transition-all ${
                               opt.isCorrect
                                 ? "bg-emerald-500 border-emerald-400 text-white"
-                                : "border-slate-700 hover:border-slate-500 text-transparent"
+                                : "border-border hover:border-foreground/50 text-transparent"
                             }`}
                             title="Mark as correct answer"
                           >
@@ -521,7 +521,7 @@ export function ProblemForm({
                             value={opt.text}
                             onChange={e => updateOption(index, { text: e.target.value })}
                             placeholder={`Choice ${String.fromCharCode(65 + index)}`}
-                            className="flex-1 bg-slate-900"
+                            className="flex-1 bg-background"
                             required
                           />
 
@@ -529,7 +529,7 @@ export function ProblemForm({
                             <button
                               type="button"
                               onClick={() => removeOption(index)}
-                              className="text-slate-500 hover:text-red-400 transition-colors p-1"
+                              className="text-muted-foreground hover:text-red-500 transition-colors p-1"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>

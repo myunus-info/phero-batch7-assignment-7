@@ -3,7 +3,7 @@
 import { use } from "react";
 import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetAssessmentResult } from "@/hooks/attempt.hook";
+import { useGetAssessmentResult } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
@@ -17,7 +17,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
   if (isLoading) {
     return (
       <RoleGuard allowedRoles={["CANDIDATE"]}>
-        <div className="py-16 text-center text-slate-500">Computing assessment results...</div>
+        <div className="py-16 text-center text-muted-foreground">Computing assessment results...</div>
       </RoleGuard>
     );
   }
@@ -26,8 +26,8 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
     return (
       <RoleGuard allowedRoles={["CANDIDATE"]}>
         <div className="py-16 text-center space-y-4">
-          <h2 className="text-xl font-bold text-white">Results not available</h2>
-          <p className="text-sm text-slate-400">
+          <h2 className="text-xl font-bold text-foreground">Results not available</h2>
+          <p className="text-sm text-muted-foreground">
             You must complete and submit the assessment before viewing scorecard results.
           </p>
           <Link href="/dashboard/candidate">
@@ -102,27 +102,29 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
         <div>
           <Link
             href="/dashboard/candidate"
-            className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
+            className="inline-flex items-center space-x-1 text-xs text-muted-foreground hover:text-foreground mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Candidate Portal</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Assessment Scorecard</h1>
-          <p className="text-sm text-slate-400">{result.assessment?.title || "Technical Assessment"}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Assessment Scorecard</h1>
+          <p className="text-sm text-muted-foreground">{result.assessment?.title || "Technical Assessment"}</p>
         </div>
 
         {/* Outcome Banner */}
         <div
           className={`flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl border ${
             isPassed
-              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-300"
-              : "bg-red-500/10 border-red-500/30 text-red-300"
+              ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300"
+              : "bg-red-500/10 border-red-500/30 text-red-800 dark:text-red-300"
           }`}
         >
           <div className="flex items-center space-x-4 mb-4 sm:mb-0">
             <div
               className={`p-3 rounded-full ${
-                isPassed ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                isPassed
+                  ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                  : "bg-red-500/20 text-red-600 dark:text-red-400"
               }`}
             >
               {isPassed ? <CheckCircle2 className="h-8 w-8" /> : <XCircle className="h-8 w-8" />}
@@ -131,7 +133,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
               <h2 className="text-2xl font-black tracking-tight">
                 {isPassed ? "Assessment Passed" : "Needs Improvement"}
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 Benchmark Cutoff: {passingMarks} pts ({Math.round((passingMarks / maxPossibleScore) * 100)}%) • Your
                 Score: {totalScore} pts ({percentageScore}%)
               </p>
@@ -139,36 +141,36 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
           </div>
 
           <div className="text-right font-mono">
-            <p className="text-4xl font-extrabold text-white">
+            <p className="text-4xl font-extrabold text-foreground">
               {totalScore} / {maxPossibleScore}
             </p>
-            <p className="text-xs text-slate-400 mt-1">Total Points Scored</p>
+            <p className="text-xs text-muted-foreground mt-1">Total Points Scored</p>
           </div>
         </div>
 
         {/* Problem Breakdown List */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-white">Problem Breakdown</h3>
+          <h3 className="text-lg font-semibold text-foreground">Problem Breakdown</h3>
 
           <div className="space-y-3">
             {problemBreakdown.length === 0 ? (
-              <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/30 text-center text-slate-500 text-sm">
+              <div className="p-6 rounded-xl border border-border bg-card text-center text-muted-foreground text-sm shadow-sm">
                 No problem submission details recorded.
               </div>
             ) : (
               problemBreakdown.map((pr, idx) => (
                 <div
                   key={pr.problemId || idx}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-slate-800 bg-slate-900/40 gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-border bg-card shadow-sm gap-4"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono text-xs text-slate-500">#{idx + 1}</span>
-                      <h4 className="font-semibold text-white">{pr.title}</h4>
+                      <span className="font-mono text-xs text-muted-foreground">#{idx + 1}</span>
+                      <h4 className="font-semibold text-foreground">{pr.title}</h4>
                       <DifficultyBadge difficulty={pr.difficulty} />
                       <ProblemTypeBadge type={pr.type || "CODING"} />
                     </div>
-                    <div className="flex items-center space-x-4 text-xs font-mono text-slate-400">
+                    <div className="flex items-center space-x-4 text-xs font-mono text-muted-foreground">
                       {pr.totalTestCases !== undefined && pr.totalTestCases > 0 && (
                         <span>
                           Passed: {pr.testCasesPassed ?? 0} / {pr.totalTestCases} test cases
@@ -182,16 +184,16 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
                   </div>
 
                   <div className="text-right font-mono">
-                    <p className="text-base font-bold text-white">
+                    <p className="text-base font-bold text-foreground">
                       {pr.score} / {pr.maxPoints} pts
                     </p>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-muted-foreground">
                       {pr.score === pr.maxPoints ? (
-                        <span className="text-emerald-400 font-semibold">Full Score</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Full Score</span>
                       ) : pr.score > 0 ? (
-                        <span className="text-amber-400 font-semibold">Partial Credit</span>
+                        <span className="text-amber-600 dark:text-amber-400 font-semibold">Partial Credit</span>
                       ) : (
-                        <span className="text-slate-500">0%</span>
+                        <span className="text-muted-foreground">0%</span>
                       )}
                     </p>
                   </div>

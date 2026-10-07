@@ -8,3 +8,4 @@ export * from "./countdown.hook";
 export * from "./admin.hook";
 export * from "./user.hook";
 export * from "./problem.hook";
+export * from "./theme.hook";

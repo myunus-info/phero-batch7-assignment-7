@@ -4,15 +4,15 @@ import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import useUrlParams from "@/hooks/url-params.hook";
-import useDebounce from "@/hooks/debounce.hook";
-import { useGetAllProblems, useDeleteProblem } from "@/hooks/problem.hook";
+import { useDebounce } from "@/hooks";
+import { useGetAllProblems, useDeleteProblem } from "@/hooks";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { DifficultyLevel, ProblemType } from "@/types/problem.type";
+import { DifficultyLevel, ProblemType } from "@/types";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
 import { Plus, Search, Trash2, ExternalLink, Edit3 } from "lucide-react";
 
@@ -55,8 +55,8 @@ function AdminProblemsContent() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Problem Management</h1>
-            <p className="text-sm text-slate-400">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Problem Management</h1>
+            <p className="text-sm text-muted-foreground">
               Create, update, and manage problems available in candidate assessments.
             </p>
           </div>
@@ -72,7 +72,7 @@ function AdminProblemsContent() {
         {/* Filters */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search problems..."
               className="pl-9"
@@ -109,13 +109,13 @@ function AdminProblemsContent() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   Loading problems...
                 </TableCell>
               </TableRow>
             ) : problems.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No problems found.
                 </TableCell>
               </TableRow>
@@ -124,8 +124,8 @@ function AdminProblemsContent() {
                 <TableRow key={problem.id}>
                   <TableCell>
                     <div>
-                      <p className="font-semibold text-white">{problem.title}</p>
-                      <p className="text-xs text-slate-400 line-clamp-1">{problem.description}</p>
+                      <p className="font-semibold text-foreground">{problem.title}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{problem.description}</p>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -134,7 +134,9 @@ function AdminProblemsContent() {
                   <TableCell>
                     <DifficultyBadge difficulty={problem.difficulty} />
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-300">{problem.points} pts</TableCell>
+                  <TableCell className="font-mono text-xs text-foreground font-semibold">
+                    {problem.points} pts
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-2">
                       <Link href={`/dashboard/admin/problems/${problem.id}`}>
@@ -144,7 +146,7 @@ function AdminProblemsContent() {
                       </Link>
                       <Link href={`/dashboard/admin/problems/${problem.id}/edit`}>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Edit problem">
-                          <Edit3 className="h-3.5 w-3.5 text-slate-400 hover:text-white" />
+                          <Edit3 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
                         </Button>
                       </Link>
                       <Button
@@ -157,7 +159,7 @@ function AdminProblemsContent() {
                           })
                         }
                         disabled={deleteMutation.isPending}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-red-400"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-red-400"
                         title="Delete"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -197,7 +199,7 @@ function AdminProblemsContent() {
 
 export default function AdminProblemsPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-slate-400">Loading admin problems...</div>}>
+    <Suspense fallback={<div className="p-6 text-muted-foreground">Loading admin problems...</div>}>
       <AdminProblemsContent />
     </Suspense>
   );

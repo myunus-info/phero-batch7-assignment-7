@@ -17,18 +17,23 @@ const DEFAULT_DATA = [
 
 export function RevenueChart({ data = DEFAULT_DATA }: RevenueChartProps) {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">
+    <div className="rounded-xl border border-border bg-card p-6 space-y-4 shadow-sm transition-colors duration-200">
       <div>
-        <h3 className="text-base font-semibold text-white">Monthly Revenue</h3>
-        <p className="text-xs text-slate-400">Stripe volume processed from recruiter credit packs (USD)</p>
+        <h3 className="text-base font-semibold text-foreground">Monthly Revenue</h3>
+        <p className="text-xs text-muted-foreground">Stripe volume processed from recruiter credit packs (USD)</p>
       </div>
 
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-            <XAxis dataKey="month" stroke="#64748b" fontSize={12} />
-            <YAxis stroke="#64748b" fontSize={12} tickFormatter={val => `$${val}`} />
+            <CartesianGrid strokeDasharray="3 3" stroke="currentColor" className="text-border" />
+            <XAxis dataKey="month" stroke="currentColor" className="text-muted-foreground" fontSize={12} />
+            <YAxis
+              stroke="currentColor"
+              className="text-muted-foreground"
+              fontSize={12}
+              tickFormatter={val => `$${val}`}
+            />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#0f172a",

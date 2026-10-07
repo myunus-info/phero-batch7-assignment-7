@@ -2,15 +2,15 @@
 
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { useDebounce } from "@/hooks";
 import useUrlParams from "@/hooks/url-params.hook";
-import { useGetAllProblems } from "@/hooks/problem.hook";
+import useDebounce from "@/hooks/debounce.hook";
+import { useGetAllProblems } from "@/hooks";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { DifficultyLevel, ProblemType } from "@/types/problem.type";
+import { DifficultyLevel, ProblemType } from "@/types";
 import { Search, ChevronRight } from "lucide-react";
 
 function ProblemsDirectoryContent() {
@@ -45,8 +45,8 @@ function ProblemsDirectoryContent() {
   return (
     <div className="container mx-auto px-4 sm:px-6 py-12 max-w-6xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-white">Problem Bank</h1>
-        <p className="text-sm text-slate-400 mt-1">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Problem Bank</h1>
+        <p className="text-sm text-muted-foreground mt-1">
           Explore coding challenges and conceptual MCQ problems used in DevJudge assessments.
         </p>
       </div>
@@ -54,7 +54,7 @@ function ProblemsDirectoryContent() {
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search problem title..."
             className="pl-9"
@@ -63,22 +63,14 @@ function ProblemsDirectoryContent() {
           />
         </div>
 
-        <Select
-          value={difficultyParam}
-          onChange={e => setParams({ difficulty: e.target.value }, true)}
-          className="bg-slate-900/60 border-slate-800"
-        >
+        <Select value={difficultyParam} onChange={e => setParams({ difficulty: e.target.value }, true)}>
           <option value="">All Difficulties</option>
           <option value="EASY">Easy</option>
           <option value="MEDIUM">Medium</option>
           <option value="HARD">Hard</option>
         </Select>
 
-        <Select
-          value={typeParam}
-          onChange={e => setParams({ type: e.target.value }, true)}
-          className="bg-slate-900/60 border-slate-800"
-        >
+        <Select value={typeParam} onChange={e => setParams({ type: e.target.value }, true)}>
           <option value="">All Problem Types</option>
           <option value="CODING">Coding (Judge0)</option>
           <option value="MCQ">Multiple Choice</option>
@@ -99,13 +91,13 @@ function ProblemsDirectoryContent() {
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-10 text-slate-500">
+              <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
                 Loading problem bank...
               </TableCell>
             </TableRow>
           ) : problems.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-10 text-slate-500">
+              <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
                 No problems match your search criteria.
               </TableCell>
             </TableRow>
@@ -115,11 +107,11 @@ function ProblemsDirectoryContent() {
                 <TableCell>
                   <Link
                     href={`/problems/${problem.id}`}
-                    className="font-medium text-white hover:text-emerald-400 transition-colors"
+                    className="font-medium text-foreground hover:text-emerald-500 transition-colors"
                   >
                     {problem.title}
                   </Link>
-                  <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{problem.description}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{problem.description}</p>
                 </TableCell>
                 <TableCell>
                   <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
@@ -127,11 +119,11 @@ function ProblemsDirectoryContent() {
                 <TableCell>
                   <DifficultyBadge difficulty={problem.difficulty} />
                 </TableCell>
-                <TableCell className="font-mono text-xs text-slate-300">{problem.points} pts</TableCell>
+                <TableCell className="font-mono text-xs text-foreground font-semibold">{problem.points} pts</TableCell>
                 <TableCell className="text-right">
                   <Link
                     href={`/problems/${problem.id}`}
-                    className="inline-flex items-center space-x-1 text-xs text-emerald-400 hover:underline"
+                    className="inline-flex items-center space-x-1 text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
                   >
                     <span>View</span>
                     <ChevronRight className="h-3 w-3" />
@@ -151,7 +143,9 @@ function ProblemsDirectoryContent() {
 export default function ProblemsDirectoryPage() {
   return (
     <Suspense
-      fallback={<div className="container mx-auto px-4 py-12 max-w-6xl text-slate-400">Loading problem bank...</div>}
+      fallback={
+        <div className="container mx-auto px-4 py-12 max-w-6xl text-muted-foreground">Loading problem bank...</div>
+      }
     >
       <ProblemsDirectoryContent />
     </Suspense>

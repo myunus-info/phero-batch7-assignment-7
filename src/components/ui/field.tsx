@@ -17,15 +17,15 @@ export function FieldLabel({
   ...props
 }: React.ComponentProps<typeof Label> & { required?: boolean }) {
   return (
-    <Label className={cn("text-sm font-medium text-slate-200", className)} {...props}>
+    <Label className={cn("text-sm font-medium text-foreground", className)} {...props}>
       {children}
-      {required && <span className="ml-1 text-emerald-400">*</span>}
+      {required && <span className="ml-1 text-emerald-500">*</span>}
     </Label>
   );
 }
 
 export function FieldDescription({ className, ...props }: React.ComponentProps<"p">) {
-  return <p className={cn("text-xs text-slate-400", className)} {...props} />;
+  return <p className={cn("text-xs text-muted-foreground", className)} {...props} />;
 }
 
 export function FieldError({ errors, className }: { errors?: unknown[]; className?: string }) {
@@ -36,32 +36,35 @@ export function FieldError({ errors, className }: { errors?: unknown[]; classNam
       ? String((err as { message: unknown }).message)
       : String(err);
 
-  return <p className={cn("text-xs font-medium text-red-400 mt-1", className)}>{message}</p>;
+  return <p className={cn("text-xs font-medium text-red-500 mt-1", className)}>{message}</p>;
 }
 
-interface FormFieldProps {
+export function FormField({
+  label,
+  description,
+  error,
+  required,
+  children,
+  className,
+}: {
   label?: string;
-  error?: string;
   description?: string;
+  error?: string;
   required?: boolean;
-  className?: string;
   children: React.ReactNode;
-}
-
-export function FormField({ label, error, description, required, className, children }: FormFieldProps) {
+  className?: string;
+}) {
   return (
     <div className={cn("space-y-1.5 w-full", className)}>
       {label && (
-        <div className="flex items-center justify-between">
-          <Label className="text-sm font-medium text-slate-200">
-            {label}
-            {required && <span className="ml-1 text-emerald-400">*</span>}
-          </Label>
-        </div>
+        <Label className="text-sm font-medium text-foreground">
+          {label}
+          {required && <span className="ml-1 text-emerald-500">*</span>}
+        </Label>
       )}
       {children}
-      {description && !error && <p className="text-xs text-slate-400">{description}</p>}
-      {error && <p className="text-xs font-medium text-red-400">{error}</p>}
+      {description && <p className="text-xs text-muted-foreground">{description}</p>}
+      {error && <p className="text-xs font-medium text-red-500 mt-1">{error}</p>}
     </div>
   );
 }

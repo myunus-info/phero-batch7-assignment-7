@@ -31,7 +31,7 @@ export function FinishDialog({
         spread: 70,
         origin: { y: 0.6 },
       });
-    } catch (e) {
+    } catch {
       // ignore in SSR
     }
     onConfirmFinish();
@@ -50,7 +50,7 @@ export function FinishDialog({
         </div>
         <DialogDescription>
           {hasUnanswered ? (
-            <span className="text-amber-300">
+            <span className="text-amber-600 dark:text-amber-300">
               You have completed {answeredCount} out of {totalCount} problems. Submitting now means any unanswered
               questions will receive 0 points.
             </span>
@@ -63,7 +63,7 @@ export function FinishDialog({
         </DialogDescription>
       </DialogHeader>
 
-      <div className="rounded-lg border border-slate-800 bg-slate-950 p-3 my-2 text-xs font-mono text-slate-400">
+      <div className="rounded-lg border border-border bg-muted/40 p-3 my-2 text-xs font-mono text-muted-foreground">
         Once submitted, your solutions cannot be altered. Your score and performance report will be generated
         immediately.
       </div>

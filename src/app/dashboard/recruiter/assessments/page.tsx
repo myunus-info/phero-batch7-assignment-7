@@ -4,8 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import useUrlParams from "@/hooks/url-params.hook";
-import useDebounce from "@/hooks/debounce.hook";
-import { useGetAllAssessments, useDeleteAssessment } from "@/hooks/assessment.hook";
+import { useDebounce, useGetAllAssessments, useDeleteAssessment } from "@/hooks";
 import { InviteCandidateModal } from "@/components/forms/InviteCandidateModal";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
@@ -56,8 +55,8 @@ function RecruiterAssessmentsContent() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white">Assessment Campaigns</h1>
-            <p className="text-sm text-slate-400">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Assessment Campaigns</h1>
+            <p className="text-sm text-muted-foreground">
               Manage custom assessments, review candidate results, and dispatch invitations.
             </p>
           </div>
@@ -72,7 +71,7 @@ function RecruiterAssessmentsContent() {
 
         {/* Search */}
         <div className="relative max-w-sm">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by title..."
             className="pl-9"
@@ -97,13 +96,13 @@ function RecruiterAssessmentsContent() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   Loading assessments...
                 </TableCell>
               </TableRow>
             ) : assessments.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   No assessments found. Create your first assessment campaign!
                 </TableCell>
               </TableRow>
@@ -113,28 +112,28 @@ function RecruiterAssessmentsContent() {
                   <TableCell>
                     <Link
                       href={`/dashboard/recruiter/assessments/${a.id}`}
-                      className="font-semibold text-white hover:text-emerald-400 transition-colors"
+                      className="font-semibold text-foreground hover:text-emerald-500 transition-colors"
                     >
                       {a.title}
                     </Link>
-                    <p className="text-xs text-slate-400 line-clamp-1 mt-0.5">{a.description}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{a.description}</p>
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={a.status} />
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-300">{a.durationMinutes} min</TableCell>
-                  <TableCell className="font-mono text-xs text-slate-300">{a.passingScore}%</TableCell>
-                  <TableCell className="font-mono text-xs text-cyan-400">
+                  <TableCell className="font-mono text-xs text-foreground">{a.durationMinutes} min</TableCell>
+                  <TableCell className="font-mono text-xs text-foreground">{a.passingScore}%</TableCell>
+                  <TableCell className="font-mono text-xs text-cyan-600 dark:text-cyan-400">
                     {a.candidateAssessments?.length || 0} invited
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-400">{formatDate(a.createdAt)}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(a.createdAt)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-1">
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => setInviteModalData({ id: a.id, title: a.title })}
-                        className="h-8 gap-1 text-xs text-cyan-400 hover:text-cyan-300"
+                        className="h-8 gap-1 text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300"
                         title="Invite candidate"
                       >
                         <UserPlus className="h-3.5 w-3.5" />
@@ -144,7 +143,7 @@ function RecruiterAssessmentsContent() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                           title="Edit assessment"
                         >
                           <Edit3 className="h-3.5 w-3.5" />
@@ -154,7 +153,7 @@ function RecruiterAssessmentsContent() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                           title="View submissions"
                         >
                           <ExternalLink className="h-3.5 w-3.5" />
@@ -170,7 +169,7 @@ function RecruiterAssessmentsContent() {
                           })
                         }
                         disabled={deleteMutation.isPending}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-red-400"
+                        className="h-8 w-8 p-0 text-muted-foreground hover:text-red-500"
                         title="Delete assessment"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -220,7 +219,7 @@ function RecruiterAssessmentsContent() {
 
 export function RecruiterAssessmentsPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-slate-400">Loading assessments...</div>}>
+    <Suspense fallback={<div className="p-6 text-muted-foreground">Loading assessments...</div>}>
       <RecruiterAssessmentsContent />
     </Suspense>
   );

@@ -14,11 +14,11 @@ export function TablePagination({ page, total, limit, onPageChange }: TablePagin
   const endItem = Math.min(total, page * limit);
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 text-sm text-slate-400">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 text-sm text-muted-foreground">
       <div>
-        Showing <span className="font-medium text-slate-200">{startItem}</span> to{" "}
-        <span className="font-medium text-slate-200">{endItem}</span> of{" "}
-        <span className="font-medium text-slate-200">{total}</span> items
+        Showing <span className="font-medium text-foreground">{startItem}</span> to{" "}
+        <span className="font-medium text-foreground">{endItem}</span> of{" "}
+        <span className="font-medium text-foreground">{total}</span> items
       </div>
 
       <div className="flex items-center space-x-2">
@@ -41,7 +41,7 @@ export function TablePagination({ page, total, limit, onPageChange }: TablePagin
           <ChevronLeft className="h-4 w-4" />
         </Button>
 
-        <span className="px-2 text-sm font-medium text-slate-300">
+        <span className="px-2 text-sm font-medium text-foreground">
           Page {page} of {totalPages}
         </span>
 

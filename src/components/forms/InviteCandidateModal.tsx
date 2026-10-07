@@ -65,36 +65,37 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
         <DialogHeader>
           <DialogTitle>Invite Candidate</DialogTitle>
           <DialogDescription>
-            Send an assessment invitation for <strong className="text-white">{assessmentTitle}</strong>.
+            Send an assessment invitation for <strong className="text-foreground">{assessmentTitle}</strong>.
           </DialogDescription>
         </DialogHeader>
 
         <div className="my-4">
           {hasCredits ? (
-            <div className="flex items-center justify-between p-3 mb-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300">
+            <div className="flex items-center justify-between p-3 mb-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-800 dark:text-cyan-300">
               <div className="flex items-center space-x-2">
-                <Coins className="h-4 w-4 shrink-0 text-cyan-400" />
+                <Coins className="h-4 w-4 shrink-0 text-cyan-600 dark:text-cyan-400" />
                 <span>
-                  Available Credits: <strong className="text-white">{credits}</strong> (1 credit deducted per invite)
+                  Available Credits: <strong className="text-foreground">{credits}</strong> (1 credit deducted per
+                  invite)
                 </span>
               </div>
               <Link
                 href="/dashboard/recruiter/billing"
-                className="underline text-[11px] text-cyan-200 hover:text-white"
+                className="underline text-[11px] text-cyan-700 dark:text-cyan-200 hover:underline"
                 onClick={() => onOpenChange(false)}
               >
                 Buy More
               </Link>
             </div>
           ) : (
-            <div className="flex items-start space-x-2 p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-300">
-              <AlertCircle className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
+            <div className="flex items-start space-x-2 p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-700 dark:text-red-300">
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
               <div className="flex-1">
-                <p className="font-semibold text-white">0 Assessment Credits Available</p>
-                <p className="mt-0.5 text-slate-300">You need at least 1 credit to invite candidates.</p>
+                <p className="font-semibold text-foreground">0 Assessment Credits Available</p>
+                <p className="mt-0.5 text-muted-foreground">You need at least 1 credit to invite candidates.</p>
                 <Link
                   href="/dashboard/recruiter/billing"
-                  className="inline-block mt-2 font-semibold text-cyan-400 underline hover:text-cyan-300"
+                  className="inline-block mt-2 font-semibold text-cyan-600 dark:text-cyan-400 underline hover:opacity-80"
                   onClick={() => onOpenChange(false)}
                 >
                   Purchase Credits in Billing &rarr;
@@ -114,7 +115,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                       Candidate Email
                     </FieldLabel>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id={field.name}
                         name={field.name}
@@ -143,7 +144,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Invitation Expiration Date (Optional)</FieldLabel>
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id={field.name}
                         name={field.name}

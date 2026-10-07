@@ -33,12 +33,12 @@ export function Sheet({ open, onOpenChange, children, side = "right" }: SheetPro
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
       <div
-        className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={() => onOpenChange(false)}
       />
       <div
         className={cn(
-          "fixed inset-y-0 z-50 flex max-w-full bg-slate-900 border-slate-800 shadow-2xl transition-transform",
+          "fixed inset-y-0 z-50 flex max-w-full bg-card border-border shadow-2xl transition-transform duration-200",
           side === "right"
             ? "right-0 w-full sm:max-w-md border-l animate-in slide-in-from-right"
             : "left-0 w-full sm:max-w-md border-r animate-in slide-in-from-left",
@@ -47,7 +47,7 @@ export function Sheet({ open, onOpenChange, children, side = "right" }: SheetPro
         <div className="relative flex h-full w-full flex-col overflow-y-auto p-6">
           <button
             onClick={() => onOpenChange(false)}
-            className="absolute right-4 top-4 rounded-sm text-slate-400 opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+            className="absolute right-4 top-4 rounded-sm text-muted-foreground opacity-70 transition-opacity hover:opacity-100 hover:text-foreground focus:outline-none"
           >
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
@@ -64,9 +64,9 @@ export function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDi
 }
 
 export function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-lg font-semibold text-slate-100", className)} {...props} />;
+  return <h3 className={cn("text-lg font-semibold text-card-foreground", className)} {...props} />;
 }
 
 export function SheetDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-slate-400", className)} {...props} />;
+  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />;
 }

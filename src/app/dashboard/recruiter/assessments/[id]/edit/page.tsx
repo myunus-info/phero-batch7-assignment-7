@@ -18,23 +18,23 @@ export default function EditAssessmentPage({ params }: { params: Promise<{ id: s
         <div>
           <Link
             href={`/dashboard/recruiter/assessments/${resolvedParams.id}`}
-            className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
+            className="inline-flex items-center space-x-1 text-xs text-muted-foreground hover:text-foreground mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Assessment</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Edit Assessment Campaign</h1>
-          <p className="text-sm text-slate-400">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Edit Assessment Campaign</h1>
+          <p className="text-sm text-muted-foreground">
             Update test configuration, problem set, and candidate passing benchmarks.
           </p>
         </div>
 
         {isLoading ? (
-          <div className="py-16 text-center text-slate-500">Loading assessment details...</div>
+          <div className="py-16 text-center text-muted-foreground">Loading assessment details...</div>
         ) : assessment ? (
           <AssessmentWizard initialData={assessment} isEditing={true} />
         ) : (
-          <div className="py-16 text-center text-slate-400">Assessment not found.</div>
+          <div className="py-16 text-center text-muted-foreground">Assessment not found.</div>
         )}
       </div>
     </RoleGuard>

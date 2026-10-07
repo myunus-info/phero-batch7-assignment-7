@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
+import { useTheme } from "@/providers/themeProvider";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { Play, RotateCcw } from "lucide-react";
@@ -63,6 +64,7 @@ export function CodeEditor({
   onSubmit,
   isSubmitting,
 }: CodeEditorProps) {
+  const { resolvedTheme } = useTheme();
   const [selectedLang, setSelectedLang] = useState(language);
   const getInitialCode = () => {
     if (initialCode !== undefined && initialCode !== "") {
@@ -104,18 +106,18 @@ export function CodeEditor({
   };
 
   return (
-    <div className="flex h-full flex-col bg-[#1e1e1e]">
+    <div className="flex h-full flex-col bg-card">
       {/* Editor Toolbar */}
-      <div className="flex h-12 items-center justify-between border-b border-slate-800 bg-slate-900 px-4">
+      <div className="flex h-12 items-center justify-between border-b border-border bg-card px-4">
         <div className="flex items-center space-x-3">
           <div className="w-52">
             <Select
               value={selectedLang}
               onChange={e => handleLanguageChange(e.target.value)}
-              className="h-8 py-1 text-xs bg-slate-950 border-slate-800"
+              className="h-8 py-1 text-xs bg-background border-border text-foreground"
             >
               {SUPPORTED_LANGUAGES.map(lang => (
-                <option key={lang.value} value={lang.value} className="bg-slate-900 text-slate-100">
+                <option key={lang.value} value={lang.value} className="bg-card text-foreground">
                   {lang.label}
                 </option>
               ))}
@@ -126,7 +128,7 @@ export function CodeEditor({
             variant="ghost"
             size="sm"
             onClick={handleReset}
-            className="h-8 px-2 text-xs text-slate-400 hover:text-slate-200"
+            className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground"
             title="Reset to starter code"
           >
             <RotateCcw className="h-3.5 w-3.5 mr-1" />
@@ -155,7 +157,7 @@ export function CodeEditor({
         <Editor
           height="100%"
           language={selectedLang}
-          theme="vs-dark"
+          theme={resolvedTheme === "light" ? "vs" : "vs-dark"}
           value={code}
           onMount={handleEditorMount}
           onChange={val => {
@@ -164,7 +166,7 @@ export function CodeEditor({
             onCodeChange(nextVal);
           }}
           loading={
-            <div className="flex h-full items-center justify-center text-slate-400">
+            <div className="flex h-full items-center justify-center text-muted-foreground">
               <Spinner size="md" className="mr-2" /> Loading Monaco Editor...
             </div>
           }

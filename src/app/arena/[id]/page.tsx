@@ -11,10 +11,10 @@ import { CodeEditor } from "@/components/arena/CodeEditor";
 import { McqView } from "@/components/arena/McqView";
 import { TestResultsPanel } from "@/components/arena/TestResultsPanel";
 import { FinishDialog } from "@/components/arena/FinishDialog";
-import { ISubmitProblemResponse } from "@/types/attempt.type";
+import { ISubmitProblemResponse } from "@/types";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
-import { IProblem } from "@/types/problem.type";
+import { IProblem } from "@/types";
 
 function subscribeOnline(callback: () => void) {
   window.addEventListener("online", callback);
@@ -61,6 +61,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     if (assessmentId) {
       startAttemptMutation.mutate(assessmentId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessmentId]);
 
   // Tab switch monitoring (proctoring alert)
@@ -183,7 +184,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   if (startAttemptMutation.isPending) {
     return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#090d16] text-slate-300">
+      <div className="flex h-screen w-screen flex-col items-center justify-center bg-background text-muted-foreground">
         <Spinner size="lg" className="mb-4" />
         <p className="font-mono text-sm">Initializing Secure Assessment Sandbox...</p>
       </div>
@@ -192,9 +193,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   if (startAttemptMutation.isError || !attemptData) {
     return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#090d16] p-6 text-center text-slate-300">
-        <h2 className="text-xl font-bold text-white mb-2">Unable to Load Assessment</h2>
-        <p className="text-sm text-slate-400 mb-6 max-w-md">
+      <div className="flex h-screen w-screen flex-col items-center justify-center bg-background p-6 text-center text-muted-foreground">
+        <h2 className="text-xl font-bold text-foreground mb-2">Unable to Load Assessment</h2>
+        <p className="text-sm text-muted-foreground mb-6 max-w-md">
           {startAttemptMutation.error?.message ||
             "You may not have an active invitation or the test has already ended."}
         </p>
@@ -212,10 +213,10 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <AuthGuard>
-      <div className="flex h-screen w-screen flex-col overflow-hidden bg-[#090d16]">
+      <div className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground transition-colors duration-200">
         {/* Offline Banner */}
         {!isOnline && (
-          <div className="flex items-center justify-center space-x-2 bg-amber-500/15 border-b border-amber-500/30 px-4 py-1.5 text-xs font-medium text-amber-300 shrink-0">
+          <div className="flex items-center justify-center space-x-2 bg-amber-500/15 border-b border-amber-500/30 px-4 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-300 shrink-0">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>
               Network connection lost. You are currently offline. Local progress is saved, but running tests and
@@ -237,7 +238,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         />
 
         {/* Problems Tab Bar */}
-        <div className="flex h-10 items-center space-x-1 border-b border-slate-800 bg-slate-900/80 px-4 overflow-x-auto">
+        <div className="flex h-10 items-center space-x-1 border-b border-border bg-muted/40 px-4 overflow-x-auto">
           {problems.map((p, idx) => {
             const isCompleted = answeredProblems.has(p.problem.id);
             const isActive = activeProblemIdx === idx;
@@ -252,12 +253,12 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                 }}
                 className={`flex items-center space-x-2 px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors ${
                   isActive
-                    ? "bg-slate-800 text-white border border-slate-700"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/40"
+                    ? "bg-card text-foreground border border-border shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                 }`}
               >
                 <span>Problem {idx + 1}</span>
-                {isCompleted && <CheckCircle2 className="h-3 w-3 text-emerald-400" />}
+                {isCompleted && <CheckCircle2 className="h-3 w-3 text-emerald-500" />}
               </button>
             );
           })}
@@ -266,7 +267,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         {/* Main Split Body */}
         <div className="flex flex-1 overflow-hidden">
           {/* Left: Problem Statement */}
-          <div className="w-1/2 border-r border-slate-800 overflow-hidden">
+          <div className="w-1/2 border-r border-border overflow-hidden">
             {activeProblem && <ProblemStatement problem={activeProblem} />}
           </div>
 

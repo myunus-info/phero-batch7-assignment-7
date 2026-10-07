@@ -8,15 +8,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
-  default: "bg-slate-100 text-slate-900 hover:bg-white shadow-sm active:translate-y-px",
-  emerald:
-    "bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm shadow-emerald-950 active:translate-y-px",
-  cyan: "bg-cyan-600 text-white hover:bg-cyan-500 shadow-sm shadow-cyan-950 active:translate-y-px",
+  default: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm active:translate-y-px",
+  emerald: "bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm shadow-emerald-950/20 active:translate-y-px",
+  cyan: "bg-cyan-600 text-white hover:bg-cyan-500 shadow-sm shadow-cyan-950/20 active:translate-y-px",
   destructive: "bg-red-600 text-white hover:bg-red-500 shadow-sm active:translate-y-px",
-  outline: "border border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800 hover:text-white",
-  secondary: "bg-slate-800 text-slate-100 hover:bg-slate-700 active:translate-y-px",
-  ghost: "text-slate-300 hover:bg-slate-800/80 hover:text-white",
-  link: "text-emerald-400 underline-offset-4 hover:underline p-0 h-auto",
+  outline: "border border-border bg-card text-foreground hover:bg-muted shadow-sm",
+  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 active:translate-y-px",
+  ghost: "text-muted-foreground hover:bg-muted hover:text-foreground",
+  link: "text-emerald-500 underline-offset-4 hover:underline p-0 h-auto",
 };
 
 const sizeStyles: Record<NonNullable<ButtonProps["size"]>, string> = {
@@ -43,10 +42,7 @@ export const buttonVariants = ({
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    { className, variant = "default", size = "default", isLoading = false, disabled, children, ...props },
-    ref,
-  ) => {
+  ({ className, variant = "default", size = "default", isLoading = false, disabled, children, ...props }, ref) => {
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}

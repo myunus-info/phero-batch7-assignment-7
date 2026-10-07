@@ -1,4 +1,4 @@
-import { IDashboardStats } from "@/types/admin.type";
+import { IDashboardStats } from "@/types";
 import { Users, FileCheck2, DollarSign, Activity } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
@@ -57,16 +57,19 @@ export function KpiCards({ stats }: KpiCardsProps) {
       {cards.map((card, idx) => {
         const Icon = card.icon;
         return (
-          <div key={idx} className="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-3">
+          <div
+            key={idx}
+            className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-sm transition-colors duration-200"
+          >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{card.title}</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{card.title}</span>
               <div className={`p-2 rounded-lg border ${card.bg}`}>
                 <Icon className={`h-4 w-4 ${card.color}`} />
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold tracking-tight text-white">{card.value}</p>
-              <p className="text-xs text-slate-400 mt-1">{card.subtext}</p>
+              <p className="text-2xl font-bold tracking-tight text-foreground">{card.value}</p>
+              <p className="text-xs text-muted-foreground mt-1">{card.subtext}</p>
             </div>
           </div>
         );

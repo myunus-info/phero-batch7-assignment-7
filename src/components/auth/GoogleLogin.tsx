@@ -2,6 +2,7 @@
 
 import { useGoogleOAuth } from "@/hooks";
 import { UserRole } from "@/types";
+import { useTheme } from "@/providers/themeProvider";
 import { GoogleLogin } from "@react-oauth/google";
 
 interface GoogleLoginComponentProps {
@@ -11,15 +12,12 @@ interface GoogleLoginComponentProps {
   shape?: "rectangular" | "pill" | "circle" | "square";
 }
 
-export default function GoogleLoginComponent({
-  role,
-  text,
-  theme = "filled_black",
-  shape = "rectangular",
-}: GoogleLoginComponentProps) {
+export default function GoogleLoginComponent({ role, text, theme, shape = "rectangular" }: GoogleLoginComponentProps) {
   const googleOAuthMutation = useGoogleOAuth();
+  const { resolvedTheme } = useTheme();
 
   const buttonText = text || (role ? "signup_with" : "continue_with");
+  const effectiveTheme = theme || (resolvedTheme === "dark" ? "filled_black" : "outline");
 
   return (
     <GoogleLogin
@@ -34,9 +32,11 @@ export default function GoogleLoginComponent({
       onError={() => {
         console.error("Google Authentication Failed");
       }}
-      theme={theme}
+      theme={effectiveTheme}
       shape={shape}
       text={buttonText}
     />
   );
 }
+
+export { GoogleLoginComponent };

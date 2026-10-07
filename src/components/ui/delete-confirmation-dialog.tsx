@@ -36,8 +36,9 @@ export function DeleteConfirmationModal({
     description ||
     (itemName ? (
       <>
-        Are you sure you want to delete <strong className="text-white font-semibold">&ldquo;{itemName}&rdquo;</strong>?
-        This action cannot be undone.
+        Are you sure you want to delete{" "}
+        <strong className="text-foreground font-semibold">&ldquo;{itemName}&rdquo;</strong>? This action cannot be
+        undone.
       </>
     ) : (
       `Are you sure you want to delete this ${itemType}? This action cannot be undone.`
@@ -47,12 +48,12 @@ export function DeleteConfirmationModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogHeader>
         <div className="flex items-center space-x-3 mb-1">
-          <div className="p-2 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 shrink-0">
+          <div className="p-2 rounded-full bg-red-500/10 text-red-500 border border-red-500/20 shrink-0">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <DialogTitle className="text-white text-lg">{modalTitle}</DialogTitle>
+          <DialogTitle className="text-foreground text-lg">{modalTitle}</DialogTitle>
         </div>
-        <DialogDescription className="text-slate-400 text-sm pl-11">{modalDescription}</DialogDescription>
+        <DialogDescription className="text-muted-foreground text-sm pl-11">{modalDescription}</DialogDescription>
       </DialogHeader>
 
       <DialogFooter className="gap-2 sm:gap-0 mt-6">

@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { DemoLoginCards } from "./DemoLoginCards";
-import { Eye, EyeClosed } from "lucide-react";
 import GoogleLoginComponent from "./GoogleLogin";
+import { Eye, EyeClosed } from "lucide-react";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,8 +33,8 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Welcome back</h1>
-        <p className="text-sm text-slate-400">Sign in to your DevJudge account to continue</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h1>
+        <p className="text-sm text-muted-foreground">Sign in to your DevJudge account to continue</p>
       </div>
 
       {/* 1-Click Demo Accounts */}
@@ -42,10 +42,10 @@ export function LoginForm() {
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-800" />
+          <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#090d16] px-2 text-slate-500 font-medium">Or continue with</span>
+          <span className="bg-background px-2 text-muted-foreground font-medium">Or continue with</span>
         </div>
       </div>
 
@@ -106,7 +106,7 @@ export function LoginForm() {
                     />
 
                     <button
-                      className="absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                      className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
                       type="button"
                       onClick={() => setShowPassword(prev => !prev)}
                     >
@@ -127,34 +127,23 @@ export function LoginForm() {
           >
             {loginMutation.isPending ? (
               <>
-                <Spinner size="sm" /> Signing in
+                <Spinner size="sm" /> Submitting
               </>
             ) : (
-              "Sign in"
+              "Sign In"
             )}
           </Button>
         </FieldGroup>
       </form>
 
       {/* Google OAuth Login */}
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-800" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#090d16] px-2 text-slate-500 font-medium">Or </span>
-        </div>
-      </div>
-
-      {/* Google OAuth Login */}
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center pt-2">
         <GoogleLoginComponent text="signin_with" />
       </div>
 
-      <div className="text-center text-sm text-slate-400">
+      <div className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-emerald-400 hover:underline">
+        <Link href="/register" className="font-medium text-emerald-500 hover:underline">
           Sign up
         </Link>
       </div>

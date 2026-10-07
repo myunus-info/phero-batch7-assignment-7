@@ -12,8 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Sheet, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { IUserProfile } from "@/types/user.type";
-import { UserRole, UserStatus } from "@/types/auth.type";
+import { IUserProfile, UserRole, UserStatus } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { Edit2, Search } from "lucide-react";
 
@@ -60,9 +59,9 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
       }}
       className="space-y-6 my-4"
     >
-      <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 space-y-1">
-        <p className="text-sm font-semibold text-white">{user.name}</p>
-        <p className="text-xs text-slate-400">{user.email}</p>
+      <div className="rounded-lg border border-border bg-muted/40 p-4 space-y-1">
+        <p className="text-sm font-semibold text-foreground">{user.name}</p>
+        <p className="text-xs text-muted-foreground">{user.email}</p>
       </div>
 
       <FieldGroup>
@@ -116,7 +115,7 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
         </form.Field>
       </FieldGroup>
 
-      <div className="pt-6 border-t border-slate-800 flex justify-end space-x-3">
+      <div className="pt-6 border-t border-border flex justify-end space-x-3">
         <Button type="button" variant="outline" onClick={onClose} disabled={updateMutation.isPending}>
           Cancel
         </Button>
@@ -153,7 +152,7 @@ export function UserManagementTable() {
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name or email..."
             className="pl-9"
@@ -205,13 +204,13 @@ export function UserManagementTable() {
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                 Loading users directory...
               </TableCell>
             </TableRow>
           ) : users.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                 No users match the criteria.
               </TableCell>
             </TableRow>
@@ -220,8 +219,8 @@ export function UserManagementTable() {
               <TableRow key={user.id}>
                 <TableCell>
                   <div>
-                    <p className="font-semibold text-white">{user.name}</p>
-                    <p className="text-xs text-slate-400">{user.email}</p>
+                    <p className="font-semibold text-foreground">{user.name}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -230,13 +229,13 @@ export function UserManagementTable() {
                 <TableCell>
                   <StatusBadge status={user.status} />
                 </TableCell>
-                <TableCell className="font-mono text-xs text-slate-400">{formatDate(user.createdAt)}</TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedUser(user)}
-                    className="h-8 gap-1 text-xs text-slate-300 hover:text-white"
+                    className="h-8 gap-1 text-xs text-muted-foreground hover:text-foreground"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                     <span>Manage</span>

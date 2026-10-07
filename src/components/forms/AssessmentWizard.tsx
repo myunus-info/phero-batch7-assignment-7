@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useGetAllProblems } from "@/hooks/problem.hook";
+import { useGetAllProblems } from "@/hooks";
 import { useCreateAssessment, useUpdateAssessment } from "@/hooks";
 import { assessmentWizardFormSchema } from "@/validations";
 import { IAssessment } from "@/types";
@@ -89,7 +89,7 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
   return (
     <div className="max-w-4xl space-y-8">
       {/* Step Indicator */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+      <div className="flex items-center justify-between border-b border-border pb-4">
         {[
           { num: 1, label: "Assessment Basics" },
           { num: 2, label: "Select Problems" },
@@ -101,21 +101,25 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
                 step === s.num
                   ? "bg-emerald-500 text-white"
                   : step > s.num
-                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
-                    : "bg-slate-800 text-slate-400"
+                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/40"
+                    : "bg-muted text-muted-foreground"
               }`}
             >
               {step > s.num ? <Check className="h-4 w-4" /> : s.num}
             </div>
-            <span className={`text-sm font-medium ${step === s.num ? "text-white" : "text-slate-400"}`}>{s.label}</span>
+            <span
+              className={`text-sm font-medium ${step === s.num ? "text-foreground font-semibold" : "text-muted-foreground"}`}
+            >
+              {s.label}
+            </span>
           </div>
         ))}
       </div>
 
       {/* Step 1: Basics */}
       {step === 1 && (
-        <div className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
-          <h2 className="text-lg font-semibold text-white">Assessment Information</h2>
+        <div className="space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h2 className="text-lg font-semibold text-foreground">Assessment Information</h2>
 
           <FieldGroup>
             <form.Field name="title">
@@ -254,23 +258,23 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
             };
 
             return (
-              <div className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
+              <div className="space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-white">
+                    <h2 className="text-lg font-semibold text-foreground">
                       Choose Problems ({selectedProblemIds.length} Selected)
                     </h2>
-                    <p className="text-xs text-slate-400">
-                      Total Assessment Points: <strong className="text-emerald-400">{totalPoints} pts</strong>
+                    <p className="text-xs text-muted-foreground">
+                      Total Assessment Points: <strong className="text-emerald-500">{totalPoints} pts</strong>
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-3 max-h-125 overflow-y-auto pr-1">
                   {isLoadingProblems ? (
-                    <p className="text-sm text-slate-400">Loading problem bank...</p>
+                    <p className="text-sm text-muted-foreground">Loading problem bank...</p>
                   ) : problems.length === 0 ? (
-                    <p className="text-sm text-slate-400">No problems found. Please create problems first.</p>
+                    <p className="text-sm text-muted-foreground">No problems found. Please create problems first.</p>
                   ) : (
                     problems.map(problem => {
                       const isSelected = selectedProblemIds.includes(problem.id);
@@ -281,25 +285,23 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
                           className={`flex items-center justify-between p-4 rounded-lg border transition-all cursor-pointer ${
                             isSelected
                               ? "border-emerald-500 bg-emerald-500/10"
-                              : "border-slate-800 bg-slate-950/60 hover:bg-slate-900"
+                              : "border-border bg-card hover:bg-muted/50"
                           }`}
                         >
                           <div className="space-y-1">
                             <div className="flex items-center space-x-2">
-                              <span className="text-sm font-semibold text-white">{problem.title}</span>
+                              <span className="text-sm font-semibold text-foreground">{problem.title}</span>
                               <DifficultyBadge difficulty={problem.difficulty} />
                               <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
                             </div>
-                            <p className="text-xs text-slate-400 line-clamp-1">{problem.description}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-1">{problem.description}</p>
                           </div>
 
                           <div className="flex items-center space-x-4">
-                            <span className="text-xs font-mono font-medium text-slate-300">{problem.points} pts</span>
+                            <span className="text-xs font-mono font-medium text-foreground">{problem.points} pts</span>
                             <div
                               className={`flex h-6 w-6 items-center justify-center rounded-md border ${
-                                isSelected
-                                  ? "bg-emerald-500 border-emerald-500 text-white"
-                                  : "border-slate-700 bg-slate-900"
+                                isSelected ? "bg-emerald-500 border-emerald-500 text-white" : "border-border bg-muted"
                               }`}
                             >
                               {isSelected && <Check className="h-4 w-4" />}
@@ -311,7 +313,7 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
                   )}
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-slate-800">
+                <div className="flex justify-between pt-4 border-t border-border">
                   <Button variant="outline" onClick={() => setStep(1)} className="gap-2">
                     <ChevronLeft className="h-4 w-4" />
                     <span>Back</span>
@@ -344,57 +346,61 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
             const totalPoints = selectedProblems.reduce((sum, p) => sum + p.points, 0);
 
             return (
-              <div className="space-y-6 rounded-xl border border-slate-800 bg-slate-900/60 p-6">
-                <h2 className="text-lg font-semibold text-white">Review Assessment</h2>
+              <div className="space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm">
+                <h2 className="text-lg font-semibold text-foreground">Review Assessment</h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 space-y-1">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Duration</span>
-                    <p className="text-lg font-bold text-white flex items-center space-x-1">
-                      <Clock className="h-4 w-4 text-emerald-400" />
+                  <div className="rounded-lg border border-border bg-muted/40 p-4 space-y-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Duration
+                    </span>
+                    <p className="text-lg font-bold text-foreground flex items-center space-x-1">
+                      <Clock className="h-4 w-4 text-emerald-500" />
                       <span>{values.durationMinutes} Minutes</span>
                     </p>
                   </div>
 
-                  <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 space-y-1">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  <div className="rounded-lg border border-border bg-muted/40 p-4 space-y-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Passing Cutoff
                     </span>
-                    <p className="text-lg font-bold text-white flex items-center space-x-1">
-                      <Award className="h-4 w-4 text-cyan-400" />
+                    <p className="text-lg font-bold text-foreground flex items-center space-x-1">
+                      <Award className="h-4 w-4 text-cyan-500" />
                       <span>{values.passingScore}%</span>
                     </p>
                   </div>
 
-                  <div className="rounded-lg border border-slate-800 bg-slate-950 p-4 space-y-1">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Value</span>
-                    <p className="text-lg font-bold text-emerald-400 font-mono">{totalPoints} Points</p>
+                  <div className="rounded-lg border border-border bg-muted/40 p-4 space-y-1">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      Total Value
+                    </span>
+                    <p className="text-lg font-bold text-emerald-500 font-mono">{totalPoints} Points</p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                     Selected Problems ({selectedProblems.length})
                   </h3>
                   <div className="space-y-2">
                     {selectedProblems.map((p, idx) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between p-3 rounded-lg border border-slate-800 bg-slate-950 text-xs"
+                        className="flex items-center justify-between p-3 rounded-lg border border-border bg-muted/40 text-xs"
                       >
                         <div className="flex items-center space-x-2">
-                          <span className="font-mono text-slate-500">#{idx + 1}</span>
-                          <span className="font-semibold text-white">{p.title}</span>
+                          <span className="font-mono text-muted-foreground">#{idx + 1}</span>
+                          <span className="font-semibold text-foreground">{p.title}</span>
                           <DifficultyBadge difficulty={p.difficulty} />
                           <ProblemTypeBadge type={p.type || p.problemType || "CODING"} />
                         </div>
-                        <span className="font-mono text-slate-300 font-bold">{p.points} pts</span>
+                        <span className="font-mono text-foreground font-bold">{p.points} pts</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-slate-800">
+                <div className="flex justify-between pt-4 border-t border-border">
                   <Button
                     variant="outline"
                     onClick={() => setStep(2)}

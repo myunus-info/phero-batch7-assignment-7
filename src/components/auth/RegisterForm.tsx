@@ -2,29 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useRegister, useGoogleOAuth } from "@/hooks/auth.hook";
+import { useRegister } from "@/hooks/auth.hook";
 import { registerSchema } from "@/validations";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { GoogleLogin } from "@react-oauth/google";
 import { Briefcase, Code2, Eye, EyeClosed } from "lucide-react";
-import { UserRole } from "@/types/auth.type";
-import GoogleLoginComponent from "./GoogleLogin";
+import GoogleLoginComponent from "@/components/auth/GoogleLogin";
 
 export function RegisterForm() {
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get("role")?.toUpperCase();
+  const initialRole: "CANDIDATE" | "RECRUITER" = roleParam === "RECRUITER" ? "RECRUITER" : "CANDIDATE";
+
   const [showPassword, setShowPassword] = useState(false);
   const registerMutation = useRegister();
-  const googleOAuthMutation = useGoogleOAuth();
 
   const form = useForm({
     defaultValues: {
       name: "",
       email: "",
       password: "",
-      role: "CANDIDATE" as UserRole,
+      role: initialRole,
       companyName: "",
     },
     validators: {
@@ -44,21 +46,21 @@ export function RegisterForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-white">Create an account</h1>
-        <p className="text-sm text-slate-400">Join DevJudge as a candidate or hiring team</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Create an account</h1>
+        <p className="text-sm text-muted-foreground">Join DevJudge as a candidate or hiring team</p>
       </div>
 
       {/* Role Picker Tabs */}
       <form.Subscribe selector={state => state.values.role}>
         {currentRole => (
-          <div className="grid grid-cols-2 gap-3 p-1 rounded-xl bg-slate-900 border border-slate-800">
+          <div className="grid grid-cols-2 gap-3 p-1 rounded-xl bg-muted border border-border">
             <button
               type="button"
               onClick={() => form.setFieldValue("role", "CANDIDATE")}
               className={`flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                 currentRole === "CANDIDATE"
                   ? "bg-emerald-500 text-white shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Code2 className="h-4 w-4" />
@@ -68,7 +70,9 @@ export function RegisterForm() {
               type="button"
               onClick={() => form.setFieldValue("role", "RECRUITER")}
               className={`flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                currentRole === "RECRUITER" ? "bg-cyan-500 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"
+                currentRole === "RECRUITER"
+                  ? "bg-cyan-500 text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Briefcase className="h-4 w-4" />
@@ -93,7 +97,9 @@ export function RegisterForm() {
 
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Full Name</FieldLabel>
+                  <FieldLabel htmlFor={field.name} required>
+                    Full Name
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -118,7 +124,9 @@ export function RegisterForm() {
 
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                  <FieldLabel htmlFor={field.name} required>
+                    Email
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -174,7 +182,9 @@ export function RegisterForm() {
 
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                  <FieldLabel htmlFor={field.name} required>
+                    Password
+                  </FieldLabel>
                   <div className="relative">
                     <Input
                       id={field.name}
@@ -190,7 +200,7 @@ export function RegisterForm() {
                       disabled={registerMutation.isPending}
                     />
                     <button
-                      className="absolute top-1/2 -translate-y-1/2 right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                      className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
                       type="button"
                       onClick={() => setShowPassword(prev => !prev)}
                     >
@@ -225,31 +235,19 @@ export function RegisterForm() {
         </FieldGroup>
       </form>
 
-      {/* Google OAuth Login */}
-      {/* <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-slate-800" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-[#090d16] px-2 text-slate-500 font-medium">Or </span>
-        </div>
-      </div>
-
-      <GoogleLoginComponent /> */}
-
       {/* Google OAuth Signup */}
       <form.Subscribe selector={state => state.values.role}>
         {currentRole => (
           <div className="flex flex-col items-center justify-center pt-2 space-y-3">
-            <div className="relative w-full flex items-center justify-center mb-5">
+            <div className="relative w-full flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-800" />
+                <div className="w-full border-t border-border" />
               </div>
-              <div className="relative px-3 bg-[#090d16] text-xs text-slate-400">
+              <div className="relative px-3 bg-background text-xs text-muted-foreground">
                 Or sign up with Google as{" "}
                 <span
                   className={
-                    currentRole === "RECRUITER" ? "text-cyan-400 font-semibold" : "text-emerald-400 font-semibold"
+                    currentRole === "RECRUITER" ? "text-cyan-500 font-semibold" : "text-emerald-500 font-semibold"
                   }
                 >
                   {currentRole === "RECRUITER" ? "Recruiter" : "Candidate"}
@@ -262,9 +260,9 @@ export function RegisterForm() {
         )}
       </form.Subscribe>
 
-      <div className="text-center text-sm text-slate-400">
+      <div className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-emerald-400 hover:underline">
+        <Link href="/login" className="font-medium text-emerald-500 hover:underline">
           Sign in
         </Link>
       </div>

@@ -13,21 +13,21 @@ export default function CandidateProfilePage() {
     <RoleGuard allowedRoles={["CANDIDATE"]}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <UserCheck className="h-6 w-6 text-emerald-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <UserCheck className="h-6 w-6 text-emerald-500" />
             <span>Candidate Profile & Skills</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Keep your skills, bio, and portfolio links updated for prospective hiring teams.
           </p>
         </div>
 
         {isLoading ? (
-          <div className="py-16 text-center text-slate-500">Loading profile information...</div>
+          <div className="py-16 text-center text-muted-foreground">Loading profile information...</div>
         ) : user ? (
           <ProfileSettingsForm user={user} />
         ) : (
-          <div className="py-16 text-center text-slate-400">Failed to load user profile.</div>
+          <div className="py-16 text-center text-muted-foreground">Failed to load user profile.</div>
         )}
       </div>
     </RoleGuard>

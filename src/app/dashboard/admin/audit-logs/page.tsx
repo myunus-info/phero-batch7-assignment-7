@@ -22,11 +22,11 @@ export default function AdminAuditLogsPage() {
     <RoleGuard allowedRoles={["ADMIN"]}>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center space-x-2">
-            <ShieldAlert className="h-6 w-6 text-red-400" />
+          <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center space-x-2">
+            <ShieldAlert className="h-6 w-6 text-red-500" />
             <span>System Audit Logs</span>
           </h1>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground">
             Immutable record of security events, administrative role updates, and transactions.
           </p>
         </div>
@@ -44,32 +44,34 @@ export default function AdminAuditLogsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   Loading audit logs...
                 </TableCell>
               </TableRow>
             ) : logs.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                   No audit logs recorded yet.
                 </TableCell>
               </TableRow>
             ) : (
               logs.map(log => (
                 <TableRow key={log.id}>
-                  <TableCell className="font-mono text-xs text-slate-400">{formatDate(log.createdAt)}</TableCell>
-                  <TableCell className="text-xs font-semibold text-slate-200">
+                  <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(log.createdAt)}</TableCell>
+                  <TableCell className="text-xs font-semibold text-foreground">
                     {log.user ? `${log.user.name} (${log.user.email})` : "System / Anonymous"}
                   </TableCell>
                   <TableCell>
-                    <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-200 font-mono text-xs font-medium">
+                    <span className="px-2 py-0.5 rounded bg-muted text-foreground border border-border font-mono text-xs font-medium">
                       {log.action}
                     </span>
                   </TableCell>
-                  <TableCell className="text-xs text-slate-300 max-w-xs truncate">
+                  <TableCell className="text-xs text-foreground/90 max-w-xs truncate">
                     {typeof log.details === "object" ? JSON.stringify(log.details) : String(log.details || "-")}
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-slate-500">{log.ipAddress || "127.0.0.1"}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {log.ipAddress || "127.0.0.1"}
+                  </TableCell>
                 </TableRow>
               ))
             )}

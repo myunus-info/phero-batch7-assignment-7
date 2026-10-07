@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { toast } from "sonner";
 import { useGetMe, useLogout } from "@/hooks";
 import { UserRole } from "@/types";
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -12,7 +14,7 @@ import { cn } from "@/lib/utils";
 export default function Header() {
   const pathname = usePathname();
 
-  const publicRoutes = [
+  const routes = [
     { name: "Home", url: "/" },
     { name: "Problems", url: "/problems" },
     { name: "Pricing", url: "/pricing" },
@@ -35,17 +37,17 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-md transition-colors duration-200">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center space-x-2">
           <Logo className="h-8 w-auto" />
-          <span className="font-mono text-xl font-bold tracking-tight text-white">
-            Dev<span className="text-emerald-400">Judge</span>
+          <span className="font-mono text-xl font-bold tracking-tight text-foreground">
+            Dev<span className="text-emerald-500">Judge</span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
-          {publicRoutes.map(route => {
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-muted-foreground">
+          {routes.map(route => {
             const itemPath = route.url || "#";
             const itemName = route.name || "Item";
 
@@ -63,10 +65,10 @@ export default function Header() {
                 key={route.url}
                 href={route.url}
                 className={cn(
-                  "transition-colors hover:text-emerald-400",
+                  "transition-colors hover:text-emerald-500",
                   isActive
-                    ? "bg-emerald-500/10 text-emerald-400"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900",
+                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted",
                 )}
               >
                 {itemName}
@@ -85,7 +87,9 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-3">
-          {isLoading && <div className="h-9 w-20 animate-pulse rounded-md bg-slate-800" />}
+          <ThemeToggle />
+
+          {isLoading && <div className="h-9 w-20 animate-pulse rounded-md bg-muted" />}
 
           {!isLoading && !data && (
             <div className="flex items-center space-x-2">

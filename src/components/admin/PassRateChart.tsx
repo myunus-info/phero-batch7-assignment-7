@@ -14,10 +14,10 @@ export function PassRateChart({ passCount = 76, failCount = 24 }: PassRateChartP
   ];
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 space-y-4">
+    <div className="rounded-xl border border-border bg-card p-6 space-y-4 shadow-sm transition-colors duration-200">
       <div>
-        <h3 className="text-base font-semibold text-white">Assessment Outcomes</h3>
-        <p className="text-xs text-slate-400">Proportion of candidates passing benchmark cutoffs</p>
+        <h3 className="text-base font-semibold text-foreground">Assessment Outcomes</h3>
+        <p className="text-xs text-muted-foreground">Proportion of candidates passing benchmark cutoffs</p>
       </div>
 
       <div className="h-64 w-full flex items-center justify-center">
@@ -40,7 +40,7 @@ export function PassRateChart({ passCount = 76, failCount = 24 }: PassRateChartP
             <Legend
               verticalAlign="bottom"
               height={36}
-              formatter={value => <span className="text-xs text-slate-300">{value}</span>}
+              formatter={value => <span className="text-xs text-foreground">{value}</span>}
             />
           </PieChart>
         </ResponsiveContainer>

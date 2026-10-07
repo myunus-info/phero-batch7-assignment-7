@@ -1,9 +1,9 @@
 "use client";
 
+import { useCreateCheckoutSession } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Check, Coins } from "lucide-react";
-import { CreditPlanKey } from "@/types/payment.type";
-import { useCreateCheckoutSession } from "@/hooks";
+import { CreditPlanKey } from "@/types";
 
 interface PlanConfig {
   key: CreditPlanKey;
@@ -70,43 +70,45 @@ export function CreditPlans() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {CREDIT_PLANS.map((plan) => (
+      {CREDIT_PLANS.map(plan => (
         <div
           key={plan.key}
-          className={`relative flex flex-col justify-between rounded-2xl border p-6 transition-all ${
+          className={`relative flex flex-col justify-between rounded-2xl border p-6 transition-all duration-200 ${
             plan.popular
-              ? "border-emerald-500 bg-slate-900/90 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500"
-              : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
+              ? "border-emerald-500 bg-card shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500"
+              : "border-border bg-card hover:border-emerald-500/40 shadow-sm"
           }`}
         >
           {plan.popular && (
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-black">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-500 px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">
               Most Popular
             </div>
           )}
 
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-bold text-white">{plan.name}</h3>
-              <p className="text-xs text-slate-400 mt-1">{plan.description}</p>
+              <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
+              <p className="text-xs text-muted-foreground mt-1">{plan.description}</p>
             </div>
 
             <div className="flex items-baseline space-x-1">
-              <span className="text-3xl font-extrabold text-white">{plan.price}</span>
-              <span className="text-xs text-slate-400 font-mono">/ one-time</span>
+              <span className="text-3xl font-extrabold text-foreground">{plan.price}</span>
+              <span className="text-xs text-muted-foreground font-mono">/ one-time</span>
             </div>
 
-            <div className="flex items-center space-x-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 text-xs font-semibold text-emerald-400">
+            <div className="flex items-center space-x-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
               <Coins className="h-4 w-4" />
               <span>{plan.credits} Assessment Credits included</span>
             </div>
 
             <div className="space-y-2 pt-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">What&apos;s included:</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                What&apos;s included:
+              </p>
               <ul className="space-y-2">
                 {plan.features.map((feat, i) => (
-                  <li key={i} className="flex items-center space-x-2 text-xs text-slate-300">
-                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                  <li key={i} className="flex items-center space-x-2 text-xs text-foreground">
+                    <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                     <span>{feat}</span>
                   </li>
                 ))}
@@ -114,7 +116,7 @@ export function CreditPlans() {
             </div>
           </div>
 
-          <div className="pt-6 mt-6 border-t border-slate-800">
+          <div className="pt-6 mt-6 border-t border-border">
             <Button
               variant={plan.popular ? "emerald" : "outline"}
               className="w-full"

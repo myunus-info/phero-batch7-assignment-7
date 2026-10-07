@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Sheet } from "@/components/ui/sheet";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
+import { Sheet } from "@/components/ui/sheet";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#090d16]">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground transition-colors duration-200">
       {/* Desktop Sidebar */}
       <div className="hidden md:flex md:shrink-0">
         <DashboardSidebar />

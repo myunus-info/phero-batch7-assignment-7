@@ -9,7 +9,7 @@ import { FormField } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { RoleBadge } from "@/components/ui/status-badge";
 import { getInitials } from "@/lib/utils";
-import { User, Mail, Building, Globe, Briefcase, Sparkles, Plus, X, Save } from "lucide-react";
+import { User, Mail, Building, Globe, Briefcase, Plus, X, Save, Code } from "lucide-react";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -106,7 +106,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">
       {/* Account Overview Header Card */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 rounded-2xl border border-slate-800 bg-slate-900/40 gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 rounded-2xl border border-border bg-card shadow-sm gap-4">
         <div className="flex items-center space-x-4">
           <div className="relative">
             {avatar ? (
@@ -114,10 +114,10 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
               <img
                 src={avatar}
                 alt={name}
-                className="h-16 w-16 rounded-full object-cover border-2 border-slate-700 bg-slate-800"
+                className="h-16 w-16 rounded-full object-cover border-2 border-border bg-muted"
               />
             ) : (
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-800 border-2 border-slate-700 text-lg font-bold text-slate-200">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted border-2 border-border text-lg font-bold text-foreground">
                 {getInitials(name || "U")}
               </div>
             )}
@@ -125,39 +125,43 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold text-white">{name || "User"}</h2>
+              <h2 className="text-xl font-bold text-foreground">{name || "User"}</h2>
               <RoleBadge role={user.role} />
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">{user.email}</p>
-            {isCandidate && headline && <p className="text-xs text-emerald-400 font-medium mt-1">{headline}</p>}
-            {isRecruiter && companyName && <p className="text-xs text-cyan-400 font-medium mt-1">{companyName}</p>}
+            <p className="text-xs text-muted-foreground mt-0.5">{user.email}</p>
+            {isCandidate && headline && (
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium mt-1">{headline}</p>
+            )}
+            {isRecruiter && companyName && (
+              <p className="text-xs text-cyan-600 dark:text-cyan-400 font-medium mt-1">{companyName}</p>
+            )}
           </div>
         </div>
 
         {isRecruiter && user.recruiterProfile && (
           <div className="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-right">
-            <span className="text-[11px] uppercase tracking-wider text-slate-400 block font-semibold">
+            <span className="text-[11px] uppercase tracking-wider text-muted-foreground block font-semibold">
               Available Credits
             </span>
-            <span className="text-xl font-black text-cyan-400">{user.recruiterProfile.credits}</span>
+            <span className="text-xl font-black text-cyan-600 dark:text-cyan-400">{user.recruiterProfile.credits}</span>
           </div>
         )}
       </div>
 
       {/* Basic Profile Details */}
-      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-5">
+      <div className="rounded-2xl border border-border bg-card shadow-sm p-6 space-y-5">
         <div>
-          <h3 className="text-base font-semibold text-white flex items-center gap-2">
-            <User className="h-4 w-4 text-emerald-400" />
+          <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+            <User className="h-4 w-4 text-emerald-500" />
             <span>Basic Information</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">Manage your personal profile information.</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Manage your personal profile information.</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Full Name" required>
             <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 value={name}
                 onChange={e => setName(e.target.value)}
@@ -170,8 +174,8 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
           <FormField label="Email Address">
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
-              <Input value={user.email} disabled className="pl-9 bg-slate-950/60 text-slate-400 cursor-not-allowed" />
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input value={user.email} disabled className="pl-9 bg-muted text-muted-foreground cursor-not-allowed" />
             </div>
           </FormField>
         </div>
@@ -187,13 +191,15 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
       {/* Candidate Profile Section */}
       {isCandidate && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-5">
+        <div className="rounded-2xl border border-border bg-card shadow-sm p-6 space-y-5">
           <div>
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-              <Briefcase className="h-4 w-4 text-emerald-400" />
+            <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Briefcase className="h-4 w-4 text-emerald-500" />
               <span>Professional Details</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">Highlight your role, social handles, and technical skills.</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Highlight your role, social handles, and technical skills.
+            </p>
           </div>
 
           <FormField
@@ -210,7 +216,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="GitHub Profile">
               <div className="relative">
-                <GithubIcon className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                <GithubIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={githubUrl}
                   onChange={e => setGithubUrl(e.target.value)}
@@ -222,7 +228,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
             <FormField label="LinkedIn Profile">
               <div className="relative">
-                <LinkedinIcon className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                <LinkedinIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={linkedinUrl}
                   onChange={e => setLinkedinUrl(e.target.value)}
@@ -235,8 +241,8 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
           {/* Technical Skills */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-200 flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-emerald-400" />
+            <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
+              <Code className="h-4 w-4 text-emerald-500" />
               <span>Technical Skills</span>
             </label>
 
@@ -259,18 +265,18 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
             <div className="flex flex-wrap gap-2 pt-2">
               {skills.length === 0 ? (
-                <p className="text-xs text-slate-500">No skills added yet.</p>
+                <p className="text-xs text-muted-foreground">No skills added yet.</p>
               ) : (
                 skills.map(skill => (
                   <span
                     key={skill}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-300"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-300"
                   >
                     <span>{skill}</span>
                     <button
                       type="button"
                       onClick={() => handleRemoveSkill(skill)}
-                      className="text-emerald-400 hover:text-red-400 transition-colors"
+                      className="text-emerald-600 dark:text-emerald-400 hover:text-red-500 transition-colors"
                       aria-label={`Remove ${skill}`}
                     >
                       <X className="h-3 w-3" />
@@ -285,13 +291,13 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
       {/* Recruiter Profile Section */}
       {isRecruiter && (
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6 space-y-5">
+        <div className="rounded-2xl border border-border bg-card shadow-sm p-6 space-y-5">
           <div>
-            <h3 className="text-base font-semibold text-white flex items-center gap-2">
-              <Building className="h-4 w-4 text-cyan-400" />
+            <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <Building className="h-4 w-4 text-cyan-500" />
               <span>Company Information</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               Information displayed to candidates when taking your assessments.
             </p>
           </div>
@@ -299,7 +305,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Company Name" required>
               <div className="relative">
-                <Building className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={companyName}
                   onChange={e => setCompanyName(e.target.value)}
@@ -312,7 +318,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
 
             <FormField label="Company Website">
               <div className="relative">
-                <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                <Globe className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   value={companyWebsite}
                   onChange={e => setCompanyWebsite(e.target.value)}
