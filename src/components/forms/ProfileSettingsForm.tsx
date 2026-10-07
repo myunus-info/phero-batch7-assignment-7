@@ -9,7 +9,7 @@ import { FormField } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { RoleBadge } from "@/components/ui/status-badge";
 import { getInitials } from "@/lib/utils";
-import { User, Mail, Building, Globe, Briefcase, Code, Plus, X, Save } from "lucide-react";
+import { User, Mail, Building, Globe, Briefcase, Sparkles, Plus, X, Save } from "lucide-react";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -110,6 +110,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
         <div className="flex items-center space-x-4">
           <div className="relative">
             {avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatar}
                 alt={name}
@@ -235,7 +236,7 @@ export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
           {/* Technical Skills */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-200 flex items-center gap-1.5">
-              <Code className="h-4 w-4 text-emerald-400" />
+              <Sparkles className="h-4 w-4 text-emerald-400" />
               <span>Technical Skills</span>
             </label>
 

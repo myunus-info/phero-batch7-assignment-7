@@ -2,21 +2,41 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetAssessmentById } from "@/hooks/assessment.hook";
+import { useGetAssessmentById, useDeleteAssessment } from "@/hooks";
 import { InviteCandidateModal } from "@/components/forms/InviteCandidateModal";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
 import { StatusBadge, CandidateStatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
-import { ArrowLeft, UserPlus, Clock, Award, CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, UserPlus, Clock, Award, CheckCircle2, XCircle, Edit3, Trash2 } from "lucide-react";
 
 export default function AssessmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
+  const router = useRouter();
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const { data: assessmentData, isLoading } = useGetAssessmentById(resolvedParams.id);
+  const deleteMutation = useDeleteAssessment();
   const assessment = assessmentData?.data;
+
+  const handleDelete = () => {
+    if (!assessment) return;
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!assessment) return;
+    deleteMutation.mutate(assessment.id, {
+      onSuccess: () => {
+        setDeleteModalOpen(false);
+        router.push("/dashboard/recruiter/assessments");
+      },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -41,10 +61,13 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
     );
   }
 
-  const candidateAssessments = assessment.candidateAssessments || [];
+  const candidateAssessments = assessment.candidates || assessment.candidateAssessments || [];
+  const passingScore = assessment.passingMarks ?? assessment.passingScore ?? 60;
+  const totalMarks = assessment.totalMarks ?? 100;
+
   const completedCandidates = candidateAssessments.filter(c => c.status === "COMPLETED");
   const passedCandidates = completedCandidates.filter(
-    c => c.score !== undefined && c.score !== null && c.score >= assessment.passingScore,
+    c => c.isPassed ?? (c.totalScore ?? c.score ?? 0) >= passingScore,
   );
 
   return (
@@ -67,10 +90,28 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
               <p className="text-sm text-slate-400 mt-1 max-w-2xl">{assessment.description}</p>
             </div>
 
-            <Button variant="cyan" size="sm" onClick={() => setInviteModalOpen(true)} className="gap-2 shrink-0">
-              <UserPlus className="h-4 w-4" />
-              <span>Invite Candidate</span>
-            </Button>
+            <div className="flex items-center space-x-2 shrink-0">
+              <Link href={`/dashboard/recruiter/assessments/${assessment.id}/edit`}>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Edit3 className="h-4 w-4" />
+                  <span>Edit Assessment</span>
+                </Button>
+              </Link>
+              <Button variant="cyan" size="sm" onClick={() => setInviteModalOpen(true)} className="gap-2">
+                <UserPlus className="h-4 w-4" />
+                <span>Invite Candidate</span>
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDelete}
+                disabled={deleteMutation.isPending}
+                className="gap-2"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Delete</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -88,7 +129,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <span className="text-xs font-semibold uppercase text-slate-400">Passing Cutoff</span>
             <p className="text-xl font-bold text-white flex items-center space-x-1">
               <Award className="h-4 w-4 text-cyan-400" />
-              <span>{assessment.passingScore}%</span>
+              <span>{passingScore} pts</span>
             </p>
           </div>
 
@@ -129,22 +170,33 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                 </TableRow>
               ) : (
                 candidateAssessments.map(ca => {
-                  const isPassed = ca.score !== undefined && ca.score !== null && ca.score >= assessment.passingScore;
+                  const candidateScore = ca.totalScore ?? ca.score;
+                  const isPassed =
+                    ca.isPassed ??
+                    (candidateScore !== undefined && candidateScore !== null && candidateScore >= passingScore);
+                  const candidateName = ca.candidate?.name || ca.candidateEmail || "Invited Candidate";
+                  const candidateEmail = ca.candidateEmail || ca.candidate?.email || "—";
+                  const completedDate = ca.submittedAt || ca.completedAt;
 
                   return (
                     <TableRow key={ca.id}>
                       <TableCell>
-                        <p className="font-semibold text-white">
-                          {ca.candidate?.name || ca.candidate?.email || "Invited Candidate"}
-                        </p>
-                        <p className="text-xs text-slate-400">{ca.candidate?.email}</p>
+                        <p className="font-semibold text-white">{candidateName}</p>
+                        <p className="text-xs text-slate-400">{candidateEmail}</p>
                       </TableCell>
                       <TableCell>
                         <CandidateStatusBadge status={ca.status} />
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {ca.score !== undefined && ca.score !== null ? (
-                          <span className="font-bold text-white">{ca.score}%</span>
+                        {candidateScore !== undefined && candidateScore !== null ? (
+                          <div>
+                            <span className="font-bold text-white">
+                              {candidateScore} / {totalMarks} pts
+                            </span>
+                            <span className="text-slate-400 text-[11px] block">
+                              {Math.round((candidateScore / totalMarks) * 100)}%
+                            </span>
+                          </div>
                         ) : (
                           <span className="text-slate-500">—</span>
                         )}
@@ -163,14 +215,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
                             </span>
                           )
                         ) : (
-                          <span className="text-xs text-slate-500">In Progress</span>
+                          <span className="text-xs text-slate-500">
+                            {ca.status === "IN_PROGRESS" ? "In Progress" : "Invited"}
+                          </span>
                         )}
                       </TableCell>
                       <TableCell className="font-mono text-xs text-slate-400">
                         {ca.startedAt ? formatDate(ca.startedAt) : "Not started"}
                       </TableCell>
                       <TableCell className="font-mono text-xs text-slate-400">
-                        {ca.completedAt ? formatDate(ca.completedAt) : "—"}
+                        {completedDate ? formatDate(completedDate) : "—"}
                       </TableCell>
                     </TableRow>
                   );
@@ -186,6 +240,16 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
           onOpenChange={setInviteModalOpen}
           assessmentId={assessment.id}
           assessmentTitle={assessment.title}
+        />
+
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmationModal
+          open={deleteModalOpen}
+          onOpenChange={setDeleteModalOpen}
+          itemType="assessment"
+          itemName={assessment?.title}
+          isLoading={deleteMutation.isPending}
+          onConfirm={handleConfirmDelete}
         />
       </div>
     </RoleGuard>

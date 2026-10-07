@@ -22,7 +22,7 @@ interface ProblemFormProps {
 export function ProblemForm({
   initialProblem,
   mode = "create",
-  redirectPath = "/recruiter/problems",
+  redirectPath = "/dashboard/recruiter/problems",
 }: ProblemFormProps) {
   const router = useRouter();
   const createProblemMutation = useCreateProblem();

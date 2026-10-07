@@ -1,0 +1,42 @@
+"use client";
+
+import { use } from "react";
+import Link from "next/link";
+import { RoleGuard } from "@/components/auth/RoleGuard";
+import { AssessmentWizard } from "@/components/forms/AssessmentWizard";
+import { useGetAssessmentById } from "@/hooks";
+import { ArrowLeft } from "lucide-react";
+
+export default function EditAssessmentPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
+  const { data: assessmentData, isLoading } = useGetAssessmentById(resolvedParams.id);
+  const assessment = assessmentData?.data;
+
+  return (
+    <RoleGuard allowedRoles={["RECRUITER"]}>
+      <div className="space-y-6">
+        <div>
+          <Link
+            href={`/dashboard/recruiter/assessments/${resolvedParams.id}`}
+            className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to Assessment</span>
+          </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Edit Assessment Campaign</h1>
+          <p className="text-sm text-slate-400">
+            Update test configuration, problem set, and candidate passing benchmarks.
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="py-16 text-center text-slate-500">Loading assessment details...</div>
+        ) : assessment ? (
+          <AssessmentWizard initialData={assessment} isEditing={true} />
+        ) : (
+          <div className="py-16 text-center text-slate-400">Assessment not found.</div>
+        )}
+      </div>
+    </RoleGuard>
+  );
+}

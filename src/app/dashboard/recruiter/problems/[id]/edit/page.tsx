@@ -3,7 +3,7 @@
 import { use } from "react";
 import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetProblemById } from "@/hooks/problem.hook";
+import { useGetProblemById } from "@/hooks";
 import { ProblemForm } from "@/components/forms/ProblemForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit3 } from "lucide-react";

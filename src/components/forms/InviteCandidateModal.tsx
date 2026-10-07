@@ -1,14 +1,16 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useInviteCandidate } from "@/hooks/assessment.hook";
+import Link from "next/link";
+import { useInviteCandidate } from "@/hooks";
+import { useGetMe } from "@/hooks/auth.hook";
 import { inviteCandidateSchema } from "@/validations";
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { Mail, Calendar, Coins } from "lucide-react";
+import { Mail, Calendar, Coins, AlertCircle } from "lucide-react";
 
 interface InviteCandidateModalProps {
   assessmentId: string;
@@ -18,6 +20,9 @@ interface InviteCandidateModalProps {
 }
 
 export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOpenChange }: InviteCandidateModalProps) {
+  const { data: user } = useGetMe();
+  const credits = user?.recruiterProfile?.credits ?? 0;
+  const hasCredits = credits > 0;
   const inviteMutation = useInviteCandidate();
 
   const form = useForm({
@@ -65,10 +70,38 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
         </DialogHeader>
 
         <div className="my-4">
-          <div className="flex items-center space-x-2 p-3 mb-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300">
-            <Coins className="h-4 w-4 shrink-0" />
-            <span>Inviting a candidate consumes 1 Recruiter credit.</span>
-          </div>
+          {hasCredits ? (
+            <div className="flex items-center justify-between p-3 mb-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-300">
+              <div className="flex items-center space-x-2">
+                <Coins className="h-4 w-4 shrink-0 text-cyan-400" />
+                <span>
+                  Available Credits: <strong className="text-white">{credits}</strong> (1 credit deducted per invite)
+                </span>
+              </div>
+              <Link
+                href="/dashboard/recruiter/billing"
+                className="underline text-[11px] text-cyan-200 hover:text-white"
+                onClick={() => onOpenChange(false)}
+              >
+                Buy More
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-start space-x-2 p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-300">
+              <AlertCircle className="h-4 w-4 shrink-0 text-red-400 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-semibold text-white">0 Assessment Credits Available</p>
+                <p className="mt-0.5 text-slate-300">You need at least 1 credit to invite candidates.</p>
+                <Link
+                  href="/dashboard/recruiter/billing"
+                  className="inline-block mt-2 font-semibold text-cyan-400 underline hover:text-cyan-300"
+                  onClick={() => onOpenChange(false)}
+                >
+                  Purchase Credits in Billing &rarr;
+                </Link>
+              </div>
+            </div>
+          )}
 
           <FieldGroup>
             <form.Field name="candidateEmail">
@@ -77,7 +110,9 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
 
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Candidate Email</FieldLabel>
+                    <FieldLabel htmlFor={field.name} required>
+                      Candidate Email
+                    </FieldLabel>
                     <div className="relative">
                       <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
                       <Input
@@ -90,7 +125,8 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
                         className="pl-9"
-                        disabled={inviteMutation.isPending}
+                        disabled={inviteMutation.isPending || !hasCredits}
+                        required
                       />
                     </div>
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -117,7 +153,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
                         className="pl-9"
-                        disabled={inviteMutation.isPending}
+                        disabled={inviteMutation.isPending || !hasCredits}
                       />
                     </div>
                     <FieldDescription>Assessment will expire after this date if not completed.</FieldDescription>
@@ -141,13 +177,15 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
           <Button
             type="submit"
             variant="cyan"
-            disabled={inviteMutation.isPending}
+            disabled={inviteMutation.isPending || !hasCredits}
             className="disabled:cursor-not-allowed disabled:pointer-events-auto"
           >
             {inviteMutation.isPending ? (
               <>
                 <Spinner size="sm" /> Sending...
               </>
+            ) : !hasCredits ? (
+              "Insufficient Credits"
             ) : (
               "Send Invitation"
             )}

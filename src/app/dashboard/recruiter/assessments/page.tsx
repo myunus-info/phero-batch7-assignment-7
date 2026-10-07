@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { Plus, UserPlus, Trash2, Search, ExternalLink } from "lucide-react";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
+import { Plus, UserPlus, Trash2, Search, ExternalLink, Edit3 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
 function RecruiterAssessmentsContent() {
@@ -42,12 +43,10 @@ function RecruiterAssessmentsContent() {
   });
 
   const deleteMutation = useDeleteAssessment();
-
-  const handleDelete = (id: string, title: string) => {
-    if (confirm(`Are you sure you want to delete assessment "${title}"?`)) {
-      deleteMutation.mutate(id);
-    }
-  };
+  const [assessmentToDelete, setAssessmentToDelete] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const assessments = assessmentsData?.data || [];
   const meta = assessmentsData?.meta || { total: 0, page: 1, limit: 10 };
@@ -141,6 +140,16 @@ function RecruiterAssessmentsContent() {
                         <UserPlus className="h-3.5 w-3.5" />
                         <span>Invite</span>
                       </Button>
+                      <Link href={`/dashboard/recruiter/assessments/${a.id}/edit`}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+                          title="Edit assessment"
+                        >
+                          <Edit3 className="h-3.5 w-3.5" />
+                        </Button>
+                      </Link>
                       <Link href={`/dashboard/recruiter/assessments/${a.id}`}>
                         <Button
                           variant="ghost"
@@ -154,7 +163,12 @@ function RecruiterAssessmentsContent() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDelete(a.id, a.title)}
+                        onClick={() =>
+                          setAssessmentToDelete({
+                            id: a.id,
+                            title: a.title,
+                          })
+                        }
                         disabled={deleteMutation.isPending}
                         className="h-8 w-8 p-0 text-slate-400 hover:text-red-400"
                         title="Delete assessment"
@@ -180,6 +194,25 @@ function RecruiterAssessmentsContent() {
             assessmentTitle={inviteModalData.title}
           />
         )}
+
+        <DeleteConfirmationModal
+          open={!!assessmentToDelete}
+          onOpenChange={open => {
+            if (!open) setAssessmentToDelete(null);
+          }}
+          itemType="assessment"
+          itemName={assessmentToDelete?.title}
+          isLoading={deleteMutation.isPending}
+          onConfirm={() => {
+            if (assessmentToDelete) {
+              deleteMutation.mutate(assessmentToDelete.id, {
+                onSuccess: () => {
+                  setAssessmentToDelete(null);
+                },
+              });
+            }
+          }}
+        />
       </div>
     </RoleGuard>
   );

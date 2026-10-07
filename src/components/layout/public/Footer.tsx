@@ -14,8 +14,8 @@ export function PublicFooter() {
               </span>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Automated code judge & technical interview platform. Real-time code execution, MCQ testing, and
-              proctoring analytics.
+              Automated code judge & technical interview platform. Real-time code execution, MCQ testing, and proctoring
+              analytics.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export function PublicFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/recruiter" className="hover:text-emerald-400 transition-colors">
+                <Link href="/dashboard/recruiter" className="hover:text-emerald-400 transition-colors">
                   Recruiter Suite
                 </Link>
               </li>

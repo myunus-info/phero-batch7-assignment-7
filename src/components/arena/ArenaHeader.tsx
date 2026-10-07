@@ -3,13 +3,14 @@
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
 import { Clock, Send, AlertTriangle } from "lucide-react";
-import { useCountdown } from "@/hooks/countdown.hook";
+import { useCountdown } from "@/hooks";
 
 interface ArenaHeaderProps {
   assessmentTitle: string;
   totalProblems: number;
   completedProblems: number;
   durationMinutes: number;
+  startedAt?: string | null;
   onFinish: () => void;
   onAutoSubmit?: () => void;
   isSubmitting?: boolean;
@@ -20,6 +21,7 @@ export function ArenaHeader({
   totalProblems,
   completedProblems,
   durationMinutes,
+  startedAt,
   onFinish,
   onAutoSubmit,
   isSubmitting,
@@ -28,6 +30,7 @@ export function ArenaHeader({
   const totalSeconds = durationMinutes * 60;
   const { formattedTime, isExpired, secondsLeft } = useCountdown({
     initialSeconds: totalSeconds,
+    startedAt,
     onExpire: onAutoSubmit,
   });
 

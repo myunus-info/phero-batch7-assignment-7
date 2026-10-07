@@ -1,5 +1,5 @@
 import { SidebarItems } from "@/types";
-import { LayoutDashboard, FileCode2, ClipboardList, CreditCard, BriefcaseBusiness } from "lucide-react";
+import { LayoutDashboard, FileCode2, ClipboardList, CreditCard, Building2 } from "lucide-react";
 
 export const recruiterRoutes: SidebarItems = [
   {
@@ -21,14 +21,14 @@ export const recruiterRoutes: SidebarItems = [
         icon: ClipboardList,
       },
       {
+        title: "Company Profile",
+        url: "/dashboard/recruiter/profile",
+        icon: Building2,
+      },
+      {
         title: "Credits & Billing",
         url: "/dashboard/recruiter/billing",
         icon: CreditCard,
-      },
-      {
-        title: "Company Profile",
-        url: "/dashboard/recruiter/profile",
-        icon: BriefcaseBusiness,
       },
     ],
   },

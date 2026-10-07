@@ -4,7 +4,7 @@ import { use, useState, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useStartAssessmentAttempt, useSubmitProblemSolution, useFinishAssessment } from "@/hooks/attempt.hook";
+import { useStartAssessmentAttempt, useSubmitProblemSolution, useFinishAssessment } from "@/hooks";
 import { ArenaHeader } from "@/components/arena/ArenaHeader";
 import { ProblemStatement } from "@/components/arena/ProblemStatement";
 import { CodeEditor } from "@/components/arena/CodeEditor";
@@ -230,6 +230,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
           totalProblems={problems.length}
           completedProblems={answeredProblems.size}
           durationMinutes={attemptData.durationMinutes || attemptData.assessment?.durationMinutes || 60}
+          startedAt={attemptData.startedAt}
           onFinish={() => setFinishDialogOpen(true)}
           onAutoSubmit={handleFinishAssessment}
           isSubmitting={finishAssessmentMutation.isPending}

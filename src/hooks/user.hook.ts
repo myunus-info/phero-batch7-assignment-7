@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getMyProfile, updateMyProfile } from "@/api/user.api";
+import { getMyProfile, updateMyProfile } from "@/api";
 import { IUpdateProfilePayload } from "@/types";
 
 export function useGetMyProfile() {

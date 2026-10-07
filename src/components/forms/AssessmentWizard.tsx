@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
 import { useGetAllProblems } from "@/hooks/problem.hook";
-import { useCreateAssessment } from "@/hooks/assessment.hook";
+import { useCreateAssessment, useUpdateAssessment } from "@/hooks";
 import { assessmentWizardFormSchema } from "@/validations";
+import { IAssessment } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,7 +15,12 @@ import { Spinner } from "@/components/ui/spinner";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Check, ChevronRight, ChevronLeft, CheckCircle2, Clock, Award } from "lucide-react";
 
-export function AssessmentWizard() {
+interface AssessmentWizardProps {
+  initialData?: IAssessment;
+  isEditing?: boolean;
+}
+
+export function AssessmentWizard({ initialData, isEditing = false }: AssessmentWizardProps) {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
@@ -22,33 +28,59 @@ export function AssessmentWizard() {
     limit: 50,
   });
   const createAssessmentMutation = useCreateAssessment();
+  const updateAssessmentMutation = useUpdateAssessment();
+
+  const initialProblemIds =
+    initialData?.problems?.map(p => p.problem.id) || initialData?.assessmentProblems?.map(p => p.problem.id) || [];
 
   const form = useForm({
     defaultValues: {
-      title: "",
-      description: "",
-      durationMinutes: 60,
-      passingScore: 70,
-      selectedProblemIds: [] as string[],
+      title: initialData?.title || "",
+      description: initialData?.description || "",
+      durationMinutes: initialData?.durationMinutes || 60,
+      passingScore: initialData?.passingMarks ?? initialData?.passingScore ?? 70,
+      selectedProblemIds: initialProblemIds,
     },
     validators: {
       onSubmit: assessmentWizardFormSchema,
     },
     onSubmit: async ({ value }) => {
-      createAssessmentMutation.mutate(
-        {
-          title: value.title,
-          description: value.description,
-          durationMinutes: Number(value.durationMinutes),
-          passingScore: Number(value.passingScore),
-          problemIds: value.selectedProblemIds,
-        },
-        {
-          onSuccess: () => {
-            router.push(`/recruiter/assessments`);
+      if (isEditing && initialData?.id) {
+        updateAssessmentMutation.mutate(
+          {
+            id: initialData.id,
+            payload: {
+              title: value.title,
+              description: value.description,
+              durationMinutes: Number(value.durationMinutes),
+              passingMarks: Number(value.passingScore),
+              passingScore: Number(value.passingScore),
+              problemIds: value.selectedProblemIds,
+            },
           },
-        },
-      );
+          {
+            onSuccess: () => {
+              router.push(`/dashboard/recruiter/assessments/${initialData.id}`);
+            },
+          },
+        );
+      } else {
+        createAssessmentMutation.mutate(
+          {
+            title: value.title,
+            description: value.description,
+            durationMinutes: Number(value.durationMinutes),
+            passingScore: Number(value.passingScore),
+            passingMarks: Number(value.passingScore),
+            problemIds: value.selectedProblemIds,
+          },
+          {
+            onSuccess: () => {
+              router.push(`/dashboard/recruiter/assessments`);
+            },
+          },
+        );
+      }
     },
   });
 
@@ -92,7 +124,9 @@ export function AssessmentWizard() {
 
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Title</FieldLabel>
+                    <FieldLabel htmlFor={field.name} required>
+                      Title
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -101,6 +135,7 @@ export function AssessmentWizard() {
                       onChange={e => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
                       aria-invalid={isInvalid}
+                      required
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
@@ -112,7 +147,9 @@ export function AssessmentWizard() {
               <form.Field name="durationMinutes">
                 {field => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>Duration (Minutes)</FieldLabel>
+                    <FieldLabel htmlFor={field.name} required>
+                      Duration (Minutes)
+                    </FieldLabel>
                     <FieldDescription>Maximum time allowed once a candidate begins.</FieldDescription>
                     <Input
                       id={field.name}
@@ -122,6 +159,7 @@ export function AssessmentWizard() {
                       max={240}
                       value={field.state.value}
                       onChange={e => field.handleChange(Number(e.target.value))}
+                      required
                     />
                   </Field>
                 )}
@@ -130,7 +168,9 @@ export function AssessmentWizard() {
               <form.Field name="passingScore">
                 {field => (
                   <Field>
-                    <FieldLabel htmlFor={field.name}>Passing Score (%)</FieldLabel>
+                    <FieldLabel htmlFor={field.name} required>
+                      Passing Score (%)
+                    </FieldLabel>
                     <FieldDescription>Minimum percentage to mark candidate as Passed.</FieldDescription>
                     <Input
                       id={field.name}
@@ -140,6 +180,7 @@ export function AssessmentWizard() {
                       max={100}
                       value={field.state.value}
                       onChange={e => field.handleChange(Number(e.target.value))}
+                      required
                     />
                   </Field>
                 )}
@@ -152,7 +193,9 @@ export function AssessmentWizard() {
 
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Description & Instructions</FieldLabel>
+                    <FieldLabel htmlFor={field.name} required>
+                      Description & Instructions
+                    </FieldLabel>
                     <Textarea
                       id={field.name}
                       name={field.name}
@@ -162,6 +205,7 @@ export function AssessmentWizard() {
                       onChange={e => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
                       aria-invalid={isInvalid}
+                      required
                     />
                     {isInvalid && <FieldError errors={field.state.meta.errors} />}
                   </Field>
@@ -354,7 +398,7 @@ export function AssessmentWizard() {
                   <Button
                     variant="outline"
                     onClick={() => setStep(2)}
-                    disabled={createAssessmentMutation.isPending}
+                    disabled={createAssessmentMutation.isPending || updateAssessmentMutation.isPending}
                     className="gap-2"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -363,17 +407,17 @@ export function AssessmentWizard() {
                   <Button
                     variant="emerald"
                     onClick={() => form.handleSubmit()}
-                    disabled={createAssessmentMutation.isPending}
+                    disabled={createAssessmentMutation.isPending || updateAssessmentMutation.isPending}
                     className="gap-2 disabled:cursor-not-allowed disabled:pointer-events-auto"
                   >
-                    {createAssessmentMutation.isPending ? (
+                    {createAssessmentMutation.isPending || updateAssessmentMutation.isPending ? (
                       <>
-                        <Spinner size="sm" /> Publishing...
+                        <Spinner size="sm" /> {isEditing ? "Updating..." : "Publishing..."}
                       </>
                     ) : (
                       <>
                         <CheckCircle2 className="h-4 w-4" />
-                        <span>Publish Assessment</span>
+                        <span>{isEditing ? "Update Assessment" : "Publish Assessment"}</span>
                       </>
                     )}
                   </Button>
