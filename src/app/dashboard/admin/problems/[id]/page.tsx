@@ -45,7 +45,7 @@ export default function RecruiterProblemDetailPage({ params }: { params: Promise
     deleteMutation.mutate(problem.id, {
       onSuccess: () => {
         setDeleteModalOpen(false);
-        router.push("/dashboard/recruiter/problems");
+        router.push("/dashboard/admin/problems");
       },
     });
   };
@@ -71,7 +71,7 @@ export default function RecruiterProblemDetailPage({ params }: { params: Promise
           <p className="text-sm text-slate-400 max-w-md">
             The problem you are looking for does not exist or has been removed.
           </p>
-          <Link href="/dashboard/recruiter/problems">
+          <Link href="/dashboard/admin/problems">
             <Button variant="outline" size="sm" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               <span>Return to Problem Studio</span>
@@ -94,7 +94,7 @@ export default function RecruiterProblemDetailPage({ params }: { params: Promise
       <div className="space-y-6 max-w-4xl">
         {/* Navigation & Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <Link href="/dashboard/recruiter/problems">
+          <Link href="/dashboard/admin/problems">
             <Button variant="ghost" size="sm" className="gap-2 text-slate-400 hover:text-white">
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Studio</span>
@@ -102,7 +102,7 @@ export default function RecruiterProblemDetailPage({ params }: { params: Promise
           </Link>
 
           <div className="flex items-center space-x-2">
-            <Link href={`/dashboard/recruiter/problems/${problem.id}/edit`}>
+            <Link href={`/dashboard/admin/problems/${problem.id}/edit`}>
               <Button variant="outline" size="sm" className="gap-2">
                 <Edit3 className="h-4 w-4" />
                 <span>Edit Problem</span>

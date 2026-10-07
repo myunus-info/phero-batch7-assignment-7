@@ -137,7 +137,7 @@ function AdminProblemsContent() {
                   <TableCell className="font-mono text-xs text-slate-300">{problem.points} pts</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-2">
-                      <Link href={`/problems/${problem.id}`}>
+                      <Link href={`/dashboard/admin/problems/${problem.id}`}>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="View details">
                           <ExternalLink className="h-3.5 w-3.5" />
                         </Button>
