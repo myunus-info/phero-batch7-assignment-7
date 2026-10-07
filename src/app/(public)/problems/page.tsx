@@ -59,18 +59,26 @@ function ProblemsDirectoryContent() {
             placeholder="Search problem title..."
             className="pl-9"
             value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            onChange={e => setSearchInput(e.target.value)}
           />
         </div>
 
-        <Select value={difficultyParam} onValueChange={(value) => setParams({ difficulty: value }, true)}>
+        <Select
+          value={difficultyParam}
+          onChange={e => setParams({ difficulty: e.target.value }, true)}
+          className="bg-slate-900/60 border-slate-800"
+        >
           <option value="">All Difficulties</option>
           <option value="EASY">Easy</option>
           <option value="MEDIUM">Medium</option>
           <option value="HARD">Hard</option>
         </Select>
 
-        <Select value={typeParam} onValueChange={(value) => setParams({ type: value }, true)}>
+        <Select
+          value={typeParam}
+          onChange={e => setParams({ type: e.target.value }, true)}
+          className="bg-slate-900/60 border-slate-800"
+        >
           <option value="">All Problem Types</option>
           <option value="CODING">Coding (Judge0)</option>
           <option value="MCQ">Multiple Choice</option>
@@ -102,7 +110,7 @@ function ProblemsDirectoryContent() {
               </TableCell>
             </TableRow>
           ) : (
-            problems.map((problem) => (
+            problems.map(problem => (
               <TableRow key={problem.id}>
                 <TableCell>
                   <Link
@@ -135,7 +143,7 @@ function ProblemsDirectoryContent() {
         </TableBody>
       </Table>
 
-      <TablePagination page={pageParam} total={meta.total} limit={10} onPageChange={(p) => setParams({ page: p })} />
+      <TablePagination page={pageParam} total={meta.total} limit={10} onPageChange={p => setParams({ page: p })} />
     </div>
   );
 }

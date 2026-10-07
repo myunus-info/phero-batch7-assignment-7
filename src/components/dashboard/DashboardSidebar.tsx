@@ -83,9 +83,9 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
 
                   const isActive =
                     pathname === itemPath ||
-                    (itemPath !== "/admin" &&
-                      itemPath !== "/recruiter" &&
-                      itemPath !== "/candidate" &&
+                    (itemPath !== "/dashboard/admin" &&
+                      itemPath !== "/dashboard/recruiter" &&
+                      itemPath !== "/dashboard/candidate" &&
                       itemPath !== "#" &&
                       pathname.startsWith(itemPath));
 

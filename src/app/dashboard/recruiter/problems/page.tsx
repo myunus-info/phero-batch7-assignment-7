@@ -84,14 +84,22 @@ function RecruiterProblemsContent() {
             />
           </div>
 
-          <Select value={difficultyParam} onValueChange={value => setParams({ difficulty: value }, true)}>
+          <Select
+            value={difficultyParam}
+            onChange={e => setParams({ difficulty: e.target.value }, true)}
+            className="bg-slate-900/60 border-slate-800"
+          >
             <option value="">All Difficulties</option>
             <option value="EASY">Easy</option>
             <option value="MEDIUM">Medium</option>
             <option value="HARD">Hard</option>
           </Select>
 
-          <Select value={typeParam} onValueChange={value => setParams({ type: value }, true)}>
+          <Select
+            value={typeParam}
+            onChange={e => setParams({ type: e.target.value }, true)}
+            className="bg-slate-900/60 border-slate-800"
+          >
             <option value="">All Types</option>
             <option value="CODING">Coding (Executable)</option>
             <option value="MCQ">Multiple Choice</option>

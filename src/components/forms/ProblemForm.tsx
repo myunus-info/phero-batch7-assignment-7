@@ -163,7 +163,7 @@ export function ProblemForm({
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
-                    onValueChange={value => field.handleChange(value as ProblemType)}
+                    onChange={e => field.handleChange(e.target.value as ProblemType)}
                   >
                     <option value="CODING">Coding (Judge0 Executable)</option>
                     <option value="MCQ">Multiple Choice Question</option>
@@ -183,7 +183,7 @@ export function ProblemForm({
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
-                    onValueChange={value => field.handleChange(value as DifficultyLevel)}
+                    onChange={e => field.handleChange(e.target.value as DifficultyLevel)}
                   >
                     <option value="EASY">Easy</option>
                     <option value="MEDIUM">Medium</option>
