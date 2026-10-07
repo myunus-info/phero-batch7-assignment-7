@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, Code2 } from "lucide-react";
 
 export function Hero() {
   return (
@@ -10,7 +10,6 @@ export function Hero() {
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center max-w-4xl">
         <div className="inline-flex items-center space-x-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 mb-6">
-          <Zap className="h-3.5 w-3.5" />
           <span>Real-time Judge0 Execution Engine</span>
         </div>
 
@@ -22,8 +21,8 @@ export function Hero() {
         </h1>
 
         <p className="mt-6 text-lg sm:text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-          Create custom coding assessments, grade multi-language solutions against hidden test cases, and hire
-          top software engineers with absolute confidence.
+          Create custom coding assessments, grade multi-language solutions against hidden test cases, and hire top
+          software engineers with absolute confidence.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
