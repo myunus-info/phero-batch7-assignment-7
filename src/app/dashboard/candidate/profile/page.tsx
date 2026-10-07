@@ -2,7 +2,7 @@
 
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { ProfileSettingsForm } from "@/components/forms/ProfileSettingsForm";
-import { useGetMyProfile } from "@/hooks";
+import { useGetMyProfile } from "@/hooks/user.hook";
 import { UserCheck } from "lucide-react";
 
 export default function CandidateProfilePage() {

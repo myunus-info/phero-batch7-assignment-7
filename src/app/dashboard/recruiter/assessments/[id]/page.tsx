@@ -31,7 +31,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <RoleGuard allowedRoles={["RECRUITER"]}>
         <div className="py-16 text-center">
           <h2 className="text-xl font-bold text-white">Assessment not found</h2>
-          <Link href="/recruiter/assessments">
+          <Link href="/dashboard/recruiter/assessments">
             <Button variant="outline" className="mt-4">
               Back to Assessments
             </Button>
@@ -52,7 +52,7 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
       <div className="space-y-8">
         <div>
           <Link
-            href="/recruiter/assessments"
+            href="/dashboard/recruiter/assessments"
             className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

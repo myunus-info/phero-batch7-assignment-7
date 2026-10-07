@@ -7,6 +7,7 @@ import { useGetAssessmentResult } from "@/hooks/attempt.hook";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, XCircle, ArrowLeft } from "lucide-react";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
+import { DifficultyLevel, ProblemType, ITestResult } from "@/types";
 
 export default function AssessmentResultPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -37,7 +38,63 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
     );
   }
 
-  const isPassed = result.passed;
+  const totalScore = result.totalScore ?? 0;
+  const maxPossibleScore = result.assessment?.totalMarks ?? result.maxPossibleScore ?? 100;
+  const passingMarks = result.assessment?.passingMarks ?? result.assessment?.passingScore ?? 60;
+  const isPassed = result.isPassed ?? result.passed ?? totalScore >= passingMarks;
+  const percentageScore =
+    result.percentageScore ?? (maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0);
+
+  interface IProblemBreakdownItem {
+    problemId: string;
+    title: string;
+    difficulty: DifficultyLevel | string;
+    type?: ProblemType | string;
+    score: number;
+    maxPoints: number;
+    status?: string;
+    testCasesPassed?: number;
+    totalTestCases?: number;
+    submittedCode?: string | null;
+    executionTimeMs?: number | null;
+  }
+
+  // Normalize problem results from backend submissions or problemResults
+  const problemBreakdown: IProblemBreakdownItem[] =
+    result.submissions && result.submissions.length > 0
+      ? result.submissions.map(sub => {
+          let testCasesPassed = 0;
+          let totalTestCases = 0;
+          if (Array.isArray(sub.executionResult)) {
+            const results = sub.executionResult as ITestResult[];
+            totalTestCases = results.length;
+            testCasesPassed = results.filter(tc => tc.passed).length;
+          }
+          return {
+            problemId: sub.problemId,
+            title: sub.problem?.title || "Problem",
+            difficulty: sub.problem?.difficulty || "MEDIUM",
+            type: sub.problem?.problemType || "CODING",
+            score: sub.scoreAwarded ?? 0,
+            maxPoints: sub.problem?.points ?? 100,
+            status: sub.status,
+            testCasesPassed,
+            totalTestCases,
+            submittedCode: sub.submittedCode,
+            executionTimeMs: sub.executionTimeMs,
+          };
+        })
+      : (result.problemResults || []).map(pr => ({
+          problemId: pr.problemId,
+          title: pr.title,
+          difficulty: pr.difficulty,
+          type: pr.type || pr.problemType || "CODING",
+          score: pr.score,
+          maxPoints: pr.maxPoints,
+          status: pr.status,
+          testCasesPassed: pr.testCasesPassed ?? 0,
+          totalTestCases: pr.totalTestCases ?? 0,
+        }));
 
   return (
     <RoleGuard allowedRoles={["CANDIDATE"]}>
@@ -75,14 +132,15 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
                 {isPassed ? "Assessment Passed" : "Needs Improvement"}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Benchmark Cutoff: {result.assessment?.passingScore}% • Your Score: {result.percentageScore}%
+                Benchmark Cutoff: {passingMarks} pts ({Math.round((passingMarks / maxPossibleScore) * 100)}%) • Your
+                Score: {totalScore} pts ({percentageScore}%)
               </p>
             </div>
           </div>
 
           <div className="text-right font-mono">
             <p className="text-4xl font-extrabold text-white">
-              {result.totalScore} / {result.maxPossibleScore}
+              {totalScore} / {maxPossibleScore}
             </p>
             <p className="text-xs text-slate-400 mt-1">Total Points Scored</p>
           </div>
@@ -93,42 +151,53 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
           <h3 className="text-lg font-semibold text-white">Problem Breakdown</h3>
 
           <div className="space-y-3">
-            {result.problemResults?.map((pr, idx) => (
-              <div
-                key={pr.problemId || idx}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-slate-800 bg-slate-900/40 gap-4"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-mono text-xs text-slate-500">#{idx + 1}</span>
-                    <h4 className="font-semibold text-white">{pr.title}</h4>
-                    <DifficultyBadge difficulty={pr.difficulty} />
-                    <ProblemTypeBadge type={pr.type || pr.problemType || "CODING"} />
-                  </div>
-                  <div className="flex items-center space-x-4 text-xs font-mono text-slate-400">
-                    <span>
-                      Passed: {pr.testCasesPassed || 0} / {pr.totalTestCases || 0} test cases
-                    </span>
-                    {pr.status && <span>Status: {pr.status}</span>}
-                  </div>
-                </div>
-
-                <div className="text-right font-mono">
-                  <p className="text-base font-bold text-white">
-                    {pr.score} / {pr.maxPoints} pts
-                  </p>
-                  <p className="text-[11px] text-slate-400">
-                    {pr.score === pr.maxPoints ? (
-                      <span className="text-emerald-400 font-semibold">Full Score</span>
-                    ) : pr.score > 0 ? (
-                      <span className="text-amber-400 font-semibold">Partial Credit</span>
-                    ) : (
-                      <span className="text-slate-500">0%</span>
-                    )}
-                  </p>
-                </div>
+            {problemBreakdown.length === 0 ? (
+              <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/30 text-center text-slate-500 text-sm">
+                No problem submission details recorded.
               </div>
-            ))}
+            ) : (
+              problemBreakdown.map((pr, idx) => (
+                <div
+                  key={pr.problemId || idx}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-slate-800 bg-slate-900/40 gap-4"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-mono text-xs text-slate-500">#{idx + 1}</span>
+                      <h4 className="font-semibold text-white">{pr.title}</h4>
+                      <DifficultyBadge difficulty={pr.difficulty} />
+                      <ProblemTypeBadge type={pr.type || "CODING"} />
+                    </div>
+                    <div className="flex items-center space-x-4 text-xs font-mono text-slate-400">
+                      {pr.totalTestCases !== undefined && pr.totalTestCases > 0 && (
+                        <span>
+                          Passed: {pr.testCasesPassed ?? 0} / {pr.totalTestCases} test cases
+                        </span>
+                      )}
+                      {pr.executionTimeMs !== undefined && pr.executionTimeMs !== null && (
+                        <span>Runtime: {pr.executionTimeMs}ms</span>
+                      )}
+                      {pr.status && <span>Status: {pr.status}</span>}
+                    </div>
+                  </div>
+
+                  <div className="text-right font-mono">
+                    <p className="text-base font-bold text-white">
+                      {pr.score} / {pr.maxPoints} pts
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      {pr.score === pr.maxPoints ? (
+                        <span className="text-emerald-400 font-semibold">Full Score</span>
+                      ) : pr.score > 0 ? (
+                        <span className="text-amber-400 font-semibold">Partial Credit</span>
+                      ) : (
+                        <span className="text-slate-500">0%</span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

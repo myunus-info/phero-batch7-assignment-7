@@ -9,7 +9,7 @@ export default function CreateAssessmentPage() {
       <div className="space-y-6">
         <div>
           <Link
-            href="/recruiter/assessments"
+            href="/dashboard/recruiter/assessments"
             className="inline-flex items-center space-x-1 text-xs text-slate-400 hover:text-white mb-2"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
