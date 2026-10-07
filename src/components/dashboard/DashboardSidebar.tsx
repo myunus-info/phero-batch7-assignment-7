@@ -77,8 +77,8 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
               )}
               <div className="space-y-1 pt-1">
                 {group.items.map((item, itemIdx) => {
-                  const itemPath = item.path || item.url || "#";
-                  const itemName = item.name || item.title || "Item";
+                  const itemPath = item.url || "#";
+                  const itemName = item.title || "Item";
                   const Icon = (typeof item.icon === "string" ? iconMap[item.icon] : item.icon) || FileText;
 
                   const isActive =

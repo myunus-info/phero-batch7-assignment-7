@@ -6,8 +6,12 @@ import { UserRole } from "@/types";
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogOut } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
+  const pathname = usePathname();
+
   const publicRoutes = [
     { name: "Home", url: "/" },
     { name: "Problems", url: "/problems" },
@@ -41,11 +45,34 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
-          {publicRoutes.map(route => (
-            <Link key={route.url} href={route.url} className="transition-colors hover:text-emerald-400">
-              {route.name}
-            </Link>
-          ))}
+          {publicRoutes.map(route => {
+            const itemPath = route.url || "#";
+            const itemName = route.name || "Item";
+
+            const isActive =
+              pathname === itemPath ||
+              (itemPath !== "/" &&
+                itemPath !== "/problems" &&
+                itemPath !== "/pricing" &&
+                itemPath !== "/about" &&
+                itemPath !== "#" &&
+                pathname.startsWith(itemPath));
+
+            return (
+              <Link
+                key={route.url}
+                href={route.url}
+                className={cn(
+                  "transition-colors hover:text-emerald-400",
+                  isActive
+                    ? "bg-emerald-500/10 text-emerald-400"
+                    : "text-slate-400 hover:text-slate-200 hover:bg-slate-900",
+                )}
+              >
+                {itemName}
+              </Link>
+            );
+          })}
 
           {role && (
             <Link
