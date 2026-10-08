@@ -111,11 +111,11 @@ function RecruiterProblemsContent() {
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="text-muted-foreground">Problem Title</TableHead>
-                <TableHead className="text-muted-foreground">Type</TableHead>
-                <TableHead className="text-muted-foreground">Difficulty</TableHead>
-                <TableHead className="text-muted-foreground">Points</TableHead>
-                <TableHead className="text-muted-foreground">Time Limit</TableHead>
-                <TableHead className="text-right text-muted-foreground">Actions</TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">Type</TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">Difficulty</TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">Points</TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">Time Limit</TableHead>
+                <TableHead className="text-right text-muted-foreground whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -157,23 +157,23 @@ function RecruiterProblemsContent() {
                         <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{problem.description}</p>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <ProblemTypeBadge type={problem.problemType || problem.type || "CODING"} />
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <DifficultyBadge difficulty={problem.difficulty} />
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <TableCell className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold whitespace-nowrap">
                       {problem.points} pts
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
+                    <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
                       {problem.timeLimitSeconds
                         ? `${Math.round(problem.timeLimitSeconds / 60)} min`
                         : problem.timeLimit
                           ? `${problem.timeLimit} min`
                           : "300s"}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right whitespace-nowrap">
                       <div className="flex items-center justify-end space-x-1">
                         <Link href={`/dashboard/recruiter/problems/${problem.id}`}>
                           <Button

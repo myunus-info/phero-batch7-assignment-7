@@ -18,9 +18,9 @@ export function ProblemTypeBadge({ type }: { type: string }) {
     case "CODING":
       return <Badge variant="cyan">Coding</Badge>;
     case "MCQ":
-      return <Badge variant="secondary">Multiple Choice</Badge>;
+      return <Badge variant="purple">Multiple Choice</Badge>;
     case "SINGLE_CHOICE":
-      return <Badge variant="outline">Single Choice</Badge>;
+      return <Badge variant="purple">Single Choice</Badge>;
     default:
       return <Badge variant="outline">{type}</Badge>;
   }

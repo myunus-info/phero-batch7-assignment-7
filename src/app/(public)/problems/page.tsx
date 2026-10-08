@@ -3,8 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import useUrlParams from "@/hooks/url-params.hook";
-import useDebounce from "@/hooks/debounce.hook";
-import { useGetAllProblems } from "@/hooks";
+import { useGetAllProblems, useDebounce } from "@/hooks";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -82,10 +81,10 @@ function ProblemsDirectoryContent() {
         <TableHeader>
           <TableRow>
             <TableHead>Problem</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Difficulty</TableHead>
-            <TableHead>Points</TableHead>
-            <TableHead className="text-right">Action</TableHead>
+            <TableHead className="whitespace-nowrap">Type</TableHead>
+            <TableHead className="whitespace-nowrap">Difficulty</TableHead>
+            <TableHead className="whitespace-nowrap">Points</TableHead>
+            <TableHead className="text-right whitespace-nowrap">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -113,14 +112,16 @@ function ProblemsDirectoryContent() {
                   </Link>
                   <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{problem.description}</p>
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
                 </TableCell>
-                <TableCell>
+                <TableCell className="whitespace-nowrap">
                   <DifficultyBadge difficulty={problem.difficulty} />
                 </TableCell>
-                <TableCell className="font-mono text-xs text-foreground font-semibold">{problem.points} pts</TableCell>
-                <TableCell className="text-right">
+                <TableCell className="font-mono text-xs text-foreground font-semibold whitespace-nowrap">
+                  {problem.points} pts
+                </TableCell>
+                <TableCell className="text-right whitespace-nowrap">
                   <Link
                     href={`/problems/${problem.id}`}
                     className="inline-flex items-center space-x-1 text-xs text-emerald-600 dark:text-emerald-400 hover:underline font-medium"

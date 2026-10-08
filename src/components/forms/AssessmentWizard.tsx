@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useGetAllProblems } from "@/hooks";
-import { useCreateAssessment, useUpdateAssessment } from "@/hooks";
+import { useCreateAssessment, useUpdateAssessment, useGetAllProblems } from "@/hooks";
 import { assessmentWizardFormSchema } from "@/validations";
 import { IAssessment } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -298,7 +297,9 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
                           </div>
 
                           <div className="flex items-center space-x-4">
-                            <span className="text-xs font-mono font-medium text-foreground">{problem.points} pts</span>
+                            <span className="text-xs font-mono font-medium text-foreground whitespace-nowrap">
+                              {problem.points} pts
+                            </span>
                             <div
                               className={`flex h-6 w-6 items-center justify-center rounded-md border ${
                                 isSelected ? "bg-emerald-500 border-emerald-500 text-white" : "border-border bg-muted"

@@ -4,8 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import useUrlParams from "@/hooks/url-params.hook";
-import { useDebounce } from "@/hooks";
-import { useGetAllProblems, useDeleteProblem } from "@/hooks";
+import { useGetAllProblems, useDeleteProblem, useDebounce } from "@/hooks";
 import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -100,10 +99,10 @@ function AdminProblemsContent() {
           <TableHeader>
             <TableRow>
               <TableHead>Problem</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Difficulty</TableHead>
-              <TableHead>Points</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="whitespace-nowrap">Type</TableHead>
+              <TableHead className="whitespace-nowrap">Difficulty</TableHead>
+              <TableHead className="whitespace-nowrap">Points</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -128,16 +127,16 @@ function AdminProblemsContent() {
                       <p className="text-xs text-muted-foreground line-clamp-1">{problem.description}</p>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="whitespace-nowrap">
                     <DifficultyBadge difficulty={problem.difficulty} />
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-foreground font-semibold">
+                  <TableCell className="font-mono text-xs text-foreground font-semibold whitespace-nowrap">
                     {problem.points} pts
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right whitespace-nowrap">
                     <div className="flex items-center justify-end space-x-2">
                       <Link href={`/dashboard/admin/problems/${problem.id}`}>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="View details">

@@ -2,8 +2,7 @@
 
 import { useForm } from "@tanstack/react-form";
 import Link from "next/link";
-import { useInviteCandidate } from "@/hooks";
-import { useGetMe } from "@/hooks/auth.hook";
+import { useInviteCandidate, useGetMe } from "@/hooks";
 import { inviteCandidateSchema } from "@/validations";
 import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -115,7 +114,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                       Candidate Email
                     </FieldLabel>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Mail className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-slate-300 z-10" />
                       <Input
                         id={field.name}
                         name={field.name}
@@ -144,7 +143,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Invitation Expiration Date (Optional)</FieldLabel>
                     <div className="relative">
-                      <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Calendar className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-slate-300 z-10" />
                       <Input
                         id={field.name}
                         name={field.name}
