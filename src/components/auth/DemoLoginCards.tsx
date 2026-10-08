@@ -1,7 +1,7 @@
 "use client";
 
 import { useLogin } from "@/hooks";
-import { ShieldCheck, Briefcase, Code2, Sparkles } from "lucide-react";
+import { ShieldCheck, Briefcase, Code2 } from "lucide-react";
 
 export function DemoLoginCards() {
   const loginMutation = useLogin();
@@ -40,7 +40,6 @@ export function DemoLoginCards() {
   return (
     <div className="space-y-3 rounded-xl border border-border bg-card p-4 shadow-sm">
       <div className="flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        <Sparkles className="h-4 w-4 text-emerald-500" />
         <span>One-Click Demo Accounts</span>
       </div>
 

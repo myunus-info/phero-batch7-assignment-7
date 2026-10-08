@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Zap } from "lucide-react";
+import { ArrowRight, Code2 } from "lucide-react";
 
 export function Hero() {
   return (
@@ -10,7 +10,6 @@ export function Hero() {
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center max-w-4xl">
         <div className="inline-flex items-center space-x-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-6">
-          <Zap className="h-3.5 w-3.5" />
           <span>Real-time Judge0 Execution Engine</span>
         </div>
 
