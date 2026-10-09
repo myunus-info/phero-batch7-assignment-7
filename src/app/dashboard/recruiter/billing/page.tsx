@@ -77,16 +77,30 @@ export default function RecruiterBillingPage() {
                     <TableCell className="font-mono text-xs text-muted-foreground">
                       {p.stripePaymentIntentId || p.id}
                     </TableCell>
-                    <TableCell className="font-bold text-foreground">{formatCurrency(p.amountInCents / 100)}</TableCell>
-                    <TableCell className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                      +{p.creditsAdded} Credits
+                    <TableCell className="font-bold text-foreground whitespace-nowrap">
+                      {formatCurrency(p.amount ?? (p.amountInCents || 0) / 100)}
                     </TableCell>
-                    <TableCell>
-                      <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                        {p.status}
-                      </span>
+                    <TableCell className="font-mono text-xs text-emerald-600 dark:text-emerald-400 font-semibold whitespace-nowrap">
+                      +{p.creditsPurchased ?? p.creditsAdded ?? 0} Credits
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(p.createdAt)}</TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {p.status === "COMPLETED" ? (
+                        <span className="px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                          COMPLETED
+                        </span>
+                      ) : p.status === "PENDING" ? (
+                        <span className="px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                          PENDING
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded text-xs font-semibold bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
+                          {p.status}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground whitespace-nowrap">
+                      {formatDate(p.createdAt)}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

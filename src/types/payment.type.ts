@@ -32,6 +32,14 @@ export interface ICreateCheckoutSessionResponse {
   };
 }
 
+export interface IVerifyCheckoutSessionResponse {
+  success: boolean;
+  message: string;
+  creditsAdded: number;
+  status: string;
+  paymentId?: string;
+}
+
 export interface IPaymentRecord {
   id: string;
   userId: string;

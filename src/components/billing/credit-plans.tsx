@@ -17,7 +17,7 @@ interface PlanConfig {
 
 const CREDIT_PLANS: PlanConfig[] = [
   {
-    key: "STARTER",
+    key: "STARTER_PACK",
     name: "Starter Pack",
     price: "$29",
     credits: 50,
@@ -31,8 +31,8 @@ const CREDIT_PLANS: PlanConfig[] = [
     ],
   },
   {
-    key: "GROWTH",
-    name: "Growth Plan",
+    key: "PRO_PACK",
+    name: "Pro Plan",
     price: "$79",
     credits: 200,
     popular: true,
@@ -46,7 +46,7 @@ const CREDIT_PLANS: PlanConfig[] = [
     ],
   },
   {
-    key: "ENTERPRISE",
+    key: "ENTERPRISE_PACK",
     name: "Scale Enterprise",
     price: "$199",
     credits: 600,
@@ -65,7 +65,7 @@ export function CreditPlans() {
   const checkoutMutation = useCreateCheckoutSession();
 
   const handleBuy = (planKey: CreditPlanKey) => {
-    checkoutMutation.mutate({ planKey, planName: planKey });
+    checkoutMutation.mutate({ planName: planKey });
   };
 
   return (
