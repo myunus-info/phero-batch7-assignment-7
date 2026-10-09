@@ -1,37 +1,17 @@
 "use client";
 
-import { use, useState } from "react";
+import { use } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetProblemById, useDeleteProblem } from "@/hooks/problem.hook";
+import { useGetProblemById } from "@/hooks/problem.hook";
 import { ProblemForm } from "@/components/forms/ProblemForm";
 import { Button } from "@/components/ui/button";
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
-import { ArrowLeft, Edit3, Trash2 } from "lucide-react";
+import { ArrowLeft, Edit3 } from "lucide-react";
 
 export default function AdminEditProblemPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const { data: problemData, isLoading } = useGetProblemById(resolvedParams.id);
-  const deleteMutation = useDeleteProblem();
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const problem = problemData?.data;
-
-  const handleDelete = () => {
-    if (!problem) return;
-    setDeleteModalOpen(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (!problem) return;
-    deleteMutation.mutate(problem.id, {
-      onSuccess: () => {
-        setDeleteModalOpen(false);
-        router.push("/dashboard/admin/problems");
-      },
-    });
-  };
 
   if (isLoading) {
     return (
@@ -70,17 +50,6 @@ export default function AdminEditProblemPage({ params }: { params: Promise<{ id:
               <span>Back to Problems</span>
             </Button>
           </Link>
-
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="gap-2"
-          >
-            <Trash2 className="h-4 w-4" />
-            <span>Delete Problem</span>
-          </Button>
         </div>
 
         <div>
@@ -94,15 +63,6 @@ export default function AdminEditProblemPage({ params }: { params: Promise<{ id:
         </div>
 
         <ProblemForm mode="edit" initialProblem={problem} redirectPath="/dashboard/admin/problems" />
-
-        <DeleteConfirmationModal
-          open={deleteModalOpen}
-          onOpenChange={setDeleteModalOpen}
-          itemType="problem"
-          itemName={problem?.title}
-          isLoading={deleteMutation.isPending}
-          onConfirm={handleConfirmDelete}
-        />
       </div>
     </RoleGuard>
   );
