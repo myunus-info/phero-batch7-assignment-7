@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useCreateAssessment, useUpdateAssessment, useGetAllProblems } from "@/hooks";
+import { useGetAllProblems } from "@/hooks/problem.hook";
+import { useCreateAssessment, useUpdateAssessment } from "@/hooks/assessment.hook";
 import { assessmentWizardFormSchema } from "@/validations";
 import { IAssessment } from "@/types";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,47 +45,95 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
     validators: {
       onSubmit: assessmentWizardFormSchema,
     },
-    onSubmit: async ({ value }) => {
-      if (isEditing && initialData?.id) {
-        updateAssessmentMutation.mutate(
-          {
-            id: initialData.id,
-            payload: {
-              title: value.title,
-              description: value.description,
-              durationMinutes: Number(value.durationMinutes),
-              passingMarks: Number(value.passingScore),
-              passingScore: Number(value.passingScore),
-              problemIds: value.selectedProblemIds,
-            },
-          },
-          {
-            onSuccess: () => {
-              router.push(`/dashboard/recruiter/assessments/${initialData.id}`);
-            },
-          },
-        );
-      } else {
-        createAssessmentMutation.mutate(
-          {
-            title: value.title,
-            description: value.description,
-            durationMinutes: Number(value.durationMinutes),
-            passingScore: Number(value.passingScore),
-            passingMarks: Number(value.passingScore),
-            problemIds: value.selectedProblemIds,
-          },
-          {
-            onSuccess: () => {
-              router.push(`/dashboard/recruiter/assessments`);
-            },
-          },
-        );
-      }
+    onSubmit: async () => {
+      handlePublish();
     },
   });
 
   const problems = problemsData?.data || [];
+
+  const handlePublish = () => {
+    const values = form.state.values;
+
+    if (!values.title || values.title.trim().length < 3) {
+      toast.error("Assessment title must be at least 3 characters.");
+      setStep(1);
+      return;
+    }
+
+    if (!values.description || !values.description.trim()) {
+      toast.error("Please provide instructions or description for the assessment.");
+      setStep(1);
+      return;
+    }
+
+    const duration = Number(values.durationMinutes);
+    if (!duration || duration <= 0) {
+      toast.error("Duration must be a positive number in minutes.");
+      setStep(1);
+      return;
+    }
+
+    const passingScore = Number(values.passingScore);
+    if (!passingScore || passingScore <= 0 || passingScore > 100) {
+      toast.error("Passing score must be between 1 and 100 percent.");
+      setStep(1);
+      return;
+    }
+
+    if (!values.selectedProblemIds || values.selectedProblemIds.length === 0) {
+      toast.error("Please select at least one problem to include in this assessment.");
+      setStep(2);
+      return;
+    }
+
+    const selectedProblems = problems.filter(p => values.selectedProblemIds.includes(p.id));
+    const totalPoints = selectedProblems.reduce((sum, p) => sum + p.points, 0);
+
+    const formattedProblemIds = values.selectedProblemIds.map((id, index) => ({
+      problemId: id,
+      orderIndex: index + 1,
+    }));
+
+    if (isEditing && initialData?.id) {
+      updateAssessmentMutation.mutate(
+        {
+          id: initialData.id,
+          payload: {
+            title: values.title.trim(),
+            description: values.description.trim(),
+            durationMinutes: duration,
+            passingMarks: passingScore,
+            passingScore: passingScore,
+            totalMarks: totalPoints || 100,
+            problemIds: formattedProblemIds,
+          },
+        },
+        {
+          onSuccess: () => {
+            router.push(`/dashboard/recruiter/assessments/${initialData.id}`);
+          },
+        },
+      );
+    } else {
+      createAssessmentMutation.mutate(
+        {
+          title: values.title.trim(),
+          description: values.description.trim(),
+          durationMinutes: duration,
+          passingScore: passingScore,
+          passingMarks: passingScore,
+          totalMarks: totalPoints || 100,
+          problemIds: formattedProblemIds,
+        },
+        {
+          onSuccess: () => {
+            router.push(`/dashboard/recruiter/assessments`);
+          },
+        },
+      );
+    }
+  };
 
   return (
     <div className="max-w-4xl space-y-8">
@@ -413,7 +463,7 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
                   </Button>
                   <Button
                     variant="emerald"
-                    onClick={() => form.handleSubmit()}
+                    onClick={handlePublish}
                     disabled={createAssessmentMutation.isPending || updateAssessmentMutation.isPending}
                     className="gap-2 disabled:cursor-not-allowed disabled:pointer-events-auto"
                   >

@@ -122,7 +122,7 @@ function RecruiterAssessmentsContent() {
                     <StatusBadge status={a.status} />
                   </TableCell>
                   <TableCell className="font-mono text-xs text-foreground">{a.durationMinutes} min</TableCell>
-                  <TableCell className="font-mono text-xs text-foreground">{a.passingScore}%</TableCell>
+                  <TableCell className="font-mono text-xs text-foreground">{a.passingMarks}%</TableCell>
                   <TableCell className="font-mono text-xs text-cyan-600 dark:text-cyan-400">
                     {a.candidateAssessments?.length || 0} invited
                   </TableCell>
