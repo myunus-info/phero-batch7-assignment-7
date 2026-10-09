@@ -5,16 +5,20 @@ import Editor, { type OnMount } from "@monaco-editor/react";
 import { useTheme } from "@/providers/themeProvider";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { Play, RotateCcw } from "lucide-react";
+import { Check, Play, RotateCcw, Send } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/utils";
 
 interface CodeEditorProps {
   initialCode?: string;
   starterCode?: Record<string, string> | null;
   language?: string;
   onCodeChange: (code: string) => void;
+  onRun: (code: string, language: string) => void;
   onSubmit: (code: string, language: string) => void;
+  isRunning?: boolean;
   isSubmitting?: boolean;
+  isSubmitted?: boolean;
 }
 
 const SUPPORTED_LANGUAGES = [
@@ -61,8 +65,11 @@ export function CodeEditor({
   starterCode,
   language = "javascript",
   onCodeChange,
+  onRun,
   onSubmit,
-  isSubmitting,
+  isRunning = false,
+  isSubmitting = false,
+  isSubmitted = false,
 }: CodeEditorProps) {
   const { resolvedTheme } = useTheme();
   const [selectedLang, setSelectedLang] = useState(language);
@@ -79,12 +86,14 @@ export function CodeEditor({
   const [code, setCode] = useState(getInitialCode);
 
   const selectedLangRef = useRef(selectedLang);
+  const onRunRef = useRef(onRun);
   const onSubmitRef = useRef(onSubmit);
 
   useEffect(() => {
     selectedLangRef.current = selectedLang;
+    onRunRef.current = onRun;
     onSubmitRef.current = onSubmit;
-  }, [selectedLang, onSubmit]);
+  }, [selectedLang, onRun, onSubmit]);
 
   const handleLanguageChange = (newLang: string) => {
     setSelectedLang(newLang);
@@ -101,7 +110,7 @@ export function CodeEditor({
 
   const handleEditorMount: OnMount = (editor, monaco) => {
     editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => {
-      onSubmitRef.current(editor.getValue(), selectedLangRef.current);
+      onRunRef.current(editor.getValue(), selectedLangRef.current);
     });
   };
 
@@ -137,17 +146,48 @@ export function CodeEditor({
         </div>
 
         <div className="flex items-center space-x-2">
+          {/* Run Code Button */}
           <Button
-            variant="emerald"
+            variant="outline"
+            size="sm"
+            onClick={() => onRun(code, selectedLang)}
+            isLoading={isRunning}
+            disabled={isRunning || isSubmitting}
+            className="h-8 gap-1.5 text-xs font-medium border-border hover:bg-muted"
+            title="Run code against test cases (Ctrl+Enter)"
+          >
+            <Play className="h-3.5 w-3.5 fill-current text-foreground" />
+            <span>Run Code</span>
+            <span className="hidden sm:inline text-[10px] text-muted-foreground font-mono">(Ctrl+↵)</span>
+          </Button>
+
+          {/* Submit Code Button */}
+          <Button
+            variant={isSubmitted ? "secondary" : "emerald"}
             size="sm"
             onClick={() => onSubmit(code, selectedLang)}
             isLoading={isSubmitting}
-            className="h-8 gap-1.5 text-xs font-semibold"
-            title="Press Ctrl+Enter or Cmd+Enter"
+            disabled={isSubmitted || isSubmitting || isRunning}
+            className={cn(
+              "h-8 gap-1.5 text-xs font-semibold",
+              isSubmitted &&
+                "cursor-not-allowed pointer-events-auto disabled:cursor-not-allowed disabled:pointer-events-auto opacity-70 border border-border text-muted-foreground shadow-none",
+            )}
+            title={
+              isSubmitted ? "Code has already been submitted for this problem" : "Submit final solution for grading"
+            }
           >
-            <Play className="h-3.5 w-3.5 fill-current" />
-            <span>Run & Submit Code</span>
-            <span className="hidden sm:inline text-[10px] text-emerald-200/70 font-mono">(Ctrl+↵)</span>
+            {isSubmitted ? (
+              <>
+                <Check className="h-3.5 w-3.5 text-emerald-500" />
+                <span>Submitted</span>
+              </>
+            ) : (
+              <>
+                <Send className="h-3.5 w-3.5" />
+                <span>Submit Code</span>
+              </>
+            )}
           </Button>
         </div>
       </div>

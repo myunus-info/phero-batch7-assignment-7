@@ -87,6 +87,7 @@ export function useInviteCandidate() {
       });
       // Invalidate recruiter profile to reflect deducted credit
       queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: ["assessments"] });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Failed to invite candidate");

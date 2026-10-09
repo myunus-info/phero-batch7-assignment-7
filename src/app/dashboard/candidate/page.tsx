@@ -68,7 +68,7 @@ export default function CandidateDashboardPage() {
                           <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                           <span>{assessment?.durationMinutes} min</span>
                         </span>
-                        <span>Pass Mark: {assessment?.passingScore}%</span>
+                        <span>Pass Mark: {assessment?.passingMarks}%</span>
                         {ca.score !== undefined && ca.score !== null && (
                           <span className="font-bold text-emerald-500">Score: {ca.score}%</span>
                         )}

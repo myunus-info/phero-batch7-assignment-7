@@ -4,17 +4,22 @@ import { use, useState, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useStartAssessmentAttempt, useSubmitProblemSolution, useFinishAssessment } from "@/hooks";
+import {
+  useStartAssessmentAttempt,
+  useRunProblemCode,
+  useSubmitProblemSolution,
+  useFinishAssessment,
+} from "@/hooks/attempt.hook";
 import { ArenaHeader } from "@/components/arena/ArenaHeader";
 import { ProblemStatement } from "@/components/arena/ProblemStatement";
 import { CodeEditor } from "@/components/arena/CodeEditor";
 import { McqView } from "@/components/arena/McqView";
 import { TestResultsPanel } from "@/components/arena/TestResultsPanel";
 import { FinishDialog } from "@/components/arena/FinishDialog";
-import { ISubmitProblemResponse } from "@/types";
+import { ISubmitProblemResponse } from "@/types/attempt.type";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
-import { IProblem } from "@/types";
+import { IProblem } from "@/types/problem.type";
 
 function subscribeOnline(callback: () => void) {
   window.addEventListener("online", callback);
@@ -53,6 +58,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   // Mutations
   const startAttemptMutation = useStartAssessmentAttempt();
+  const runCodeMutation = useRunProblemCode();
   const submitSolutionMutation = useSubmitProblemSolution();
   const finishAssessmentMutation = useFinishAssessment();
 
@@ -81,6 +87,24 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
   const attemptData = startAttemptMutation.data?.data;
   const problems = attemptData?.problems || [];
 
+  // Synchronize previously submitted problems and saved code on load
+  useEffect(() => {
+    if (attemptData?.submittedProblemIds && attemptData.submittedProblemIds.length > 0) {
+      setAnsweredProblems(prev => new Set([...prev, ...attemptData.submittedProblemIds!]));
+    }
+    if (attemptData?.submissions && attemptData.submissions.length > 0) {
+      setCodeSolutions(prev => {
+        const next = { ...prev };
+        attemptData.submissions?.forEach(s => {
+          if (s.submittedCode && !next[s.problemId]) {
+            next[s.problemId] = s.submittedCode;
+          }
+        });
+        return next;
+      });
+    }
+  }, [attemptData]);
+
   const getInitialProblemCode = (problemId: string): string | undefined => {
     if (codeSolutions[problemId] !== undefined) {
       return codeSolutions[problemId];
@@ -108,6 +132,8 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
       }
     : undefined;
 
+  const isProblemSubmitted = activeProblem ? answeredProblems.has(activeProblem.id) : false;
+
   // Handle local code changes and persist to localStorage
   const handleCodeChange = (problemId: string, code: string) => {
     setCodeSolutions(prev => ({
@@ -123,9 +149,31 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     }
   };
 
-  // Handle Coding Submission
-  const handleCodeSubmit = (code: string, language: string) => {
+  // Handle Coding Run (Testing against test cases without official submission)
+  const handleCodeRun = (code: string, language: string) => {
     if (!activeProblem) return;
+
+    runCodeMutation.mutate(
+      {
+        assessmentId,
+        problemId: activeProblem.id,
+        payload: {
+          code,
+          submittedCode: code,
+          language,
+        },
+      },
+      {
+        onSuccess: res => {
+          setTestResults(res.data);
+        },
+      },
+    );
+  };
+
+  // Handle Coding Submission (Official final submission for problem)
+  const handleCodeSubmit = (code: string, language: string) => {
+    if (!activeProblem || isProblemSubmitted) return;
 
     submitSolutionMutation.mutate(
       {
@@ -133,6 +181,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         problemId: activeProblem.id,
         payload: {
           code,
+          submittedCode: code,
           language,
         },
       },
@@ -147,7 +196,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   // Handle MCQ Submission
   const handleMcqSubmit = () => {
-    if (!activeProblem || !selectedMcqOption) return;
+    if (!activeProblem || !selectedMcqOption || isProblemSubmitted) return;
 
     submitSolutionMutation.mutate(
       {
@@ -155,6 +204,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         problemId: activeProblem.id,
         payload: {
           selectedOptionId: selectedMcqOption,
+          selectedOptions: [selectedMcqOption],
         },
       },
       {
@@ -282,13 +332,19 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                       initialCode={getInitialProblemCode(activeProblem.id)}
                       starterCode={activeProblem.starterCode}
                       onCodeChange={code => handleCodeChange(activeProblem.id, code)}
+                      onRun={handleCodeRun}
                       onSubmit={handleCodeSubmit}
+                      isRunning={runCodeMutation.isPending}
                       isSubmitting={submitSolutionMutation.isPending}
+                      isSubmitted={isProblemSubmitted}
                     />
                   )}
                 </div>
                 <div className="max-h-60 overflow-y-auto">
-                  <TestResultsPanel results={testResults} isSubmitting={submitSolutionMutation.isPending} />
+                  <TestResultsPanel
+                    results={testResults}
+                    isSubmitting={runCodeMutation.isPending || submitSolutionMutation.isPending}
+                  />
                 </div>
               </>
             ) : (
@@ -299,6 +355,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                   onSelectOption={setSelectedMcqOption}
                   onSubmit={handleMcqSubmit}
                   isSubmitting={submitSolutionMutation.isPending}
+                  isSubmitted={isProblemSubmitted}
                 />
               </div>
             )}

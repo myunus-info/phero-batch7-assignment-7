@@ -26,6 +26,13 @@ export function submitProblemSolution(assessmentId: string, payload: ISubmitProb
   });
 }
 
+export function runProblemCode(assessmentId: string, payload: ISubmitProblemPayload) {
+  return apiClient<IApiResponse<ISubmitProblemResponse>>(`/attempts/${assessmentId}/run-code`, {
+    method: "POST",
+    body: payload,
+  });
+}
+
 export function finishAssessment(assessmentId: string) {
   return apiClient<IApiResponse<IFinishAssessmentResponse>>(`/attempts/${assessmentId}/finish`, {
     method: "POST",

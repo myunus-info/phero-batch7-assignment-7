@@ -124,7 +124,7 @@ function RecruiterAssessmentsContent() {
                   <TableCell className="font-mono text-xs text-foreground">{a.durationMinutes} min</TableCell>
                   <TableCell className="font-mono text-xs text-foreground">{a.passingMarks}%</TableCell>
                   <TableCell className="font-mono text-xs text-cyan-600 dark:text-cyan-400">
-                    {a.candidateAssessments?.length || 0} invited
+                    {a._count?.candidates || 0} invited
                   </TableCell>
                   <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(a.createdAt)}</TableCell>
                   <TableCell className="text-right">

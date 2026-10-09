@@ -36,6 +36,12 @@ export interface IStartAttemptResponse {
     passingScore?: number;
   };
   problems: IAttemptProblem[];
+  submittedProblemIds?: string[];
+  submissions?: Array<{
+    problemId: string;
+    submittedCode?: string | null;
+    selectedOptions?: string[] | null;
+  }>;
 }
 
 export interface ISubmitProblemPayload {
