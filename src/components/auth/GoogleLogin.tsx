@@ -31,22 +31,27 @@ export default function GoogleLoginComponent({
     theme || (resolvedTheme === "dark" ? "filled_black" : "outline");
 
   return (
-    <GoogleLogin
-      onSuccess={(credentialResponse) => {
-        if (credentialResponse.credential) {
-          googleOAuthMutation.mutate({
-            idToken: credentialResponse.credential,
-            ...(role ? { role } : {}),
-          });
-        }
-      }}
-      onError={() => {
-        console.error("Google Authentication Failed");
-      }}
-      theme={effectiveTheme}
-      shape={shape}
-      text={buttonText}
-    />
+    <div
+      style={{ colorScheme: "light" }}
+      className="flex items-center justify-center overflow-hidden rounded-md"
+    >
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          if (credentialResponse.credential) {
+            googleOAuthMutation.mutate({
+              idToken: credentialResponse.credential,
+              ...(role ? { role } : {}),
+            });
+          }
+        }}
+        onError={() => {
+          console.error("Google Authentication Failed");
+        }}
+        theme={effectiveTheme}
+        shape={shape}
+        text={buttonText}
+      />
+    </div>
   );
 }
 
