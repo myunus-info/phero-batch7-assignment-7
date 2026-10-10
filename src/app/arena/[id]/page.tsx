@@ -4,12 +4,8 @@ import { use, useState, useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import {
-  useStartAssessmentAttempt,
-  useRunProblemCode,
-  useSubmitProblemSolution,
-  useFinishAssessment,
-} from "@/hooks/attempt.hook";
+import { useStartAssessmentAttempt, useSubmitProblemSolution, useFinishAssessment } from "@/hooks/attempt.hook";
+import { runClientCode } from "@/lib/clientCodeRunner";
 import { ArenaHeader } from "@/components/arena/ArenaHeader";
 import { ProblemStatement } from "@/components/arena/ProblemStatement";
 import { CodeEditor } from "@/components/arena/CodeEditor";
@@ -51,6 +47,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
   const [finishDialogOpen, setFinishDialogOpen] = useState(false);
   const [testResults, setTestResults] = useState<ISubmitProblemResponse | null>(null);
   const [selectedMcqOption, setSelectedMcqOption] = useState<string>("");
+  const [isRunningClientCode, setIsRunningClientCode] = useState(false);
 
   // Code state per problem
   const [codeSolutions, setCodeSolutions] = useState<Record<string, string>>({});
@@ -58,14 +55,31 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   // Mutations
   const startAttemptMutation = useStartAssessmentAttempt();
-  const runCodeMutation = useRunProblemCode();
   const submitSolutionMutation = useSubmitProblemSolution();
   const finishAssessmentMutation = useFinishAssessment();
 
   // Start or resume attempt on mount
   useEffect(() => {
     if (assessmentId) {
-      startAttemptMutation.mutate(assessmentId);
+      startAttemptMutation.mutate(assessmentId, {
+        onSuccess: res => {
+          const data = res.data;
+          if (data?.submittedProblemIds && data.submittedProblemIds.length > 0) {
+            setAnsweredProblems(new Set(data.submittedProblemIds));
+          }
+          if (data?.submissions && data.submissions.length > 0) {
+            setCodeSolutions(prev => {
+              const next = { ...prev };
+              data.submissions?.forEach(s => {
+                if (s.submittedCode && !next[s.problemId]) {
+                  next[s.problemId] = s.submittedCode;
+                }
+              });
+              return next;
+            });
+          }
+        },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assessmentId]);
@@ -86,24 +100,6 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
   const attemptData = startAttemptMutation.data?.data;
   const problems = attemptData?.problems || [];
-
-  // Synchronize previously submitted problems and saved code on load
-  useEffect(() => {
-    if (attemptData?.submittedProblemIds && attemptData.submittedProblemIds.length > 0) {
-      setAnsweredProblems(prev => new Set([...prev, ...attemptData.submittedProblemIds!]));
-    }
-    if (attemptData?.submissions && attemptData.submissions.length > 0) {
-      setCodeSolutions(prev => {
-        const next = { ...prev };
-        attemptData.submissions?.forEach(s => {
-          if (s.submittedCode && !next[s.problemId]) {
-            next[s.problemId] = s.submittedCode;
-          }
-        });
-        return next;
-      });
-    }
-  }, [attemptData]);
 
   const getInitialProblemCode = (problemId: string): string | undefined => {
     if (codeSolutions[problemId] !== undefined) {
@@ -149,26 +145,19 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     }
   };
 
-  // Handle Coding Run (Testing against test cases without official submission)
-  const handleCodeRun = (code: string, language: string) => {
+  // Handle Coding Run (Client-side execution in browser sandbox)
+  const handleCodeRun = async (code: string) => {
     if (!activeProblem) return;
 
-    runCodeMutation.mutate(
-      {
-        assessmentId,
-        problemId: activeProblem.id,
-        payload: {
-          code,
-          submittedCode: code,
-          language,
-        },
-      },
-      {
-        onSuccess: res => {
-          setTestResults(res.data);
-        },
-      },
-    );
+    setIsRunningClientCode(true);
+    try {
+      const results = await runClientCode(code, activeProblem.testCases || [], activeProblem.points || 100);
+      setTestResults(results);
+    } catch (err: unknown) {
+      toast.error((err as Error)?.message || "Execution error in browser sandbox");
+    } finally {
+      setIsRunningClientCode(false);
+    }
   };
 
   // Handle Coding Submission (Official final submission for problem)
@@ -180,7 +169,6 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         assessmentId,
         problemId: activeProblem.id,
         payload: {
-          code,
           submittedCode: code,
           language,
         },
@@ -203,7 +191,6 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         assessmentId,
         problemId: activeProblem.id,
         payload: {
-          selectedOptionId: selectedMcqOption,
           selectedOptions: [selectedMcqOption],
         },
       },
@@ -334,7 +321,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                       onCodeChange={code => handleCodeChange(activeProblem.id, code)}
                       onRun={handleCodeRun}
                       onSubmit={handleCodeSubmit}
-                      isRunning={runCodeMutation.isPending}
+                      isRunning={isRunningClientCode}
                       isSubmitting={submitSolutionMutation.isPending}
                       isSubmitted={isProblemSubmitted}
                     />
@@ -343,7 +330,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                 <div className="max-h-60 overflow-y-auto">
                   <TestResultsPanel
                     results={testResults}
-                    isSubmitting={runCodeMutation.isPending || submitSolutionMutation.isPending}
+                    isSubmitting={isRunningClientCode || submitSolutionMutation.isPending}
                   />
                 </div>
               </>

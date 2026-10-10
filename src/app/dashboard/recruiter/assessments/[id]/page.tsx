@@ -62,8 +62,12 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
   }
 
   const candidateAssessments = assessment.candidates || assessment.candidateAssessments || [];
-  const passingScore = assessment.passingMarks ?? assessment.passingScore ?? 60;
+  const rawPassingScore = assessment.passingMarks ?? assessment.passingScore ?? 60;
   const totalMarks = assessment.totalMarks ?? 100;
+  const passingScore =
+    rawPassingScore > totalMarks
+      ? Math.max(1, Math.round((rawPassingScore / 100) * totalMarks))
+      : rawPassingScore;
 
   const completedCandidates = candidateAssessments.filter(c => c.status === "COMPLETED");
   const passedCandidates = completedCandidates.filter(
@@ -129,7 +133,9 @@ export default function AssessmentDetailPage({ params }: { params: Promise<{ id:
             <span className="text-xs font-semibold uppercase text-muted-foreground">Passing Cutoff</span>
             <p className="text-xl font-bold text-foreground flex items-center space-x-1">
               <Award className="h-4 w-4 text-cyan-500" />
-              <span>{passingScore} pts</span>
+              <span>
+                {passingScore} pts ({totalMarks > 0 ? Math.min(100, Math.round((passingScore / totalMarks) * 100)) : 0}%)
+              </span>
             </p>
           </div>
 

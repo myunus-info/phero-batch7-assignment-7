@@ -52,7 +52,9 @@ export function StepReview({
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Passing Cutoff</span>
           <p className="text-lg font-bold text-foreground flex items-center space-x-1">
             <Award className="h-4 w-4 text-cyan-500" />
-            <span>{values.passingMarks}%</span>
+            <span>
+              {values.passingMarks}% ({Math.max(1, Math.round((values.passingMarks / 100) * totalPoints))} pts)
+            </span>
           </p>
         </div>
 

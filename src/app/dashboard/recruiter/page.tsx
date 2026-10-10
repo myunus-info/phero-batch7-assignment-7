@@ -127,7 +127,9 @@ export default function RecruiterDashboardPage() {
                         <Clock className="h-3 w-3" />
                         <span>{a.durationMinutes} min</span>
                       </span>
-                      <span>Passing Score: {a.passingScore}%</span>
+                      <span>
+                        Passing Score: {a.passingScore ?? (a.totalMarks && a.passingMarks ? Math.round((a.passingMarks / a.totalMarks) * 100) : a.passingMarks || 70)}%
+                      </span>
                       <span>{a.assessmentProblems?.length || 0} Problems</span>
                     </div>
                   </div>

@@ -40,10 +40,16 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
 
   const totalScore = result.totalScore ?? 0;
   const maxPossibleScore = result.assessment?.totalMarks ?? result.maxPossibleScore ?? 100;
-  const passingMarks = result.assessment?.passingMarks ?? result.assessment?.passingScore ?? 60;
-  const isPassed = result.isPassed ?? result.passed ?? totalScore >= passingMarks;
+  const rawPassingMarks = result.assessment?.passingMarks ?? result.assessment?.passingScore ?? 60;
+  const passingMarks =
+    rawPassingMarks > maxPossibleScore
+      ? Math.max(1, Math.round((rawPassingMarks / 100) * maxPossibleScore))
+      : rawPassingMarks;
+  const isPassed = result.isPassed ?? totalScore >= passingMarks;
   const percentageScore =
     result.percentageScore ?? (maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0);
+  const benchmarkPercentage =
+    maxPossibleScore > 0 ? Math.min(100, Math.round((passingMarks / maxPossibleScore) * 100)) : 0;
 
   interface IProblemBreakdownItem {
     problemId: string;
@@ -59,42 +65,28 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
     executionTimeMs?: number | null;
   }
 
-  // Normalize problem results from backend submissions or problemResults
-  const problemBreakdown: IProblemBreakdownItem[] =
-    result.submissions && result.submissions.length > 0
-      ? result.submissions.map(sub => {
-          let testCasesPassed = 0;
-          let totalTestCases = 0;
-          if (Array.isArray(sub.executionResult)) {
-            const results = sub.executionResult as ITestResult[];
-            totalTestCases = results.length;
-            testCasesPassed = results.filter(tc => tc.passed).length;
-          }
-          return {
-            problemId: sub.problemId,
-            title: sub.problem?.title || "Problem",
-            difficulty: sub.problem?.difficulty || "MEDIUM",
-            type: sub.problem?.problemType || "CODING",
-            score: sub.scoreAwarded ?? 0,
-            maxPoints: sub.problem?.points ?? 100,
-            status: sub.status,
-            testCasesPassed,
-            totalTestCases,
-            submittedCode: sub.submittedCode,
-            executionTimeMs: sub.executionTimeMs,
-          };
-        })
-      : (result.problemResults || []).map(pr => ({
-          problemId: pr.problemId,
-          title: pr.title,
-          difficulty: pr.difficulty,
-          type: pr.type || pr.problemType || "CODING",
-          score: pr.score,
-          maxPoints: pr.maxPoints,
-          status: pr.status,
-          testCasesPassed: pr.testCasesPassed ?? 0,
-          totalTestCases: pr.totalTestCases ?? 0,
-        }));
+  const problemBreakdown: IProblemBreakdownItem[] = (result.submissions || []).map(sub => {
+    let testCasesPassed = 0;
+    let totalTestCases = 0;
+    if (Array.isArray(sub.executionResult)) {
+      const results = sub.executionResult as ITestResult[];
+      totalTestCases = results.length;
+      testCasesPassed = results.filter(tc => tc.passed).length;
+    }
+    return {
+      problemId: sub.problemId,
+      title: sub.problem?.title || "Problem",
+      difficulty: sub.problem?.difficulty || "MEDIUM",
+      type: sub.problem?.problemType || "CODING",
+      score: sub.scoreAwarded ?? 0,
+      maxPoints: sub.problem?.points ?? 100,
+      status: sub.status,
+      testCasesPassed,
+      totalTestCases,
+      submittedCode: sub.submittedCode,
+      executionTimeMs: sub.executionTimeMs,
+    };
+  });
 
   return (
     <RoleGuard allowedRoles={["CANDIDATE"]}>
@@ -134,7 +126,7 @@ export default function AssessmentResultPage({ params }: { params: Promise<{ id:
                 {isPassed ? "Assessment Passed" : "Needs Improvement"}
               </h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Benchmark Cutoff: {passingMarks} pts ({Math.round((passingMarks / maxPossibleScore) * 100)}%) • Your
+                Benchmark Cutoff: {passingMarks} pts ({benchmarkPercentage}%) • Your
                 Score: {totalScore} pts ({percentageScore}%)
               </p>
             </div>

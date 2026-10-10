@@ -6,7 +6,6 @@ import {
   finishAssessment,
   getAssessmentResult,
   getMyCandidateAssessments,
-  runProblemCode,
   startAssessmentAttempt,
   submitProblemSolution,
 } from "@/api/attempt.api";
@@ -32,30 +31,6 @@ export function useStartAssessmentAttempt() {
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
       toast.error(err?.data?.message || err?.message || "Failed to start assessment");
-    },
-  });
-}
-
-export function useRunProblemCode() {
-  return useMutation({
-    mutationFn: ({
-      assessmentId,
-      problemId,
-      payload,
-    }: {
-      assessmentId: string;
-      problemId?: string;
-      payload: ISubmitProblemPayload;
-    }) =>
-      runProblemCode(assessmentId, {
-        problemId: problemId || payload.problemId,
-        ...payload,
-      }),
-    onSuccess: () => {
-      toast.info("Test execution completed.");
-    },
-    onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Code execution failed");
     },
   });
 }

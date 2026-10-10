@@ -42,6 +42,7 @@ export interface IAssessment {
   durationMinutes: number;
   totalMarks?: number;
   passingMarks?: number;
+  passingScore?: number;
   scheduleStart?: string | null;
   scheduleEnd?: string | null;
   status: AssessmentStatus;

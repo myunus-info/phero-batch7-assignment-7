@@ -35,7 +35,10 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
       title: initialData?.title || "",
       description: initialData?.description || "",
       durationMinutes: initialData?.durationMinutes || 60,
-      passingMarks: initialData?.passingMarks ?? 70,
+      passingMarks:
+        initialData?.totalMarks && initialData.passingMarks && initialData.totalMarks > 0
+          ? Math.round((initialData.passingMarks / initialData.totalMarks) * 100)
+          : initialData?.passingMarks ?? 70,
       selectedProblemIds: initialProblemIds,
     },
     validators: {
@@ -91,6 +94,9 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
       orderIndex: index + 1,
     }));
 
+    const totalMarks = totalPoints || 100;
+    const calculatedPassingMarks = Math.max(1, Math.round((passingMarks / 100) * totalMarks));
+
     if (isEditing && initialData?.id) {
       updateAssessmentMutation.mutate(
         {
@@ -99,8 +105,8 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
             title: values.title.trim(),
             description: values.description.trim(),
             durationMinutes: duration,
-            passingMarks,
-            totalMarks: totalPoints || 100,
+            passingMarks: calculatedPassingMarks,
+            totalMarks: totalMarks,
             problemIds: formattedProblemIds,
           },
         },
@@ -116,8 +122,8 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
           title: values.title.trim(),
           description: values.description.trim(),
           durationMinutes: duration,
-          passingMarks,
-          totalMarks: totalPoints || 100,
+          passingMarks: calculatedPassingMarks,
+          totalMarks: totalMarks,
           problemIds: formattedProblemIds,
         },
         {

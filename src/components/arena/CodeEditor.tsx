@@ -5,7 +5,7 @@ import Editor, { type OnMount } from "@monaco-editor/react";
 import { useTheme } from "@/providers/themeProvider";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { Check, Play, RotateCcw, Send } from "lucide-react";
+import { Play, RotateCcw, Send, Check } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
@@ -21,42 +21,21 @@ interface CodeEditorProps {
   isSubmitted?: boolean;
 }
 
-const SUPPORTED_LANGUAGES = [
-  { value: "javascript", label: "JavaScript (Node.js)" },
-  { value: "typescript", label: "TypeScript" },
-  { value: "python", label: "Python 3" },
-  { value: "cpp", label: "C++ (GCC)" },
-  { value: "java", label: "Java (OpenJDK)" },
-];
+const SUPPORTED_LANGUAGES = [{ value: "javascript", label: "JavaScript (Node.js)" }];
 
 export const DEFAULT_BOILERPLATES: Record<string, string> = {
-  javascript: `// Write your solution here
-function solution() {
-  
-}
-`,
-  typescript: `// Write your TypeScript solution here
-function solution(): void {
-  
-}
-`,
-  python: `# Write your Python solution here
-def solution():
-    pass
-`,
-  cpp: `#include <iostream>
-using namespace std;
+  javascript: `// Write your JavaScript (Node.js) solution here
+// Input is available via standard input (stdin) or as the 'input' variable
+const fs = require("fs");
 
-int main() {
-    // Write your solution here
-    return 0;
+function solution() {
+  const input = fs.readFileSync(0, "utf-8").trim();
+  
+  // Write your solution logic here
+  
 }
-`,
-  java: `public class Solution {
-    public static void main(String[] args) {
-        // Write your solution here
-    }
-}
+
+solution();
 `,
 };
 

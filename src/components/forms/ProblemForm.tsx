@@ -80,14 +80,10 @@ export function ProblemForm({
         title: value.title,
         description: value.description,
         difficulty: value.difficulty,
-        type: value.type,
         problemType: value.type,
         points: Number(value.points),
-        timeLimit: value.type === "CODING" ? Number(value.timeLimit) : undefined,
         timeLimitSeconds: value.type === "CODING" ? Number(value.timeLimit) * 60 : undefined,
-        memoryLimit: value.type === "CODING" ? Number(value.memoryLimit) : undefined,
         testCases: value.type === "CODING" ? value.testCases : undefined,
-        options: value.type === "MCQ" ? value.options : undefined,
         mcqOptions: value.type === "MCQ" ? value.options : undefined,
       };
 
