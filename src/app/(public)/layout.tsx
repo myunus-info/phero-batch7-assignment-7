@@ -1,7 +1,11 @@
-import { PublicHeader } from "@/components/layout/public/Header";
 import { PublicFooter } from "@/components/layout/public/Footer";
+import { PublicHeader } from "@/components/layout/public/Header";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-200">
       <PublicHeader />

@@ -1,6 +1,6 @@
+import { ArrowLeft, XCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { XCircle, ArrowLeft } from "lucide-react";
 
 export default function PaymentCancelPage() {
   return (
@@ -11,9 +11,12 @@ export default function PaymentCancelPage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Payment Cancelled</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Payment Cancelled
+          </h1>
           <p className="text-sm text-muted-foreground">
-            No charges were incurred. You can return to your billing page anytime to select another package.
+            No charges were incurred. You can return to your billing page
+            anytime to select another package.
           </p>
         </div>
 

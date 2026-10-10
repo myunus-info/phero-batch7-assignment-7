@@ -1,9 +1,9 @@
 "use client";
 
-import { IMcqOption } from "@/types";
+import { Check, CheckCircle2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Send, CheckCircle2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { IMcqOption } from "@/types";
 
 interface McqViewProps {
   options: IMcqOption[];
@@ -37,7 +37,9 @@ export function McqView({
                 key={option.id || idx}
                 type="button"
                 disabled={isSubmitted}
-                onClick={() => !isSubmitted && onSelectOption(option.id || String(idx))}
+                onClick={() =>
+                  !isSubmitted && onSelectOption(option.id || String(idx))
+                }
                 className={cn(
                   "flex w-full items-center justify-between p-4 rounded-xl border text-left transition-all",
                   isSubmitted && "cursor-not-allowed opacity-90",
@@ -49,7 +51,9 @@ export function McqView({
                 <div className="flex items-center space-x-4">
                   <span
                     className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-mono font-bold ${
-                      isSelected ? "bg-emerald-500 text-white" : "bg-muted text-muted-foreground"
+                      isSelected
+                        ? "bg-emerald-500 text-white"
+                        : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {String.fromCharCode(65 + idx)}
@@ -57,7 +61,9 @@ export function McqView({
                   <span className="text-sm font-medium">{option.text}</span>
                 </div>
 
-                {isSelected && <CheckCircle2 className="h-5 w-5 text-emerald-500" />}
+                {isSelected && (
+                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                )}
               </button>
             );
           })}
@@ -75,7 +81,11 @@ export function McqView({
             isSubmitted &&
               "cursor-not-allowed pointer-events-auto disabled:cursor-not-allowed disabled:pointer-events-auto opacity-70 border border-border text-muted-foreground shadow-none",
           )}
-          title={isSubmitted ? "Answer already submitted for this question" : undefined}
+          title={
+            isSubmitted
+              ? "Answer already submitted for this question"
+              : undefined
+          }
         >
           {isSubmitted ? (
             <>

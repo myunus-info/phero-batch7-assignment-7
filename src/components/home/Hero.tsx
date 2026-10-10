@@ -1,6 +1,6 @@
+import { ArrowRight, Code2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2 } from "lucide-react";
 
 export function Hero() {
   return (
@@ -21,19 +21,28 @@ export function Hero() {
         </h1>
 
         <p className="mt-6 text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          Create custom coding assessments, grade multi-language solutions against hidden test cases, and hire top
-          software engineers with absolute confidence.
+          Create custom coding assessments, grade multi-language solutions
+          against hidden test cases, and hire top software engineers with
+          absolute confidence.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link href="/register">
-            <Button variant="emerald" size="lg" className="gap-2 w-full sm:w-auto font-semibold">
+            <Button
+              variant="emerald"
+              size="lg"
+              className="gap-2 w-full sm:w-auto font-semibold"
+            >
               <span>Start Free Trial</span>
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
           <Link href="/problems">
-            <Button variant="outline" size="lg" className="gap-2 w-full sm:w-auto">
+            <Button
+              variant="outline"
+              size="lg"
+              className="gap-2 w-full sm:w-auto"
+            >
               <Code2 className="h-4 w-4" />
               <span>Explore Problem Bank</span>
             </Button>
@@ -43,20 +52,36 @@ export function Hero() {
         {/* Quick Demo Preview Stats */}
         <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 pt-10 border-t border-border text-left">
           <div>
-            <p className="text-2xl font-bold font-mono text-emerald-500">5+ Langs</p>
-            <p className="text-xs text-muted-foreground mt-1">JS, TS, Python, C++, Java</p>
+            <p className="text-2xl font-bold font-mono text-emerald-500">
+              5+ Langs
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              JS, TS, Python, C++, Java
+            </p>
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono text-cyan-500">&lt; 800ms</p>
-            <p className="text-xs text-muted-foreground mt-1">Average execution latency</p>
+            <p className="text-2xl font-bold font-mono text-cyan-500">
+              &lt; 800ms
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Average execution latency
+            </p>
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono text-indigo-500">100% Secure</p>
-            <p className="text-xs text-muted-foreground mt-1">Isolated sandbox runner</p>
+            <p className="text-2xl font-bold font-mono text-indigo-500">
+              100% Secure
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Isolated sandbox runner
+            </p>
           </div>
           <div>
-            <p className="text-2xl font-bold font-mono text-amber-500">Zero Fluff</p>
-            <p className="text-xs text-muted-foreground mt-1">Auto-scored test verdicts</p>
+            <p className="text-2xl font-bold font-mono text-amber-500">
+              Zero Fluff
+            </p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Auto-scored test verdicts
+            </p>
           </div>
         </div>
       </div>

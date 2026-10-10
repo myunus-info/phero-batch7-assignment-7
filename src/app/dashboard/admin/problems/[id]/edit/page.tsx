@@ -1,14 +1,18 @@
 "use client";
 
-import { use } from "react";
+import { ArrowLeft, Edit3 } from "lucide-react";
 import Link from "next/link";
+import { use } from "react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetProblemById } from "@/hooks/problem.hook";
 import { ProblemForm } from "@/components/forms/ProblemForm";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit3 } from "lucide-react";
+import { useGetProblemById } from "@/hooks/problem.hook";
 
-export default function AdminEditProblemPage({ params }: { params: Promise<{ id: string }> }) {
+export default function AdminEditProblemPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const { data: problemData, isLoading } = useGetProblemById(resolvedParams.id);
   const problem = problemData?.data;
@@ -29,7 +33,9 @@ export default function AdminEditProblemPage({ params }: { params: Promise<{ id:
     return (
       <RoleGuard allowedRoles={["ADMIN"]}>
         <div className="p-8 text-center space-y-4">
-          <p className="text-muted-foreground">Problem not found or could not be loaded.</p>
+          <p className="text-muted-foreground">
+            Problem not found or could not be loaded.
+          </p>
           <Link href="/dashboard/admin/problems">
             <Button variant="outline" size="sm">
               Back to Problems
@@ -45,7 +51,11 @@ export default function AdminEditProblemPage({ params }: { params: Promise<{ id:
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Link href="/dashboard/admin/problems">
-            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Problems</span>
             </Button>
@@ -58,11 +68,16 @@ export default function AdminEditProblemPage({ params }: { params: Promise<{ id:
             <span>Edit Problem: {problem.title}</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Update problem title, description, difficulty, points, code starter, and test cases.
+            Update problem title, description, difficulty, points, code starter,
+            and test cases.
           </p>
         </div>
 
-        <ProblemForm mode="edit" initialProblem={problem} redirectPath="/dashboard/admin/problems" />
+        <ProblemForm
+          mode="edit"
+          initialProblem={problem}
+          redirectPath="/dashboard/admin/problems"
+        />
       </div>
     </RoleGuard>
   );

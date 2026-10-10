@@ -5,4 +5,6 @@ export const updateUserStatusOrRoleSchema = z.object({
   status: z.enum(["ACTIVE", "BLOCKED"]),
 });
 
-export type UpdateUserStatusOrRoleFormData = z.infer<typeof updateUserStatusOrRoleSchema>;
+export type UpdateUserStatusOrRoleFormData = z.infer<
+  typeof updateUserStatusOrRoleSchema
+>;

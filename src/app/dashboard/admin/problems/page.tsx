@@ -1,19 +1,29 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Edit3, ExternalLink, Plus, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import useUrlParams from "@/hooks/url-params.hook";
-import { useGetAllProblems, useDeleteProblem, useDebounce } from "@/hooks";
-import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import {
+  DifficultyBadge,
+  ProblemTypeBadge,
+} from "@/components/ui/status-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { DifficultyLevel, ProblemType } from "@/types";
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
-import { Plus, Search, Trash2, ExternalLink, Edit3 } from "lucide-react";
+import { useDebounce, useDeleteProblem, useGetAllProblems } from "@/hooks";
+import useUrlParams from "@/hooks/url-params.hook";
+import type { DifficultyLevel, ProblemType } from "@/types";
 
 function AdminProblemsContent() {
   const { getParam, setParams } = useUrlParams();
@@ -54,9 +64,12 @@ function AdminProblemsContent() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Problem Management</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Problem Management
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Create, update, and manage problems available in candidate assessments.
+              Create, update, and manage problems available in candidate
+              assessments.
             </p>
           </div>
 
@@ -76,18 +89,24 @@ function AdminProblemsContent() {
               placeholder="Search problems..."
               className="pl-9"
               value={searchInput}
-              onChange={e => setSearchInput(e.target.value)}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
 
-          <Select value={difficultyParam} onChange={e => setParams({ difficulty: e.target.value }, true)}>
+          <Select
+            value={difficultyParam}
+            onChange={(e) => setParams({ difficulty: e.target.value }, true)}
+          >
             <option value="">All Difficulties</option>
             <option value="EASY">Easy</option>
             <option value="MEDIUM">Medium</option>
             <option value="HARD">Hard</option>
           </Select>
 
-          <Select value={typeParam} onChange={e => setParams({ type: e.target.value }, true)}>
+          <Select
+            value={typeParam}
+            onChange={(e) => setParams({ type: e.target.value }, true)}
+          >
             <option value="">All Problem Types</option>
             <option value="CODING">Coding (Judge0)</option>
             <option value="MCQ">Multiple Choice</option>
@@ -102,33 +121,47 @@ function AdminProblemsContent() {
               <TableHead className="whitespace-nowrap">Type</TableHead>
               <TableHead className="whitespace-nowrap">Difficulty</TableHead>
               <TableHead className="whitespace-nowrap">Points</TableHead>
-              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
+              <TableHead className="text-right whitespace-nowrap">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-8 text-muted-foreground"
+                >
                   Loading problems...
                 </TableCell>
               </TableRow>
             ) : problems.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-8 text-muted-foreground"
+                >
                   No problems found.
                 </TableCell>
               </TableRow>
             ) : (
-              problems.map(problem => (
+              problems.map((problem) => (
                 <TableRow key={problem.id}>
                   <TableCell>
                     <div>
-                      <p className="font-semibold text-foreground">{problem.title}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{problem.description}</p>
+                      <p className="font-semibold text-foreground">
+                        {problem.title}
+                      </p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">
+                        {problem.description}
+                      </p>
                     </div>
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
-                    <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
+                    <ProblemTypeBadge
+                      type={problem.type || problem.problemType || "CODING"}
+                    />
                   </TableCell>
                   <TableCell className="whitespace-nowrap">
                     <DifficultyBadge difficulty={problem.difficulty} />
@@ -139,12 +172,24 @@ function AdminProblemsContent() {
                   <TableCell className="text-right whitespace-nowrap">
                     <div className="flex items-center justify-end space-x-2">
                       <Link href={`/dashboard/admin/problems/${problem.id}`}>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="View details">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          title="View details"
+                        >
                           <ExternalLink className="h-3.5 w-3.5" />
                         </Button>
                       </Link>
-                      <Link href={`/dashboard/admin/problems/${problem.id}/edit`}>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Edit problem">
+                      <Link
+                        href={`/dashboard/admin/problems/${problem.id}/edit`}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          title="Edit problem"
+                        >
                           <Edit3 className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
                         </Button>
                       </Link>
@@ -171,11 +216,16 @@ function AdminProblemsContent() {
           </TableBody>
         </Table>
 
-        <TablePagination page={pageParam} total={meta.total} limit={10} onPageChange={p => setParams({ page: p })} />
+        <TablePagination
+          page={pageParam}
+          total={meta.total}
+          limit={10}
+          onPageChange={(p) => setParams({ page: p })}
+        />
 
         <DeleteConfirmationModal
           open={!!problemToDelete}
-          onOpenChange={open => {
+          onOpenChange={(open) => {
             if (!open) setProblemToDelete(null);
           }}
           itemType="problem"
@@ -198,7 +248,13 @@ function AdminProblemsContent() {
 
 export default function AdminProblemsPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-muted-foreground">Loading admin problems...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-muted-foreground">
+          Loading admin problems...
+        </div>
+      }
+    >
       <AdminProblemsContent />
     </Suspense>
   );

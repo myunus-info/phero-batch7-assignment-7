@@ -1,5 +1,5 @@
-import { ComponentType } from "react";
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { ComponentType } from "react";
 
 export interface ISidebarItem {
   title?: string;

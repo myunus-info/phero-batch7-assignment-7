@@ -1,21 +1,25 @@
 "use client";
 
-import { use, useState, useEffect, useSyncExternalStore } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useStartAssessmentAttempt, useSubmitProblemSolution, useFinishAssessment } from "@/hooks/attempt.hook";
-import { runClientCode } from "@/lib/clientCodeRunner";
-import { ArenaHeader } from "@/components/arena/ArenaHeader";
-import { ProblemStatement } from "@/components/arena/ProblemStatement";
-import { CodeEditor } from "@/components/arena/CodeEditor";
-import { McqView } from "@/components/arena/McqView";
-import { TestResultsPanel } from "@/components/arena/TestResultsPanel";
-import { FinishDialog } from "@/components/arena/FinishDialog";
-import { ISubmitProblemResponse } from "@/types/attempt.type";
-import { Spinner } from "@/components/ui/spinner";
 import { AlertTriangle, CheckCircle2 } from "lucide-react";
-import { IProblem } from "@/types/problem.type";
+import { useRouter } from "next/navigation";
+import { use, useEffect, useState, useSyncExternalStore } from "react";
+import { toast } from "sonner";
+import { ArenaHeader } from "@/components/arena/ArenaHeader";
+import { CodeEditor } from "@/components/arena/CodeEditor";
+import { FinishDialog } from "@/components/arena/FinishDialog";
+import { McqView } from "@/components/arena/McqView";
+import { ProblemStatement } from "@/components/arena/ProblemStatement";
+import { TestResultsPanel } from "@/components/arena/TestResultsPanel";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  useFinishAssessment,
+  useStartAssessmentAttempt,
+  useSubmitProblemSolution,
+} from "@/hooks/attempt.hook";
+import { runClientCode } from "@/lib/clientCodeRunner";
+import type { ISubmitProblemResponse } from "@/types/attempt.type";
+import type { IProblem } from "@/types/problem.type";
 
 function subscribeOnline(callback: () => void) {
   window.addEventListener("online", callback);
@@ -34,24 +38,39 @@ function getOnlineServerSnapshot() {
   return true;
 }
 
-const getDraftKey = (assessmentId: string, problemId: string) => `devjudge_draft_${assessmentId}_${problemId}`;
+const getDraftKey = (assessmentId: string, problemId: string) =>
+  `devjudge_draft_${assessmentId}_${problemId}`;
 
-export default function ArenaPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ArenaPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const assessmentId = resolvedParams.id;
   const router = useRouter();
 
-  const isOnline = useSyncExternalStore(subscribeOnline, getOnlineSnapshot, getOnlineServerSnapshot);
+  const isOnline = useSyncExternalStore(
+    subscribeOnline,
+    getOnlineSnapshot,
+    getOnlineServerSnapshot,
+  );
 
   const [activeProblemIdx, setActiveProblemIdx] = useState(0);
   const [finishDialogOpen, setFinishDialogOpen] = useState(false);
-  const [testResults, setTestResults] = useState<ISubmitProblemResponse | null>(null);
+  const [testResults, setTestResults] = useState<ISubmitProblemResponse | null>(
+    null,
+  );
   const [selectedMcqOption, setSelectedMcqOption] = useState<string>("");
   const [isRunningClientCode, setIsRunningClientCode] = useState(false);
 
   // Code state per problem
-  const [codeSolutions, setCodeSolutions] = useState<Record<string, string>>({});
-  const [answeredProblems, setAnsweredProblems] = useState<Set<string>>(new Set());
+  const [codeSolutions, setCodeSolutions] = useState<Record<string, string>>(
+    {},
+  );
+  const [answeredProblems, setAnsweredProblems] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Mutations
   const startAttemptMutation = useStartAssessmentAttempt();
@@ -62,15 +81,18 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
   useEffect(() => {
     if (assessmentId) {
       startAttemptMutation.mutate(assessmentId, {
-        onSuccess: res => {
+        onSuccess: (res) => {
           const data = res.data;
-          if (data?.submittedProblemIds && data.submittedProblemIds.length > 0) {
+          if (
+            data?.submittedProblemIds &&
+            data.submittedProblemIds.length > 0
+          ) {
             setAnsweredProblems(new Set(data.submittedProblemIds));
           }
           if (data?.submissions && data.submissions.length > 0) {
-            setCodeSolutions(prev => {
+            setCodeSolutions((prev) => {
               const next = { ...prev };
-              data.submissions?.forEach(s => {
+              data.submissions?.forEach((s) => {
                 if (s.submittedCode && !next[s.problemId]) {
                   next[s.problemId] = s.submittedCode;
                 }
@@ -82,13 +104,15 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assessmentId]);
+  }, [assessmentId, startAttemptMutation.mutate]);
 
   // Tab switch monitoring (proctoring alert)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        toast.warning("Proctoring Alert: Assessment window lost focus. Tab switches are logged.");
+        toast.warning(
+          "Proctoring Alert: Assessment window lost focus. Tab switches are logged.",
+        );
       }
     };
 
@@ -107,7 +131,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     }
     if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem(getDraftKey(assessmentId, problemId));
+        const saved = localStorage.getItem(
+          getDraftKey(assessmentId, problemId),
+        );
         if (saved) return saved;
       } catch {
         // ignore
@@ -121,18 +147,24 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     ? {
         ...currentProblemRaw,
         points: currentProblemRaw.points ?? 100,
-        type: currentProblemRaw.type || currentProblemRaw.problemType || "CODING",
-        problemType: currentProblemRaw.problemType || currentProblemRaw.type || "CODING",
-        options: currentProblemRaw.options || currentProblemRaw.mcqOptions || [],
-        mcqOptions: currentProblemRaw.mcqOptions || currentProblemRaw.options || [],
+        type:
+          currentProblemRaw.type || currentProblemRaw.problemType || "CODING",
+        problemType:
+          currentProblemRaw.problemType || currentProblemRaw.type || "CODING",
+        options:
+          currentProblemRaw.options || currentProblemRaw.mcqOptions || [],
+        mcqOptions:
+          currentProblemRaw.mcqOptions || currentProblemRaw.options || [],
       }
     : undefined;
 
-  const isProblemSubmitted = activeProblem ? answeredProblems.has(activeProblem.id) : false;
+  const isProblemSubmitted = activeProblem
+    ? answeredProblems.has(activeProblem.id)
+    : false;
 
   // Handle local code changes and persist to localStorage
   const handleCodeChange = (problemId: string, code: string) => {
-    setCodeSolutions(prev => ({
+    setCodeSolutions((prev) => ({
       ...prev,
       [problemId]: code,
     }));
@@ -151,10 +183,16 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
     setIsRunningClientCode(true);
     try {
-      const results = await runClientCode(code, activeProblem.testCases || [], activeProblem.points || 100);
+      const results = await runClientCode(
+        code,
+        activeProblem.testCases || [],
+        activeProblem.points || 100,
+      );
       setTestResults(results);
     } catch (err: unknown) {
-      toast.error((err as Error)?.message || "Execution error in browser sandbox");
+      toast.error(
+        (err as Error)?.message || "Execution error in browser sandbox",
+      );
     } finally {
       setIsRunningClientCode(false);
     }
@@ -174,9 +212,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         },
       },
       {
-        onSuccess: res => {
+        onSuccess: (res) => {
           setTestResults(res.data);
-          setAnsweredProblems(prev => new Set([...prev, activeProblem.id]));
+          setAnsweredProblems((prev) => new Set([...prev, activeProblem.id]));
         },
       },
     );
@@ -195,9 +233,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
         },
       },
       {
-        onSuccess: res => {
+        onSuccess: (res) => {
           setTestResults(res.data);
-          setAnsweredProblems(prev => new Set([...prev, activeProblem.id]));
+          setAnsweredProblems((prev) => new Set([...prev, activeProblem.id]));
         },
       },
     );
@@ -207,7 +245,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
   const handleFinishAssessment = () => {
     finishAssessmentMutation.mutate(assessmentId, {
       onSuccess: () => {
-        problems.forEach(p => {
+        problems.forEach((p) => {
           try {
             localStorage.removeItem(getDraftKey(assessmentId, p.problem.id));
           } catch {
@@ -223,7 +261,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center bg-background text-muted-foreground">
         <Spinner size="lg" className="mb-4" />
-        <p className="font-mono text-sm">Initializing Secure Assessment Sandbox...</p>
+        <p className="font-mono text-sm">
+          Initializing Secure Assessment Sandbox...
+        </p>
       </div>
     );
   }
@@ -231,12 +271,15 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
   if (startAttemptMutation.isError || !attemptData) {
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center bg-background p-6 text-center text-muted-foreground">
-        <h2 className="text-xl font-bold text-foreground mb-2">Unable to Load Assessment</h2>
+        <h2 className="text-xl font-bold text-foreground mb-2">
+          Unable to Load Assessment
+        </h2>
         <p className="text-sm text-muted-foreground mb-6 max-w-md">
           {startAttemptMutation.error?.message ||
             "You may not have an active invitation or the test has already ended."}
         </p>
         <button
+          type="button"
           onClick={() => router.push("/dashboard/candidate")}
           className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
         >
@@ -246,7 +289,8 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
     );
   }
 
-  const isCodingProblem = (activeProblem?.type || activeProblem?.problemType) === "CODING";
+  const isCodingProblem =
+    (activeProblem?.type || activeProblem?.problemType) === "CODING";
 
   return (
     <AuthGuard>
@@ -256,18 +300,24 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
           <div className="flex items-center justify-center space-x-2 bg-amber-500/15 border-b border-amber-500/30 px-4 py-1.5 text-xs font-medium text-amber-600 dark:text-amber-300 shrink-0">
             <AlertTriangle className="h-4 w-4 shrink-0" />
             <span>
-              Network connection lost. You are currently offline. Local progress is saved, but running tests and
-              submissions require internet.
+              Network connection lost. You are currently offline. Local progress
+              is saved, but running tests and submissions require internet.
             </span>
           </div>
         )}
 
         {/* Arena Header */}
         <ArenaHeader
-          assessmentTitle={attemptData.title || attemptData.assessment?.title || "Assessment"}
+          assessmentTitle={
+            attemptData.title || attemptData.assessment?.title || "Assessment"
+          }
           totalProblems={problems.length}
           completedProblems={answeredProblems.size}
-          durationMinutes={attemptData.durationMinutes || attemptData.assessment?.durationMinutes || 60}
+          durationMinutes={
+            attemptData.durationMinutes ||
+            attemptData.assessment?.durationMinutes ||
+            60
+          }
           startedAt={attemptData.startedAt}
           onFinish={() => setFinishDialogOpen(true)}
           onAutoSubmit={handleFinishAssessment}
@@ -282,6 +332,7 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
 
             return (
               <button
+                type="button"
                 key={p.problem.id}
                 onClick={() => {
                   setActiveProblemIdx(idx);
@@ -295,7 +346,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                 }`}
               >
                 <span>Problem {idx + 1}</span>
-                {isCompleted && <CheckCircle2 className="h-3 w-3 text-emerald-500" />}
+                {isCompleted && (
+                  <CheckCircle2 className="h-3 w-3 text-emerald-500" />
+                )}
               </button>
             );
           })}
@@ -318,7 +371,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                       key={activeProblem.id}
                       initialCode={getInitialProblemCode(activeProblem.id)}
                       starterCode={activeProblem.starterCode}
-                      onCodeChange={code => handleCodeChange(activeProblem.id, code)}
+                      onCodeChange={(code) =>
+                        handleCodeChange(activeProblem.id, code)
+                      }
                       onRun={handleCodeRun}
                       onSubmit={handleCodeSubmit}
                       isRunning={isRunningClientCode}
@@ -330,7 +385,9 @@ export default function ArenaPage({ params }: { params: Promise<{ id: string }> 
                 <div className="max-h-60 overflow-y-auto">
                   <TestResultsPanel
                     results={testResults}
-                    isSubmitting={isRunningClientCode || submitSolutionMutation.isPending}
+                    isSubmitting={
+                      isRunningClientCode || submitSolutionMutation.isPending
+                    }
                   />
                 </div>
               </>

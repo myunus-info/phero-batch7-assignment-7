@@ -1,26 +1,26 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useGetMe } from "@/hooks";
-import { roleSidebarRoutes } from "@/routes";
-import Logo from "@/assets/svg/Logo";
-import { RoleBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard,
-  Users,
-  Code2,
-  FileCheck2,
-  CreditCard,
-  History,
   Award,
+  Code2,
+  CreditCard,
+  FileCheck2,
+  FileText,
+  History,
   Layers,
+  LayoutDashboard,
+  type LucideIcon,
   Settings,
   Shield,
-  FileText,
-  LucideIcon,
+  Users,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import Logo from "@/assets/svg/Logo";
+import { RoleBadge } from "@/components/ui/status-badge";
+import { useGetMe } from "@/hooks";
+import { cn } from "@/lib/utils";
+import { roleSidebarRoutes } from "@/routes";
 
 const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
@@ -36,7 +36,11 @@ const iconMap: Record<string, LucideIcon> = {
   FileText,
 };
 
-export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void }) {
+export function DashboardSidebar({
+  onCloseMobile,
+}: {
+  onCloseMobile?: () => void;
+}) {
   const pathname = usePathname();
   const { data: user } = useGetMe();
 
@@ -48,7 +52,11 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
     <aside className="flex h-full w-64 flex-col border-r border-border bg-card transition-colors duration-200">
       {/* Brand */}
       <div className="flex h-16 items-center px-6 border-b border-border">
-        <Link href="/" onClick={onCloseMobile} className="flex items-center space-x-2">
+        <Link
+          href="/"
+          onClick={onCloseMobile}
+          className="flex items-center space-x-2"
+        >
           <Logo className="h-7 w-auto" />
           <span className="font-mono text-lg font-bold tracking-tight text-foreground">
             Dev<span className="text-emerald-500">Judge</span>
@@ -59,19 +67,24 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
       {/* Role tag */}
       <div className="px-6 py-4 border-b border-border bg-muted/40">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Workspace</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Workspace
+          </span>
           <RoleBadge role={user.role} />
         </div>
-        <p className="mt-1 text-sm font-medium text-foreground truncate">{user.name}</p>
+        <p className="mt-1 text-sm font-medium text-foreground truncate">
+          {user.name}
+        </p>
         <p className="text-xs text-muted-foreground truncate">{user.email}</p>
       </div>
 
       {/* Navigation Groups */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {sidebarGroups.map((group, idx) => {
+        {sidebarGroups.map((group) => {
           const groupTitle = group.label || group.title;
+          const groupKey = groupTitle || group.items[0]?.path || "group";
           return (
-            <div key={idx} className="space-y-1">
+            <div key={groupKey} className="space-y-1">
               {groupTitle && (
                 <h4 className="px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {groupTitle}
@@ -81,7 +94,10 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
                 {group.items.map((item, itemIdx) => {
                   const itemPath = item.path || item.url || "#";
                   const itemName = item.name || item.title || "Item";
-                  const Icon = (typeof item.icon === "string" ? iconMap[item.icon] : item.icon) || FileText;
+                  const Icon =
+                    (typeof item.icon === "string"
+                      ? iconMap[item.icon]
+                      : item.icon) || FileText;
 
                   const isActive =
                     pathname === itemPath ||
@@ -107,7 +123,9 @@ export function DashboardSidebar({ onCloseMobile }: { onCloseMobile?: () => void
                         <Icon
                           className={cn(
                             "h-4 w-4",
-                            isActive ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground",
+                            isActive
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-muted-foreground",
                           )}
                         />
                         <span>{itemName}</span>

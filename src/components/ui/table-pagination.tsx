@@ -1,5 +1,10 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { Button } from "./button";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface TablePaginationProps {
   page: number;
@@ -8,7 +13,12 @@ interface TablePaginationProps {
   onPageChange: (newPage: number) => void;
 }
 
-export function TablePagination({ page, total, limit, onPageChange }: TablePaginationProps) {
+export function TablePagination({
+  page,
+  total,
+  limit,
+  onPageChange,
+}: TablePaginationProps) {
   const totalPages = Math.max(1, Math.ceil(total / limit));
   const startItem = total === 0 ? 0 : (page - 1) * limit + 1;
   const endItem = Math.min(total, page * limit);
@@ -16,8 +26,8 @@ export function TablePagination({ page, total, limit, onPageChange }: TablePagin
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 text-sm text-muted-foreground">
       <div>
-        Showing <span className="font-medium text-foreground">{startItem}</span> to{" "}
-        <span className="font-medium text-foreground">{endItem}</span> of{" "}
+        Showing <span className="font-medium text-foreground">{startItem}</span>{" "}
+        to <span className="font-medium text-foreground">{endItem}</span> of{" "}
         <span className="font-medium text-foreground">{total}</span> items
       </div>
 

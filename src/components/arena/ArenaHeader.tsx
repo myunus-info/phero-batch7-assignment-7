@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertTriangle, Clock, Send } from "lucide-react";
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Clock, Send, AlertTriangle } from "lucide-react";
 import { useCountdown } from "@/hooks";
 
 interface ArenaHeaderProps {
@@ -50,7 +50,9 @@ export function ArenaHeader({
         <div className="hidden h-5 w-px bg-border sm:block" />
 
         <div className="hidden sm:block">
-          <h2 className="text-sm font-semibold text-foreground truncate max-w-xs md:max-w-md">{assessmentTitle}</h2>
+          <h2 className="text-sm font-semibold text-foreground truncate max-w-xs md:max-w-md">
+            {assessmentTitle}
+          </h2>
           <p className="text-xs text-muted-foreground">
             Progress: {completedProblems} of {totalProblems} problems completed
           </p>
@@ -80,7 +82,13 @@ export function ArenaHeader({
         <ThemeToggle />
 
         {/* Finish Assessment Button */}
-        <Button variant="emerald" size="sm" onClick={onFinish} isLoading={isSubmitting} className="gap-2 font-medium">
+        <Button
+          variant="emerald"
+          size="sm"
+          onClick={onFinish}
+          isLoading={isSubmitting}
+          className="gap-2 font-medium"
+        >
           <Send className="h-4 w-4" />
           <span>Finish & Submit</span>
         </Button>

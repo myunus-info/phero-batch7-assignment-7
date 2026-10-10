@@ -1,17 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 import { useForm } from "@tanstack/react-form";
+import { Eye, EyeClosed } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useLogin } from "@/hooks/auth.hook";
 import { loginSchema } from "@/validations";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { Spinner } from "@/components/ui/spinner";
 import { DemoLoginCards } from "./DemoLoginCards";
 import GoogleLoginComponent from "./GoogleLogin";
-import { Eye, EyeClosed } from "lucide-react";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,8 +38,12 @@ export function LoginForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">Sign in to your DevJudge account to continue</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          Welcome back
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Sign in to your DevJudge account to continue
+        </p>
       </div>
 
       {/* 1-Click Demo Accounts */}
@@ -45,12 +54,14 @@ export function LoginForm() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground font-medium">Or continue with</span>
+          <span className="bg-background px-2 text-muted-foreground font-medium">
+            Or continue with
+          </span>
         </div>
       </div>
 
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
@@ -59,8 +70,9 @@ export function LoginForm() {
       >
         <FieldGroup>
           <form.Field name="email">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -71,7 +83,7 @@ export function LoginForm() {
                     type="email"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={e => field.handleChange(e.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     placeholder="name@company.com"
                     autoComplete="off"
@@ -84,8 +96,9 @@ export function LoginForm() {
           </form.Field>
 
           <form.Field name="password">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -97,7 +110,7 @@ export function LoginForm() {
                       type={showPassword ? "text" : "password"}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={e => field.handleChange(e.target.value)}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder="••••••••"
                       autoComplete="off"
@@ -108,9 +121,13 @@ export function LoginForm() {
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
                       type="button"
-                      onClick={() => setShowPassword(prev => !prev)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeClosed className="size-4" /> : <Eye className="size-4" />}
+                      {showPassword ? (
+                        <EyeClosed className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
                     </button>
                   </div>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
@@ -143,7 +160,10 @@ export function LoginForm() {
 
       <div className="text-center text-sm text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-emerald-500 hover:underline">
+        <Link
+          href="/register"
+          className="font-medium text-emerald-500 hover:underline"
+        >
           Sign up
         </Link>
       </div>

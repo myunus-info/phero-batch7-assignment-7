@@ -1,7 +1,12 @@
-import { CandidateAssessmentStatus } from "./assessment.type";
-import { DifficultyLevel, IProblem, ProblemType } from "./problem.type";
+import type { CandidateAssessmentStatus } from "./assessment.type";
+import type { DifficultyLevel, IProblem, ProblemType } from "./problem.type";
 
-export type SubmissionStatus = "PASSED" | "FAILED" | "ACCEPTED" | "WRONG_ANSWER" | "ERROR";
+export type SubmissionStatus =
+  | "PASSED"
+  | "FAILED"
+  | "ACCEPTED"
+  | "WRONG_ANSWER"
+  | "ERROR";
 
 export interface ITestResult {
   testCaseId?: string;

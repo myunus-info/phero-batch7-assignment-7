@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useCallback, useSyncExternalStore, ReactNode } from "react";
+import {
+  createContext,
+  type ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 
 export type Theme = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
@@ -20,7 +27,9 @@ const STORAGE_KEY = "devjudge_theme";
 const subscribers = new Set<() => void>();
 
 function notify() {
-  subscribers.forEach(cb => cb());
+  subscribers.forEach((cb) => {
+    cb();
+  });
 }
 
 function subscribe(callback: () => void) {
@@ -30,7 +39,10 @@ function subscribe(callback: () => void) {
     if (e.key === STORAGE_KEY) callback();
   };
 
-  const mediaQuery = typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  const mediaQuery =
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-color-scheme: dark)")
+      : null;
 
   const handleMedia = () => callback();
 
@@ -67,23 +79,36 @@ function getServerSnapshot(): Theme {
 
 const emptySubscribe = () => () => {};
 
-export function ThemeProvider({ children, defaultTheme = "dark" }: { children: ReactNode; defaultTheme?: Theme }) {
+export function ThemeProvider({
+  children,
+  defaultTheme = "dark",
+}: {
+  children: ReactNode;
+  defaultTheme?: Theme;
+}) {
   const isMounted = useSyncExternalStore(
     emptySubscribe,
     () => true,
     () => false,
   );
 
-  const rawTheme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const rawTheme = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const theme: Theme = isMounted ? rawTheme : defaultTheme;
 
   const getSystemTheme = (): ResolvedTheme => {
     if (typeof window === "undefined") return "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   };
 
-  const resolvedTheme: ResolvedTheme = theme === "system" ? getSystemTheme() : theme;
+  const resolvedTheme: ResolvedTheme =
+    theme === "system" ? getSystemTheme() : theme;
 
   // Synchronize with documentElement whenever resolvedTheme changes
   useEffect(() => {

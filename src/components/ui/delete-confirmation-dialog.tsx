@@ -1,9 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { AlertTriangle, Trash2 } from "lucide-react";
+import type * as React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export interface DeleteConfirmationModalProps {
   open: boolean;
@@ -30,15 +36,18 @@ export function DeleteConfirmationModal({
   confirmText = "Delete",
   cancelText = "Cancel",
 }: DeleteConfirmationModalProps) {
-  const modalTitle = title || `Delete ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`;
+  const modalTitle =
+    title || `Delete ${itemType.charAt(0).toUpperCase() + itemType.slice(1)}`;
 
   const modalDescription =
     description ||
     (itemName ? (
       <>
         Are you sure you want to delete{" "}
-        <strong className="text-foreground font-semibold">&ldquo;{itemName}&rdquo;</strong>? This action cannot be
-        undone.
+        <strong className="text-foreground font-semibold">
+          &ldquo;{itemName}&rdquo;
+        </strong>
+        ? This action cannot be undone.
       </>
     ) : (
       `Are you sure you want to delete this ${itemType}? This action cannot be undone.`
@@ -51,16 +60,31 @@ export function DeleteConfirmationModal({
           <div className="p-2 rounded-full bg-red-500/10 text-red-500 border border-red-500/20 shrink-0">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <DialogTitle className="text-foreground text-lg">{modalTitle}</DialogTitle>
+          <DialogTitle className="text-foreground text-lg">
+            {modalTitle}
+          </DialogTitle>
         </div>
-        <DialogDescription className="text-muted-foreground text-sm pl-11">{modalDescription}</DialogDescription>
+        <DialogDescription className="text-muted-foreground text-sm pl-11">
+          {modalDescription}
+        </DialogDescription>
       </DialogHeader>
 
       <DialogFooter className="gap-2 sm:gap-0 mt-6">
-        <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={isLoading}
+        >
           {cancelText}
         </Button>
-        <Button type="button" variant="destructive" onClick={onConfirm} isLoading={isLoading} className="gap-2">
+        <Button
+          type="button"
+          variant="destructive"
+          onClick={onConfirm}
+          isLoading={isLoading}
+          className="gap-2"
+        >
           <Trash2 className="h-4 w-4" />
           <span>{confirmText}</span>
         </Button>

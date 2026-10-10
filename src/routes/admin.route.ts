@@ -1,5 +1,5 @@
-import { SidebarItems } from "@/types";
-import { LayoutDashboard, Users, History, Code } from "lucide-react";
+import { Code, History, LayoutDashboard, Users } from "lucide-react";
+import type { SidebarItems } from "@/types";
 
 export const adminRoutes: SidebarItems = [
   {

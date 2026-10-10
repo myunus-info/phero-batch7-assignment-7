@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import {
+import type {
   IApiResponse,
   ICreateCheckoutSessionPayload,
   ICreateCheckoutSessionResponse,
@@ -9,17 +9,23 @@ import {
 } from "@/types";
 
 export function createCheckoutSession(payload: ICreateCheckoutSessionPayload) {
-  return apiClient<IApiResponse<ICreateCheckoutSessionResponse>>("/payments/create-checkout-session", {
-    method: "POST",
-    body: payload,
-  });
+  return apiClient<IApiResponse<ICreateCheckoutSessionResponse>>(
+    "/payments/create-checkout-session",
+    {
+      method: "POST",
+      body: payload,
+    },
+  );
 }
 
 export function verifyCheckoutSession(sessionId: string) {
-  return apiClient<IApiResponse<IVerifyCheckoutSessionResponse>>("/payments/verify-session", {
-    method: "POST",
-    body: { sessionId },
-  });
+  return apiClient<IApiResponse<IVerifyCheckoutSessionResponse>>(
+    "/payments/verify-session",
+    {
+      method: "POST",
+      body: { sessionId },
+    },
+  );
 }
 
 export function getPaymentHistory(params?: IPaymentFilters) {

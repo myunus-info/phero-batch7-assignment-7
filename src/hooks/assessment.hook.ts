@@ -10,7 +10,11 @@ import {
   inviteCandidate,
   updateAssessment,
 } from "@/api/assessment.api";
-import { IAssessmentFilters, ICreateAssessmentPayload, IInviteCandidatePayload } from "@/types";
+import type {
+  IAssessmentFilters,
+  ICreateAssessmentPayload,
+  IInviteCandidatePayload,
+} from "@/types";
 
 export function useGetAllAssessments(filters?: IAssessmentFilters) {
   return useQuery({
@@ -31,13 +35,16 @@ export function useCreateAssessment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: ICreateAssessmentPayload) => createAssessment(payload),
-    onSuccess: res => {
+    mutationFn: (payload: ICreateAssessmentPayload) =>
+      createAssessment(payload),
+    onSuccess: (res) => {
       toast.success(res?.message || "Assessment created successfully!");
       queryClient.invalidateQueries({ queryKey: ["assessments"] });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to create assessment");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to create assessment",
+      );
     },
   });
 }
@@ -46,15 +53,22 @@ export function useUpdateAssessment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: Partial<ICreateAssessmentPayload> }) =>
-      updateAssessment(id, payload),
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: string;
+      payload: Partial<ICreateAssessmentPayload>;
+    }) => updateAssessment(id, payload),
     onSuccess: (res, variables) => {
       toast.success(res?.message || "Assessment updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["assessments"] });
       queryClient.invalidateQueries({ queryKey: ["assessment", variables.id] });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to update assessment");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to update assessment",
+      );
     },
   });
 }
@@ -64,12 +78,14 @@ export function useDeleteAssessment() {
 
   return useMutation({
     mutationFn: (id: string) => deleteAssessment(id),
-    onSuccess: res => {
+    onSuccess: (res) => {
       toast.success(res?.message || "Assessment deleted successfully!");
       queryClient.invalidateQueries({ queryKey: ["assessments"] });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to delete assessment");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to delete assessment",
+      );
     },
   });
 }
@@ -78,8 +94,13 @@ export function useInviteCandidate() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ assessmentId, payload }: { assessmentId: string; payload: IInviteCandidatePayload }) =>
-      inviteCandidate(assessmentId, payload),
+    mutationFn: ({
+      assessmentId,
+      payload,
+    }: {
+      assessmentId: string;
+      payload: IInviteCandidatePayload;
+    }) => inviteCandidate(assessmentId, payload),
     onSuccess: (res, variables) => {
       toast.success(res?.message || "Candidate invited successfully!");
       queryClient.invalidateQueries({
@@ -90,7 +111,9 @@ export function useInviteCandidate() {
       queryClient.invalidateQueries({ queryKey: ["assessments"] });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to invite candidate");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to invite candidate",
+      );
     },
   });
 }

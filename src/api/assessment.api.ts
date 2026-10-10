@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import {
+import type {
   IApiResponse,
   IAssessment,
   IAssessmentCandidate,
@@ -25,7 +25,10 @@ export function createAssessment(payload: ICreateAssessmentPayload) {
   });
 }
 
-export function updateAssessment(id: string, payload: Partial<ICreateAssessmentPayload>) {
+export function updateAssessment(
+  id: string,
+  payload: Partial<ICreateAssessmentPayload>,
+) {
   return apiClient<IApiResponse<IAssessment>>(`/assessments/${id}`, {
     method: "PATCH",
     body: payload,
@@ -38,9 +41,15 @@ export function deleteAssessment(id: string) {
   });
 }
 
-export function inviteCandidate(assessmentId: string, payload: IInviteCandidatePayload) {
-  return apiClient<IApiResponse<IAssessmentCandidate>>(`/assessments/${assessmentId}/invite`, {
-    method: "POST",
-    body: payload,
-  });
+export function inviteCandidate(
+  assessmentId: string,
+  payload: IInviteCandidatePayload,
+) {
+  return apiClient<IApiResponse<IAssessmentCandidate>>(
+    `/assessments/${assessmentId}/invite`,
+    {
+      method: "POST",
+      body: payload,
+    },
+  );
 }

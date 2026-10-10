@@ -14,26 +14,37 @@ export function PublicFooter() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Automated code judge & technical interview platform. Real-time code execution, MCQ testing, and proctoring
-              analytics.
+              Automated code judge & technical interview platform. Real-time
+              code execution, MCQ testing, and proctoring analytics.
             </p>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Product</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">
+              Product
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/problems" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/problems"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Problem Bank
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/pricing"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Pricing Plans
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/recruiter" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/dashboard/recruiter"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Recruiter Suite
                 </Link>
               </li>
@@ -41,20 +52,31 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Roles</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">
+              Roles
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/login" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/login"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Admin Portal
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/login"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Recruiter Dashboard
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/login"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   Candidate Arena
                 </Link>
               </li>
@@ -62,10 +84,15 @@ export function PublicFooter() {
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-foreground mb-3">Platform</h4>
+            <h4 className="text-sm font-semibold text-foreground mb-3">
+              Platform
+            </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="hover:text-emerald-500 transition-colors">
+                <Link
+                  href="/about"
+                  className="hover:text-emerald-500 transition-colors"
+                >
                   About Us
                 </Link>
               </li>
@@ -80,7 +107,9 @@ export function PublicFooter() {
 
         <div className="mt-8 border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} DevJudge. All rights reserved.</p>
-          <p className="mt-2 sm:mt-0 font-mono">Powered by Judge0 & Next.js App Router</p>
+          <p className="mt-2 sm:mt-0 font-mono">
+            Powered by Judge0 & Next.js App Router
+          </p>
         </div>
       </div>
     </footer>

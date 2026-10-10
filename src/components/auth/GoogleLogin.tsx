@@ -1,9 +1,9 @@
 "use client";
 
-import { useGoogleOAuth } from "@/hooks";
-import { UserRole } from "@/types";
-import { useTheme } from "@/providers/themeProvider";
 import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleOAuth } from "@/hooks";
+import { useTheme } from "@/providers/themeProvider";
+import type { UserRole } from "@/types";
 
 interface GoogleLoginComponentProps {
   role?: UserRole;
@@ -12,16 +12,22 @@ interface GoogleLoginComponentProps {
   shape?: "rectangular" | "pill" | "circle" | "square";
 }
 
-export default function GoogleLoginComponent({ role, text, theme, shape = "rectangular" }: GoogleLoginComponentProps) {
+export default function GoogleLoginComponent({
+  role,
+  text,
+  theme,
+  shape = "rectangular",
+}: GoogleLoginComponentProps) {
   const googleOAuthMutation = useGoogleOAuth();
   const { resolvedTheme } = useTheme();
 
   const buttonText = text || (role ? "signup_with" : "continue_with");
-  const effectiveTheme = theme || (resolvedTheme === "dark" ? "filled_black" : "outline");
+  const effectiveTheme =
+    theme || (resolvedTheme === "dark" ? "filled_black" : "outline");
 
   return (
     <GoogleLogin
-      onSuccess={credentialResponse => {
+      onSuccess={(credentialResponse) => {
         if (credentialResponse.credential) {
           googleOAuthMutation.mutate({
             idToken: credentialResponse.credential,

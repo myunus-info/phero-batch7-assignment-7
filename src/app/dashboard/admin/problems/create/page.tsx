@@ -1,9 +1,9 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { CreateProblemForm } from "@/components/forms/CreateProblemForm";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 export default function CreateProblemPage() {
   return (
@@ -17,8 +17,12 @@ export default function CreateProblemPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Problem Bank</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Create New Problem</h1>
-          <p className="text-sm text-slate-400">Define executable coding challenges or multiple choice questions.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Create New Problem
+          </h1>
+          <p className="text-sm text-slate-400">
+            Define executable coding challenges or multiple choice questions.
+          </p>
         </div>
 
         <CreateProblemForm />

@@ -1,16 +1,26 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { ChevronRight, Search } from "lucide-react";
 import Link from "next/link";
-import useUrlParams from "@/hooks/url-params.hook";
-import { useGetAllProblems, useDebounce } from "@/hooks";
-import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
+import { Suspense, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import {
+  DifficultyBadge,
+  ProblemTypeBadge,
+} from "@/components/ui/status-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { DifficultyLevel, ProblemType } from "@/types";
-import { Search, ChevronRight } from "lucide-react";
+import { useDebounce, useGetAllProblems } from "@/hooks";
+import useUrlParams from "@/hooks/url-params.hook";
+import type { DifficultyLevel, ProblemType } from "@/types";
 
 function ProblemsDirectoryContent() {
   const { getParam, setParams } = useUrlParams();
@@ -44,9 +54,12 @@ function ProblemsDirectoryContent() {
   return (
     <div className="container mx-auto px-4 sm:px-6 py-12 max-w-6xl space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">Problem Bank</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          Problem Bank
+        </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Explore coding challenges and conceptual MCQ problems used in DevJudge assessments.
+          Explore coding challenges and conceptual MCQ problems used in DevJudge
+          assessments.
         </p>
       </div>
 
@@ -58,18 +71,24 @@ function ProblemsDirectoryContent() {
             placeholder="Search problem title..."
             className="pl-9"
             value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
-        <Select value={difficultyParam} onChange={e => setParams({ difficulty: e.target.value }, true)}>
+        <Select
+          value={difficultyParam}
+          onChange={(e) => setParams({ difficulty: e.target.value }, true)}
+        >
           <option value="">All Difficulties</option>
           <option value="EASY">Easy</option>
           <option value="MEDIUM">Medium</option>
           <option value="HARD">Hard</option>
         </Select>
 
-        <Select value={typeParam} onChange={e => setParams({ type: e.target.value }, true)}>
+        <Select
+          value={typeParam}
+          onChange={(e) => setParams({ type: e.target.value }, true)}
+        >
           <option value="">All Problem Types</option>
           <option value="CODING">Coding (Judge0)</option>
           <option value="MCQ">Multiple Choice</option>
@@ -84,24 +103,32 @@ function ProblemsDirectoryContent() {
             <TableHead className="whitespace-nowrap">Type</TableHead>
             <TableHead className="whitespace-nowrap">Difficulty</TableHead>
             <TableHead className="whitespace-nowrap">Points</TableHead>
-            <TableHead className="text-right whitespace-nowrap">Action</TableHead>
+            <TableHead className="text-right whitespace-nowrap">
+              Action
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="text-center py-10 text-muted-foreground"
+              >
                 Loading problem bank...
               </TableCell>
             </TableRow>
           ) : problems.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-10 text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="text-center py-10 text-muted-foreground"
+              >
                 No problems match your search criteria.
               </TableCell>
             </TableRow>
           ) : (
-            problems.map(problem => (
+            problems.map((problem) => (
               <TableRow key={problem.id}>
                 <TableCell>
                   <Link
@@ -110,10 +137,14 @@ function ProblemsDirectoryContent() {
                   >
                     {problem.title}
                   </Link>
-                  <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{problem.description}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                    {problem.description}
+                  </p>
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
-                  <ProblemTypeBadge type={problem.type || problem.problemType || "CODING"} />
+                  <ProblemTypeBadge
+                    type={problem.type || problem.problemType || "CODING"}
+                  />
                 </TableCell>
                 <TableCell className="whitespace-nowrap">
                   <DifficultyBadge difficulty={problem.difficulty} />
@@ -136,7 +167,12 @@ function ProblemsDirectoryContent() {
         </TableBody>
       </Table>
 
-      <TablePagination page={pageParam} total={meta.total} limit={10} onPageChange={p => setParams({ page: p })} />
+      <TablePagination
+        page={pageParam}
+        total={meta.total}
+        limit={10}
+        onPageChange={(p) => setParams({ page: p })}
+      />
     </div>
   );
 }
@@ -145,7 +181,9 @@ export default function ProblemsDirectoryPage() {
   return (
     <Suspense
       fallback={
-        <div className="container mx-auto px-4 py-12 max-w-6xl text-muted-foreground">Loading problem bank...</div>
+        <div className="container mx-auto px-4 py-12 max-w-6xl text-muted-foreground">
+          Loading problem bank...
+        </div>
       }
     >
       <ProblemsDirectoryContent />

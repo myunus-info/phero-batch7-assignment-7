@@ -1,15 +1,27 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
+import { AlertCircle, Calendar, Coins, Mail } from "lucide-react";
 import Link from "next/link";
-import { useInviteCandidate, useGetMe } from "@/hooks";
-import { inviteCandidateSchema } from "@/validations";
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { Mail, Calendar, Coins, AlertCircle } from "lucide-react";
+import { useGetMe, useInviteCandidate } from "@/hooks";
+import { inviteCandidateSchema } from "@/validations";
 
 interface InviteCandidateModalProps {
   assessmentId: string;
@@ -18,7 +30,12 @@ interface InviteCandidateModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOpenChange }: InviteCandidateModalProps) {
+export function InviteCandidateModal({
+  assessmentId,
+  assessmentTitle,
+  open,
+  onOpenChange,
+}: InviteCandidateModalProps) {
   const { data: user } = useGetMe();
   const credits = user?.recruiterProfile?.credits ?? 0;
   const hasCredits = credits > 0;
@@ -39,7 +56,9 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
           payload: {
             email: value.candidateEmail,
             candidateEmail: value.candidateEmail,
-            expiresAt: value.expiresAt ? new Date(value.expiresAt).toISOString() : undefined,
+            expiresAt: value.expiresAt
+              ? new Date(value.expiresAt).toISOString()
+              : undefined,
           },
         },
         {
@@ -55,7 +74,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
@@ -64,7 +83,8 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
         <DialogHeader>
           <DialogTitle>Invite Candidate</DialogTitle>
           <DialogDescription>
-            Send an assessment invitation for <strong className="text-foreground">{assessmentTitle}</strong>.
+            Send an assessment invitation for{" "}
+            <strong className="text-foreground">{assessmentTitle}</strong>.
           </DialogDescription>
         </DialogHeader>
 
@@ -74,8 +94,9 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
               <div className="flex items-center space-x-2">
                 <Coins className="h-4 w-4 shrink-0 text-cyan-600 dark:text-cyan-400" />
                 <span>
-                  Available Credits: <strong className="text-foreground">{credits}</strong> (1 credit deducted per
-                  invite)
+                  Available Credits:{" "}
+                  <strong className="text-foreground">{credits}</strong> (1
+                  credit deducted per invite)
                 </span>
               </div>
               <Link
@@ -90,8 +111,12 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
             <div className="flex items-start space-x-2 p-3 mb-4 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-700 dark:text-red-300">
               <AlertCircle className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
               <div className="flex-1">
-                <p className="font-semibold text-foreground">0 Assessment Credits Available</p>
-                <p className="mt-0.5 text-muted-foreground">You need at least 1 credit to invite candidates.</p>
+                <p className="font-semibold text-foreground">
+                  0 Assessment Credits Available
+                </p>
+                <p className="mt-0.5 text-muted-foreground">
+                  You need at least 1 credit to invite candidates.
+                </p>
                 <Link
                   href="/dashboard/recruiter/billing"
                   className="inline-block mt-2 font-semibold text-cyan-600 dark:text-cyan-400 underline hover:opacity-80"
@@ -105,8 +130,9 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
 
           <FieldGroup>
             <form.Field name="candidateEmail">
-              {field => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
 
                 return (
                   <Field data-invalid={isInvalid}>
@@ -121,7 +147,7 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                         type="email"
                         placeholder="candidate@example.com"
                         value={field.state.value}
-                        onChange={e => field.handleChange(e.target.value)}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
                         className="pl-9"
@@ -129,19 +155,24 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                         required
                       />
                     </div>
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                   </Field>
                 );
               }}
             </form.Field>
 
             <form.Field name="expiresAt">
-              {field => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
 
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Invitation Expiration Date (Optional)</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      Invitation Expiration Date (Optional)
+                    </FieldLabel>
                     <div className="relative">
                       <Calendar className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-slate-300 z-10" />
                       <Input
@@ -149,15 +180,19 @@ export function InviteCandidateModal({ assessmentId, assessmentTitle, open, onOp
                         name={field.name}
                         type="datetime-local"
                         value={field.state.value}
-                        onChange={e => field.handleChange(e.target.value)}
+                        onChange={(e) => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
                         aria-invalid={isInvalid}
                         className="pl-9"
                         disabled={inviteMutation.isPending || !hasCredits}
                       />
                     </div>
-                    <FieldDescription>Assessment will expire after this date if not completed.</FieldDescription>
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    <FieldDescription>
+                      Assessment will expire after this date if not completed.
+                    </FieldDescription>
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                   </Field>
                 );
               }}

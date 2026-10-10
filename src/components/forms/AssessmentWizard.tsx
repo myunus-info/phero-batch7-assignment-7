@@ -1,34 +1,49 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useGetAllProblems } from "@/hooks/problem.hook";
-import { useCreateAssessment, useUpdateAssessment } from "@/hooks/assessment.hook";
-import { assessmentWizardFormSchema } from "@/validations";
-import { IAssessment } from "@/types";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
-import { StepIndicator, StepBasics, StepProblems, StepReview } from "./assessment-wizard";
+import {
+  useCreateAssessment,
+  useUpdateAssessment,
+} from "@/hooks/assessment.hook";
+import { useGetAllProblems } from "@/hooks/problem.hook";
+import type { IAssessment } from "@/types";
+import { assessmentWizardFormSchema } from "@/validations";
+import {
+  StepBasics,
+  StepIndicator,
+  StepProblems,
+  StepReview,
+} from "./assessment-wizard";
 
 interface AssessmentWizardProps {
   initialData?: IAssessment;
   isEditing?: boolean;
 }
 
-export function AssessmentWizard({ initialData, isEditing = false }: AssessmentWizardProps) {
+export function AssessmentWizard({
+  initialData,
+  isEditing = false,
+}: AssessmentWizardProps) {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  const { data: problemsData, isLoading: isLoadingProblems } = useGetAllProblems({
-    limit: 50,
-  });
+  const { data: problemsData, isLoading: isLoadingProblems } =
+    useGetAllProblems({
+      limit: 50,
+    });
   const createAssessmentMutation = useCreateAssessment();
   const updateAssessmentMutation = useUpdateAssessment();
 
-  const isSubmitting = createAssessmentMutation.isPending || updateAssessmentMutation.isPending;
+  const isSubmitting =
+    createAssessmentMutation.isPending || updateAssessmentMutation.isPending;
 
   const initialProblemIds =
-    initialData?.problems?.map(p => p.problem.id) || initialData?.assessmentProblems?.map(p => p.problem.id) || [];
+    initialData?.problems?.map((p) => p.problem.id) ||
+    initialData?.assessmentProblems?.map((p) => p.problem.id) ||
+    [];
 
   const form = useForm({
     defaultValues: {
@@ -36,9 +51,13 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
       description: initialData?.description || "",
       durationMinutes: initialData?.durationMinutes || 60,
       passingMarks:
-        initialData?.totalMarks && initialData.passingMarks && initialData.totalMarks > 0
-          ? Math.round((initialData.passingMarks / initialData.totalMarks) * 100)
-          : initialData?.passingMarks ?? 70,
+        initialData?.totalMarks &&
+        initialData.passingMarks &&
+        initialData.totalMarks > 0
+          ? Math.round(
+              (initialData.passingMarks / initialData.totalMarks) * 100,
+            )
+          : (initialData?.passingMarks ?? 70),
       selectedProblemIds: initialProblemIds,
     },
     validators: {
@@ -61,7 +80,9 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
     }
 
     if (!values.description || !values.description.trim()) {
-      toast.error("Please provide instructions or description for the assessment.");
+      toast.error(
+        "Please provide instructions or description for the assessment.",
+      );
       setStep(1);
       return;
     }
@@ -81,12 +102,16 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
     }
 
     if (!values.selectedProblemIds || values.selectedProblemIds.length === 0) {
-      toast.error("Please select at least one problem to include in this assessment.");
+      toast.error(
+        "Please select at least one problem to include in this assessment.",
+      );
       setStep(2);
       return;
     }
 
-    const selectedProblems = problems.filter(p => values.selectedProblemIds.includes(p.id));
+    const selectedProblems = problems.filter((p) =>
+      values.selectedProblemIds.includes(p.id),
+    );
     const totalPoints = selectedProblems.reduce((sum, p) => sum + p.points, 0);
 
     const formattedProblemIds = values.selectedProblemIds.map((id, index) => ({
@@ -95,7 +120,10 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
     }));
 
     const totalMarks = totalPoints || 100;
-    const calculatedPassingMarks = Math.max(1, Math.round((passingMarks / 100) * totalMarks));
+    const calculatedPassingMarks = Math.max(
+      1,
+      Math.round((passingMarks / 100) * totalMarks),
+    );
 
     if (isEditing && initialData?.id) {
       updateAssessmentMutation.mutate(
@@ -157,8 +185,7 @@ export function AssessmentWizard({ initialData, isEditing = false }: AssessmentW
       {/* Step 3: Review & Schedule */}
       {step === 3 && (
         <form.Subscribe
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          selector={(state: any) => ({
+          selector={(state) => ({
             values: state.values,
           })}
         >

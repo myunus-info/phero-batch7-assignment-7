@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import Editor, { type OnMount } from "@monaco-editor/react";
-import { useTheme } from "@/providers/themeProvider";
+import { Check, Play, RotateCcw, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { Play, RotateCcw, Send, Check } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/providers/themeProvider";
 
 interface CodeEditorProps {
   initialCode?: string;
@@ -21,7 +21,9 @@ interface CodeEditorProps {
   isSubmitted?: boolean;
 }
 
-const SUPPORTED_LANGUAGES = [{ value: "javascript", label: "JavaScript (Node.js)" }];
+const SUPPORTED_LANGUAGES = [
+  { value: "javascript", label: "JavaScript (Node.js)" },
+];
 
 export const DEFAULT_BOILERPLATES: Record<string, string> = {
   javascript: `// Write your JavaScript (Node.js) solution here
@@ -76,13 +78,15 @@ export function CodeEditor({
 
   const handleLanguageChange = (newLang: string) => {
     setSelectedLang(newLang);
-    const newCode = starterCode?.[newLang] || DEFAULT_BOILERPLATES[newLang] || "";
+    const newCode =
+      starterCode?.[newLang] || DEFAULT_BOILERPLATES[newLang] || "";
     setCode(newCode);
     onCodeChange(newCode);
   };
 
   const handleReset = () => {
-    const boilerplate = starterCode?.[selectedLang] || DEFAULT_BOILERPLATES[selectedLang] || "";
+    const boilerplate =
+      starterCode?.[selectedLang] || DEFAULT_BOILERPLATES[selectedLang] || "";
     setCode(boilerplate);
     onCodeChange(boilerplate);
   };
@@ -101,11 +105,15 @@ export function CodeEditor({
           <div className="w-52">
             <Select
               value={selectedLang}
-              onChange={e => handleLanguageChange(e.target.value)}
+              onChange={(e) => handleLanguageChange(e.target.value)}
               className="h-8 py-1 text-xs bg-background border-border text-foreground"
             >
-              {SUPPORTED_LANGUAGES.map(lang => (
-                <option key={lang.value} value={lang.value} className="bg-card text-foreground">
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <option
+                  key={lang.value}
+                  value={lang.value}
+                  className="bg-card text-foreground"
+                >
                   {lang.label}
                 </option>
               ))}
@@ -137,7 +145,9 @@ export function CodeEditor({
           >
             <Play className="h-3.5 w-3.5 fill-current text-foreground" />
             <span>Run Code</span>
-            <span className="hidden sm:inline text-[10px] text-muted-foreground font-mono">(Ctrl+↵)</span>
+            <span className="hidden sm:inline text-[10px] text-muted-foreground font-mono">
+              (Ctrl+↵)
+            </span>
           </Button>
 
           {/* Submit Code Button */}
@@ -153,7 +163,9 @@ export function CodeEditor({
                 "cursor-not-allowed pointer-events-auto disabled:cursor-not-allowed disabled:pointer-events-auto opacity-70 border border-border text-muted-foreground shadow-none",
             )}
             title={
-              isSubmitted ? "Code has already been submitted for this problem" : "Submit final solution for grading"
+              isSubmitted
+                ? "Code has already been submitted for this problem"
+                : "Submit final solution for grading"
             }
           >
             {isSubmitted ? (
@@ -179,7 +191,7 @@ export function CodeEditor({
           theme={resolvedTheme === "light" ? "vs" : "vs-dark"}
           value={code}
           onMount={handleEditorMount}
-          onChange={val => {
+          onChange={(val) => {
             const nextVal = val || "";
             setCode(nextVal);
             onCodeChange(nextVal);

@@ -1,6 +1,6 @@
-import { IDashboardStats } from "@/types";
-import { Users, FileCheck2, DollarSign, Activity } from "lucide-react";
+import { Activity, DollarSign, FileCheck2, Users } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import type { IDashboardStats } from "@/types";
 
 interface KpiCardsProps {
   stats: IDashboardStats;
@@ -8,10 +8,14 @@ interface KpiCardsProps {
 
 export function KpiCards({ stats }: KpiCardsProps) {
   const totalUsers = stats.totalUsers ?? stats.overview?.totalUsers ?? 0;
-  const candidateCount = stats.candidateCount ?? stats.overview?.totalCandidates ?? 0;
-  const recruiterCount = stats.recruiterCount ?? stats.overview?.totalRecruiters ?? 0;
-  const totalAssessments = stats.totalAssessments ?? stats.overview?.totalAssessments ?? 0;
-  const completedAttempts = stats.completedAttempts ?? stats.overview?.totalPassedAttempts ?? 0;
+  const candidateCount =
+    stats.candidateCount ?? stats.overview?.totalCandidates ?? 0;
+  const recruiterCount =
+    stats.recruiterCount ?? stats.overview?.totalRecruiters ?? 0;
+  const totalAssessments =
+    stats.totalAssessments ?? stats.overview?.totalAssessments ?? 0;
+  const completedAttempts =
+    stats.completedAttempts ?? stats.overview?.totalPassedAttempts ?? 0;
   const totalRevenue = stats.totalRevenueInCents
     ? stats.totalRevenueInCents / 100
     : (stats.revenue?.totalRevenueUSD ?? 0);
@@ -54,22 +58,28 @@ export function KpiCards({ stats }: KpiCardsProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card, idx) => {
+      {cards.map((card) => {
         const Icon = card.icon;
         return (
           <div
-            key={idx}
+            key={card.title}
             className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-sm transition-colors duration-200"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{card.title}</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {card.title}
+              </span>
               <div className={`p-2 rounded-lg border ${card.bg}`}>
                 <Icon className={`h-4 w-4 ${card.color}`} />
               </div>
             </div>
             <div>
-              <p className="text-2xl font-bold tracking-tight text-foreground">{card.value}</p>
-              <p className="text-xs text-muted-foreground mt-1">{card.subtext}</p>
+              <p className="text-2xl font-bold tracking-tight text-foreground">
+                {card.value}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {card.subtext}
+              </p>
             </div>
           </div>
         );

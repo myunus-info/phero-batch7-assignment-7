@@ -1,8 +1,8 @@
 "use client";
 
+import { CheckCircle2, Play, Terminal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Play, CheckCircle2, Terminal } from "lucide-react";
 
 export function LiveJudgeDemo() {
   const [isRunning, setIsRunning] = useState(false);
@@ -30,9 +30,12 @@ export function LiveJudgeDemo() {
     <section className="py-16 bg-muted/30 border-y border-border">
       <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">Experience the Automated Code Judge</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
+            Experience the Automated Code Judge
+          </h2>
           <p className="text-sm text-muted-foreground mt-2">
-            Candidates execute their algorithms against real-time containerized test runners.
+            Candidates execute their algorithms against real-time containerized
+            test runners.
           </p>
         </div>
 
@@ -43,7 +46,9 @@ export function LiveJudgeDemo() {
               <div className="h-3 w-3 rounded-full bg-red-500/80" />
               <div className="h-3 w-3 rounded-full bg-amber-500/80" />
               <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
-              <span className="ml-2 font-mono text-xs text-muted-foreground">two_sum_solution.js</span>
+              <span className="ml-2 font-mono text-xs text-muted-foreground">
+                two_sum_solution.js
+              </span>
             </div>
 
             <Button
@@ -76,7 +81,9 @@ export function LiveJudgeDemo() {
                   <span>ACCEPTED • 3/3 Test Cases Passed (42ms)</span>
                 </div>
               ) : (
-                <span className="text-muted-foreground">Click &ldquo;Simulate Run&rdquo; to test</span>
+                <span className="text-muted-foreground">
+                  Click &ldquo;Simulate Run&rdquo; to test
+                </span>
               )}
             </div>
 

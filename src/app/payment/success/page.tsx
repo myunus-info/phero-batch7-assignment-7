@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { CheckCircle2, Coins, ArrowRight, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { ArrowRight, CheckCircle2, Coins, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
 import { useVerifyCheckoutSession } from "@/hooks";
 
 function PaymentSuccessContent() {
@@ -13,7 +13,11 @@ function PaymentSuccessContent() {
   const sessionId = searchParams.get("session_id");
   const hasTriggeredVerification = useRef(false);
 
-  const { mutate: verifySession, isPending: isVerifying, data: verifyResult } = useVerifyCheckoutSession();
+  const {
+    mutate: verifySession,
+    isPending: isVerifying,
+    data: verifyResult,
+  } = useVerifyCheckoutSession();
 
   useEffect(() => {
     try {
@@ -61,7 +65,9 @@ function PaymentSuccessContent() {
         <div className="rounded-xl border border-border bg-muted/40 p-4 flex items-center justify-center space-x-2 text-cyan-600 dark:text-cyan-400 font-mono text-sm">
           <Coins className="h-5 w-5" />
           <span>
-            {creditsAdded ? `+${creditsAdded} Assessment Credits Added` : "Credits Ready for Candidate Invites"}
+            {creditsAdded
+              ? `+${creditsAdded} Assessment Credits Added`
+              : "Credits Ready for Candidate Invites"}
           </span>
         </div>
 

@@ -1,11 +1,11 @@
 "use client";
 
-import { useGetMe, useLogout } from "@/hooks/auth.hook";
+import { Coins, LogOut, Menu } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { useGetMe, useLogout } from "@/hooks/auth.hook";
 import { getInitials } from "@/lib/utils";
-import { Menu, LogOut, Coins } from "lucide-react";
-import Link from "next/link";
 
 interface DashboardHeaderProps {
   onOpenMobileMenu: () => void;
@@ -42,7 +42,9 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
             <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-500/20 transition-colors cursor-pointer text-xs font-semibold">
               <Coins className="h-3.5 w-3.5" />
               <span>{user.recruiterProfile.credits} Credits</span>
-              <span className="text-[10px] text-cyan-700 dark:text-cyan-300 underline ml-1">+ Add</span>
+              <span className="text-[10px] text-cyan-700 dark:text-cyan-300 underline ml-1">
+                + Add
+              </span>
             </div>
           </Link>
         )}
@@ -62,8 +64,12 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
             </div>
 
             <div className="hidden sm:block text-left">
-              <p className="text-xs font-medium text-foreground truncate max-w-30">{user?.name}</p>
-              <p className="text-[10px] text-muted-foreground capitalize">{user?.role.toLowerCase()}</p>
+              <p className="text-xs font-medium text-foreground truncate max-w-30">
+                {user?.name}
+              </p>
+              <p className="text-[10px] text-muted-foreground capitalize">
+                {user?.role.toLowerCase()}
+              </p>
             </div>
           </Link>
         ) : (
@@ -73,8 +79,12 @@ export function DashboardHeader({ onOpenMobileMenu }: DashboardHeaderProps) {
             </div>
 
             <div className="hidden sm:block text-left">
-              <p className="text-xs font-medium text-foreground truncate max-w-30">{user?.name}</p>
-              <p className="text-[10px] text-muted-foreground capitalize">{user?.role.toLowerCase()}</p>
+              <p className="text-xs font-medium text-foreground truncate max-w-30">
+                {user?.name}
+              </p>
+              <p className="text-[10px] text-muted-foreground capitalize">
+                {user?.role.toLowerCase()}
+              </p>
             </div>
           </div>
         )}

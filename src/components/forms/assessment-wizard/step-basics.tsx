@@ -1,12 +1,19 @@
 "use client";
 
-import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
+import { ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
 
 export interface StepBasicsProps {
+  // biome-ignore lint/suspicious/noExplicitAny: Tanstack Form instance
   form: any;
   onNext: () => void;
 }
@@ -14,12 +21,16 @@ export interface StepBasicsProps {
 export function StepBasics({ form, onNext }: StepBasicsProps) {
   return (
     <div className="space-y-6 rounded-xl border border-border bg-card p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-foreground">Assessment Information</h2>
+      <h2 className="text-lg font-semibold text-foreground">
+        Assessment Information
+      </h2>
 
       <FieldGroup>
         <form.Field name="title">
+          {/* biome-ignore lint/suspicious/noExplicitAny: Tanstack FieldApi */}
           {(field: any) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -31,7 +42,7 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
                   name={field.name}
                   placeholder="e.g. Senior Frontend Engineer Technical Screen"
                   value={field.state.value}
-                  onChange={e => field.handleChange(e.target.value)}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   aria-invalid={isInvalid}
                   required
@@ -44,12 +55,15 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <form.Field name="durationMinutes">
+            {/* biome-ignore lint/suspicious/noExplicitAny: Tanstack FieldApi */}
             {(field: any) => (
               <Field>
                 <FieldLabel htmlFor={field.name} required>
                   Duration (Minutes)
                 </FieldLabel>
-                <FieldDescription>Maximum time allowed once a candidate begins.</FieldDescription>
+                <FieldDescription>
+                  Maximum time allowed once a candidate begins.
+                </FieldDescription>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -57,7 +71,7 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
                   min={15}
                   max={240}
                   value={field.state.value}
-                  onChange={e => field.handleChange(Number(e.target.value))}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
                   required
                 />
               </Field>
@@ -65,12 +79,15 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
           </form.Field>
 
           <form.Field name="passingMarks">
+            {/* biome-ignore lint/suspicious/noExplicitAny: Tanstack FieldApi */}
             {(field: any) => (
               <Field>
                 <FieldLabel htmlFor={field.name} required>
                   Passing Marks (%)
                 </FieldLabel>
-                <FieldDescription>Minimum percentage to mark candidate as Passed.</FieldDescription>
+                <FieldDescription>
+                  Minimum percentage to mark candidate as Passed.
+                </FieldDescription>
                 <Input
                   id={field.name}
                   name={field.name}
@@ -78,7 +95,7 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
                   min={1}
                   max={100}
                   value={field.state.value}
-                  onChange={e => field.handleChange(Number(e.target.value))}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
                   required
                 />
               </Field>
@@ -87,8 +104,10 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
         </div>
 
         <form.Field name="description">
+          {/* biome-ignore lint/suspicious/noExplicitAny: Tanstack FieldApi */}
           {(field: any) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -101,7 +120,7 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
                   rows={4}
                   placeholder="Please complete all questions before the timer expires. You may submit code multiple times."
                   value={field.state.value}
-                  onChange={e => field.handleChange(e.target.value)}
+                  onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   aria-invalid={isInvalid}
                   required
@@ -115,6 +134,7 @@ export function StepBasics({ form, onNext }: StepBasicsProps) {
 
       <div className="flex justify-end pt-4">
         <form.Subscribe
+          // biome-ignore lint/suspicious/noExplicitAny: Tanstack FormState
           selector={(state: any) => ({
             title: state.values.title,
             description: state.values.description,

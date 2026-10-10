@@ -9,7 +9,7 @@ import {
   startAssessmentAttempt,
   submitProblemSolution,
 } from "@/api/attempt.api";
-import { ISubmitProblemPayload } from "@/types";
+import type { ISubmitProblemPayload } from "@/types";
 
 export function useGetMyCandidateAssessments() {
   return useQuery({
@@ -30,7 +30,9 @@ export function useStartAssessmentAttempt() {
       });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to start assessment");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to start assessment",
+      );
     },
   });
 }
@@ -77,7 +79,9 @@ export function useFinishAssessment() {
       });
     },
     onError: (err: { data?: { message?: string }; message?: string }) => {
-      toast.error(err?.data?.message || err?.message || "Failed to finish assessment");
+      toast.error(
+        err?.data?.message || err?.message || "Failed to finish assessment",
+      );
     },
   });
 }

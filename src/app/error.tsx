@@ -1,10 +1,16 @@
 "use client";
 
+import { AlertTriangle, RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, RotateCcw } from "lucide-react";
 
-export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
     console.error("Application error boundary triggered:", error);
   }, [error]);
@@ -15,9 +21,12 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         <AlertTriangle className="h-8 w-8" />
       </div>
 
-      <h2 className="text-2xl font-bold text-foreground mb-2">Something went wrong</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-2">
+        Something went wrong
+      </h2>
       <p className="text-sm text-muted-foreground max-w-md mb-6">
-        {error.message || "An unexpected error occurred while processing your request."}
+        {error.message ||
+          "An unexpected error occurred while processing your request."}
       </p>
 
       <Button variant="emerald" onClick={() => reset()} className="gap-2">

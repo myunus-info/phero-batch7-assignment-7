@@ -13,15 +13,14 @@ export function Spinner({ className, size = "md" }: SpinnerProps) {
   };
 
   return (
-    <div
+    <output
       className={cn(
-        "animate-spin rounded-full border-t-emerald-500 border-r-transparent border-b-emerald-500 border-l-transparent",
+        "inline-block animate-spin rounded-full border-t-emerald-500 border-r-transparent border-b-emerald-500 border-l-transparent",
         sizeClasses[size],
         className,
       )}
-      role="status"
     >
       <span className="sr-only">Loading...</span>
-    </div>
+    </output>
   );
 }

@@ -1,19 +1,29 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Edit3, Eye, FileCode2, Plus, Search, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import useUrlParams from "@/hooks/url-params.hook";
-import { useGetAllProblems, useDeleteProblem, useDebounce } from "@/hooks";
-import { DifficultyBadge, ProblemTypeBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
+import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import {
+  DifficultyBadge,
+  ProblemTypeBadge,
+} from "@/components/ui/status-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TablePagination } from "@/components/ui/table-pagination";
-import { DifficultyLevel, ProblemType } from "@/types";
-import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
-import { Plus, Search, Trash2, Edit3, Eye, FileCode2 } from "lucide-react";
+import { useDebounce, useDeleteProblem, useGetAllProblems } from "@/hooks";
+import useUrlParams from "@/hooks/url-params.hook";
+import type { DifficultyLevel, ProblemType } from "@/types";
 
 function RecruiterProblemsContent() {
   const { getParam, setParams } = useUrlParams();
@@ -59,7 +69,8 @@ function RecruiterProblemsContent() {
               <span>Problem Studio</span>
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Create, curate, and customize coding challenges and MCQs for your candidate assessments.
+              Create, curate, and customize coding challenges and MCQs for your
+              candidate assessments.
             </p>
           </div>
 
@@ -79,13 +90,13 @@ function RecruiterProblemsContent() {
               placeholder="Search problems by title, keywords..."
               className="pl-9 bg-background border-border"
               value={searchInput}
-              onChange={e => setSearchInput(e.target.value)}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
 
           <Select
             value={difficultyParam}
-            onChange={e => setParams({ difficulty: e.target.value }, true)}
+            onChange={(e) => setParams({ difficulty: e.target.value }, true)}
             className="bg-background border-border"
           >
             <option value="">All Difficulties</option>
@@ -96,7 +107,7 @@ function RecruiterProblemsContent() {
 
           <Select
             value={typeParam}
-            onChange={e => setParams({ type: e.target.value }, true)}
+            onChange={(e) => setParams({ type: e.target.value }, true)}
             className="bg-background border-border"
           >
             <option value="">All Types</option>
@@ -110,31 +121,55 @@ function RecruiterProblemsContent() {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-muted-foreground">Problem Title</TableHead>
-                <TableHead className="text-muted-foreground whitespace-nowrap">Type</TableHead>
-                <TableHead className="text-muted-foreground whitespace-nowrap">Difficulty</TableHead>
-                <TableHead className="text-muted-foreground whitespace-nowrap">Points</TableHead>
-                <TableHead className="text-muted-foreground whitespace-nowrap">Time Limit</TableHead>
-                <TableHead className="text-right text-muted-foreground whitespace-nowrap">Actions</TableHead>
+                <TableHead className="text-muted-foreground">
+                  Problem Title
+                </TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">
+                  Type
+                </TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">
+                  Difficulty
+                </TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">
+                  Points
+                </TableHead>
+                <TableHead className="text-muted-foreground whitespace-nowrap">
+                  Time Limit
+                </TableHead>
+                <TableHead className="text-right text-muted-foreground whitespace-nowrap">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                Array.from({ length: 5 }).map((_, i) => (
-                  <TableRow key={i} className="border-border/60">
-                    <TableCell colSpan={6} className="h-14 animate-pulse bg-muted/40" />
+                ["sk-1", "sk-2", "sk-3", "sk-4", "sk-5"].map((skId) => (
+                  <TableRow key={skId} className="border-border/60">
+                    <TableCell
+                      colSpan={6}
+                      className="h-14 animate-pulse bg-muted/40"
+                    />
                   </TableRow>
                 ))
               ) : problems.length === 0 ? (
                 <TableRow className="border-border">
-                  <TableCell colSpan={6} className="h-40 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="h-40 text-center text-muted-foreground"
+                  >
                     <div className="flex flex-col items-center justify-center space-y-2">
                       <FileCode2 className="h-8 w-8 text-muted-foreground/50" />
-                      <p className="font-medium text-foreground">No problems found</p>
-                      <p className="text-xs text-muted-foreground">
-                        Try adjusting your filters or create a new problem to start testing candidates.
+                      <p className="font-medium text-foreground">
+                        No problems found
                       </p>
-                      <Link href="/dashboard/recruiter/problems/create" className="pt-2">
+                      <p className="text-xs text-muted-foreground">
+                        Try adjusting your filters or create a new problem to
+                        start testing candidates.
+                      </p>
+                      <Link
+                        href="/dashboard/recruiter/problems/create"
+                        className="pt-2"
+                      >
                         <Button variant="emerald" size="sm" className="gap-2">
                           <Plus className="h-4 w-4" />
                           <span>Create Your First Problem</span>
@@ -144,8 +179,11 @@ function RecruiterProblemsContent() {
                   </TableCell>
                 </TableRow>
               ) : (
-                problems.map(problem => (
-                  <TableRow key={problem.id} className="border-border/60 hover:bg-muted/40 transition-colors">
+                problems.map((problem) => (
+                  <TableRow
+                    key={problem.id}
+                    className="border-border/60 hover:bg-muted/40 transition-colors"
+                  >
                     <TableCell className="font-medium text-foreground max-w-xs truncate">
                       <div>
                         <Link
@@ -154,11 +192,15 @@ function RecruiterProblemsContent() {
                         >
                           {problem.title}
                         </Link>
-                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{problem.description}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                          {problem.description}
+                        </p>
                       </div>
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
-                      <ProblemTypeBadge type={problem.problemType || problem.type || "CODING"} />
+                      <ProblemTypeBadge
+                        type={problem.problemType || problem.type || "CODING"}
+                      />
                     </TableCell>
                     <TableCell className="whitespace-nowrap">
                       <DifficultyBadge difficulty={problem.difficulty} />
@@ -175,7 +217,9 @@ function RecruiterProblemsContent() {
                     </TableCell>
                     <TableCell className="text-right whitespace-nowrap">
                       <div className="flex items-center justify-end space-x-1">
-                        <Link href={`/dashboard/recruiter/problems/${problem.id}`}>
+                        <Link
+                          href={`/dashboard/recruiter/problems/${problem.id}`}
+                        >
                           <Button
                             variant="ghost"
                             size="sm"
@@ -186,7 +230,9 @@ function RecruiterProblemsContent() {
                           </Button>
                         </Link>
 
-                        <Link href={`/dashboard/recruiter/problems/${problem.id}/edit`}>
+                        <Link
+                          href={`/dashboard/recruiter/problems/${problem.id}/edit`}
+                        >
                           <Button
                             variant="ghost"
                             size="sm"
@@ -225,14 +271,14 @@ function RecruiterProblemsContent() {
               page={meta.page}
               limit={meta.limit}
               total={meta.total}
-              onPageChange={p => setParams({ page: p })}
+              onPageChange={(p) => setParams({ page: p })}
             />
           )}
         </div>
 
         <DeleteConfirmationModal
           open={!!problemToDelete}
-          onOpenChange={open => {
+          onOpenChange={(open) => {
             if (!open) setProblemToDelete(null);
           }}
           itemType="problem"

@@ -1,5 +1,5 @@
-import { IPaginationParams } from "./api.type";
-import { UserRole, UserStatus } from "./auth.type";
+import type { IPaginationParams } from "./api.type";
+import type { UserRole, UserStatus } from "./auth.type";
 
 export interface IDashboardStats {
   totalUsers?: number;

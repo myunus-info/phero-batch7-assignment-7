@@ -1,9 +1,9 @@
 "use client";
 
+import { UserCheck } from "lucide-react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { ProfileSettingsForm } from "@/components/forms/ProfileSettingsForm";
 import { useGetMyProfile } from "@/hooks/user.hook";
-import { UserCheck } from "lucide-react";
 
 export default function CandidateProfilePage() {
   const { data: profileData, isLoading } = useGetMyProfile();
@@ -18,16 +18,21 @@ export default function CandidateProfilePage() {
             <span>Candidate Profile & Skills</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Keep your skills, bio, and portfolio links updated for prospective hiring teams.
+            Keep your skills, bio, and portfolio links updated for prospective
+            hiring teams.
           </p>
         </div>
 
         {isLoading ? (
-          <div className="py-16 text-center text-muted-foreground">Loading profile information...</div>
+          <div className="py-16 text-center text-muted-foreground">
+            Loading profile information...
+          </div>
         ) : user ? (
           <ProfileSettingsForm user={user} />
         ) : (
-          <div className="py-16 text-center text-muted-foreground">Failed to load user profile.</div>
+          <div className="py-16 text-center text-muted-foreground">
+            Failed to load user profile.
+          </div>
         )}
       </div>
     </RoleGuard>

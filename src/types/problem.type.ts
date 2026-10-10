@@ -1,4 +1,4 @@
-import { IPaginationParams } from "./api.type";
+import type { IPaginationParams } from "./api.type";
 
 export type DifficultyLevel = "EASY" | "MEDIUM" | "HARD";
 export type ProblemType = "CODING" | "MCQ" | "SINGLE_CHOICE";

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { DashboardSidebar } from "./DashboardSidebar";
-import { DashboardHeader } from "./DashboardHeader";
 import { Sheet } from "@/components/ui/sheet";
+import { DashboardHeader } from "./DashboardHeader";
+import { DashboardSidebar } from "./DashboardSidebar";
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);

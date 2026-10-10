@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import {
+import type {
   IApiResponse,
   IAuthUser,
   IGoogleLoginPayload,
@@ -37,10 +37,13 @@ export function logoutUser() {
 }
 
 export function refreshToken(token?: string) {
-  return apiClient<IApiResponse<{ accessToken: string }>>("/auth/refresh-token", {
-    method: "POST",
-    body: token ? { refreshToken: token } : {},
-  });
+  return apiClient<IApiResponse<{ accessToken: string }>>(
+    "/auth/refresh-token",
+    {
+      method: "POST",
+      body: token ? { refreshToken: token } : {},
+    },
+  );
 }
 
 export function getMe() {

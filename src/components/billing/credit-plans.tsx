@@ -1,9 +1,9 @@
 "use client";
 
-import { useCreateCheckoutSession } from "@/hooks";
-import { Button } from "@/components/ui/button";
 import { Check, Coins } from "lucide-react";
-import { CreditPlanKey } from "@/types";
+import { Button } from "@/components/ui/button";
+import { useCreateCheckoutSession } from "@/hooks";
+import type { CreditPlanKey } from "@/types";
 
 interface PlanConfig {
   key: CreditPlanKey;
@@ -70,7 +70,7 @@ export function CreditPlans() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {CREDIT_PLANS.map(plan => (
+      {CREDIT_PLANS.map((plan) => (
         <div
           key={plan.key}
           className={`relative flex flex-col justify-between rounded-2xl border p-6 transition-all duration-200 ${
@@ -88,12 +88,18 @@ export function CreditPlans() {
           <div className="space-y-4">
             <div>
               <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{plan.description}</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {plan.description}
+              </p>
             </div>
 
             <div className="flex items-baseline space-x-1">
-              <span className="text-3xl font-extrabold text-foreground">{plan.price}</span>
-              <span className="text-xs text-muted-foreground font-mono">/ one-time</span>
+              <span className="text-3xl font-extrabold text-foreground">
+                {plan.price}
+              </span>
+              <span className="text-xs text-muted-foreground font-mono">
+                / one-time
+              </span>
             </div>
 
             <div className="flex items-center space-x-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-3 py-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
@@ -106,8 +112,11 @@ export function CreditPlans() {
                 What&apos;s included:
               </p>
               <ul className="space-y-2">
-                {plan.features.map((feat, i) => (
-                  <li key={i} className="flex items-center space-x-2 text-xs text-foreground">
+                {plan.features.map((feat) => (
+                  <li
+                    key={feat}
+                    className="flex items-center space-x-2 text-xs text-foreground"
+                  >
                     <Check className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
                     <span>{feat}</span>
                   </li>

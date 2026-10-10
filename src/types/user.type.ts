@@ -1,4 +1,4 @@
-import { UserRole, UserStatus } from "./auth.type";
+import type { UserRole, UserStatus } from "./auth.type";
 
 export interface IRecruiterProfile {
   id?: string;

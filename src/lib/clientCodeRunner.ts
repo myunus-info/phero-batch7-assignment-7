@@ -1,11 +1,11 @@
-import { ITestCase, ISubmitProblemResponse, ITestResult } from "@/types";
+import type { ISubmitProblemResponse, ITestCase, ITestResult } from "@/types";
 
 export function normalizeOutput(str: string): string {
   return (str || "")
     .trim()
     .replace(/\r\n/g, "\n")
     .split("\n")
-    .map(line => line.trimEnd())
+    .map((line) => line.trimEnd())
     .join("\n");
 }
 
@@ -14,7 +14,7 @@ function executeTestCaseInWorker(
   rawInput: string,
   timeoutMs = 2500,
 ): Promise<{ actualOutput: string; error?: string; executionTimeMs: number }> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const startTime = performance.now();
 
     if (typeof window === "undefined" || typeof Worker === "undefined") {
@@ -110,7 +110,7 @@ self.onmessage = function(e) {
       }
     }, timeoutMs);
 
-    worker.onmessage = event => {
+    worker.onmessage = (event) => {
       if (!isSettled) {
         isSettled = true;
         clearTimeout(timer);
@@ -124,7 +124,7 @@ self.onmessage = function(e) {
       }
     };
 
-    worker.onerror = err => {
+    worker.onerror = (err) => {
       if (!isSettled) {
         isSettled = true;
         clearTimeout(timer);
@@ -146,7 +146,7 @@ export async function runClientCode(
   testCases: ITestCase[],
   totalPoints = 100,
 ): Promise<ISubmitProblemResponse> {
-  const visibleTests = testCases.filter(tc => !tc.isHidden);
+  const visibleTests = testCases.filter((tc) => !tc.isHidden);
   const testsToRun = visibleTests.length > 0 ? visibleTests : testCases;
 
   if (testsToRun.length === 0) {
@@ -181,7 +181,9 @@ export async function runClientCode(
       passed,
       input: rawInput,
       expectedOutput,
-      actualOutput: exec.error ? exec.error : exec.actualOutput || "(Empty Output)",
+      actualOutput: exec.error
+        ? exec.error
+        : exec.actualOutput || "(Empty Output)",
       error: exec.error,
       executionTimeMs: exec.executionTimeMs,
       isHidden: false,

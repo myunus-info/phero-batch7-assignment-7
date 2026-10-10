@@ -1,5 +1,10 @@
 import apiClient from "@/lib/apiClient";
-import { IApiResponse, ICreateProblemPayload, IProblem, IProblemFilters } from "@/types";
+import type {
+  IApiResponse,
+  ICreateProblemPayload,
+  IProblem,
+  IProblemFilters,
+} from "@/types";
 
 export function getAllProblems(params?: IProblemFilters) {
   return apiClient<IApiResponse<IProblem[]>>("/problems", {
@@ -18,7 +23,10 @@ export function createProblem(payload: ICreateProblemPayload) {
   });
 }
 
-export function updateProblem(id: string, payload: Partial<ICreateProblemPayload>) {
+export function updateProblem(
+  id: string,
+  payload: Partial<ICreateProblemPayload>,
+) {
   return apiClient<IApiResponse<IProblem>>(`/problems/${id}`, {
     method: "PATCH",
     body: payload,

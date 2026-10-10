@@ -1,20 +1,37 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
-import { useGetAllUsers, useUpdateUserStatusOrRole } from "@/hooks";
-import { updateUserStatusOrRoleSchema } from "@/validations";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { TablePagination } from "@/components/ui/table-pagination";
-import { RoleBadge, StatusBadge } from "@/components/ui/status-badge";
+import { Edit2, Search } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { Sheet, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { FieldGroup, Field, FieldLabel, FieldError } from "@/components/ui/field";
-import { IUserProfile, UserRole, UserStatus } from "@/types";
+import {
+  Sheet,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { RoleBadge, StatusBadge } from "@/components/ui/status-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TablePagination } from "@/components/ui/table-pagination";
+import { useGetAllUsers, useUpdateUserStatusOrRole } from "@/hooks";
 import { formatDate } from "@/lib/utils";
-import { Edit2, Search } from "lucide-react";
+import type { IUserProfile, UserRole, UserStatus } from "@/types";
+import { updateUserStatusOrRoleSchema } from "@/validations";
 
 interface EditUserFormProps {
   user: IUserProfile;
@@ -52,7 +69,7 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
 
   return (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
         form.handleSubmit();
@@ -66,8 +83,9 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
 
       <FieldGroup>
         <form.Field name="role">
-          {field => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -77,12 +95,18 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={e => field.handleChange(e.target.value as UserRole)}
+                  onChange={(e) =>
+                    field.handleChange(e.target.value as UserRole)
+                  }
                   aria-invalid={isInvalid}
                 >
                   <option value="ADMIN">Admin (Full System Privilege)</option>
-                  <option value="RECRUITER">Recruiter (Assessments & Billing)</option>
-                  <option value="CANDIDATE">Candidate (Arena & Submissions)</option>
+                  <option value="RECRUITER">
+                    Recruiter (Assessments & Billing)
+                  </option>
+                  <option value="CANDIDATE">
+                    Candidate (Arena & Submissions)
+                  </option>
                 </Select>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
@@ -91,8 +115,9 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
         </form.Field>
 
         <form.Field name="status">
-          {field => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+          {(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -102,7 +127,9 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
                   name={field.name}
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={e => field.handleChange(e.target.value as UserStatus)}
+                  onChange={(e) =>
+                    field.handleChange(e.target.value as UserStatus)
+                  }
                   aria-invalid={isInvalid}
                 >
                   <option value="ACTIVE">Active</option>
@@ -116,10 +143,19 @@ function EditUserForm({ user, onClose }: EditUserFormProps) {
       </FieldGroup>
 
       <div className="pt-6 border-t border-border flex justify-end space-x-3">
-        <Button type="button" variant="outline" onClick={onClose} disabled={updateMutation.isPending}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          disabled={updateMutation.isPending}
+        >
           Cancel
         </Button>
-        <Button type="submit" variant="emerald" isLoading={updateMutation.isPending}>
+        <Button
+          type="submit"
+          variant="emerald"
+          isLoading={updateMutation.isPending}
+        >
           Save Changes
         </Button>
       </div>
@@ -157,7 +193,7 @@ export function UserManagementTable() {
             placeholder="Search by name or email..."
             className="pl-9"
             value={search}
-            onChange={e => {
+            onChange={(e) => {
               setSearch(e.target.value);
               setPage(1);
             }}
@@ -166,7 +202,7 @@ export function UserManagementTable() {
 
         <Select
           value={roleFilter}
-          onChange={e => {
+          onChange={(e) => {
             setRoleFilter(e.target.value);
             setPage(1);
           }}
@@ -179,7 +215,7 @@ export function UserManagementTable() {
 
         <Select
           value={statusFilter}
-          onChange={e => {
+          onChange={(e) => {
             setStatusFilter(e.target.value);
             setPage(1);
           }}
@@ -204,23 +240,31 @@ export function UserManagementTable() {
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="text-center py-8 text-muted-foreground"
+              >
                 Loading users directory...
               </TableCell>
             </TableRow>
           ) : users.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+              <TableCell
+                colSpan={5}
+                className="text-center py-8 text-muted-foreground"
+              >
                 No users match the criteria.
               </TableCell>
             </TableRow>
           ) : (
-            users.map(user => (
+            users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>
                   <div>
                     <p className="font-semibold text-foreground">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.email}
+                    </p>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -229,7 +273,9 @@ export function UserManagementTable() {
                 <TableCell>
                   <StatusBadge status={user.status} />
                 </TableCell>
-                <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(user.createdAt)}</TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground">
+                  {formatDate(user.createdAt)}
+                </TableCell>
                 <TableCell className="text-right">
                   <Button
                     variant="ghost"
@@ -247,17 +293,31 @@ export function UserManagementTable() {
         </TableBody>
       </Table>
 
-      <TablePagination page={page} total={meta.total} limit={limit} onPageChange={setPage} />
+      <TablePagination
+        page={page}
+        total={meta.total}
+        limit={limit}
+        onPageChange={setPage}
+      />
 
       {/* User Edit Drawer */}
-      <Sheet open={Boolean(selectedUser)} onOpenChange={open => !open && setSelectedUser(null)}>
+      <Sheet
+        open={Boolean(selectedUser)}
+        onOpenChange={(open) => !open && setSelectedUser(null)}
+      >
         <SheetHeader>
           <SheetTitle>Manage User Account</SheetTitle>
-          <SheetDescription>Change permission role or access status for {selectedUser?.name}.</SheetDescription>
+          <SheetDescription>
+            Change permission role or access status for {selectedUser?.name}.
+          </SheetDescription>
         </SheetHeader>
 
         {selectedUser && (
-          <EditUserForm key={selectedUser.id} user={selectedUser} onClose={() => setSelectedUser(null)} />
+          <EditUserForm
+            key={selectedUser.id}
+            user={selectedUser}
+            onClose={() => setSelectedUser(null)}
+          />
         )}
       </Sheet>
     </div>

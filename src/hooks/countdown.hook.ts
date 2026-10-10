@@ -26,7 +26,7 @@ export function useCountdown(
 ): ICountdownState {
   let initialDurationSeconds = 3600;
   let startedAt: string | null | undefined = null;
-  let onExpire: (() => void) | undefined = undefined;
+  let onExpire: (() => void) | undefined;
 
   if (typeof param1 === "object" && param1 !== null) {
     if (param1.initialSeconds) {
@@ -60,7 +60,8 @@ export function useCountdown(
     return Math.max(0, Math.floor((endTime - now) / 1000));
   }, [initialDurationSeconds, startedAt]);
 
-  const [remainingSeconds, setRemainingSeconds] = useState<number>(calculateRemaining);
+  const [remainingSeconds, setRemainingSeconds] =
+    useState<number>(calculateRemaining);
 
   useEffect(() => {
     const interval = setInterval(() => {

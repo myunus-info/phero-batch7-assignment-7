@@ -1,12 +1,14 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function proxy(request: NextRequest) {
   const token = request.cookies.get("accessToken")?.value;
   const { pathname } = request.nextUrl;
 
   const protectedPrefixes = ["/dashboard", "/arena"];
-  const isProtected = protectedPrefixes.some(prefix => pathname.startsWith(prefix));
+  const isProtected = protectedPrefixes.some((prefix) =>
+    pathname.startsWith(prefix),
+  );
 
   // If trying to access a protected route without token cookie
   if (isProtected && !token) {

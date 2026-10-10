@@ -1,22 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
+import { Briefcase, Code2, Eye, EyeClosed } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useForm } from "@tanstack/react-form";
+import { useState } from "react";
+import GoogleLoginComponent from "@/components/auth/GoogleLogin";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useRegister } from "@/hooks/auth.hook";
 import { registerSchema } from "@/validations";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
-import { Spinner } from "@/components/ui/spinner";
-import { Briefcase, Code2, Eye, EyeClosed } from "lucide-react";
-import GoogleLoginComponent from "@/components/auth/GoogleLogin";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();
   const roleParam = searchParams.get("role")?.toUpperCase();
-  const initialRole: "CANDIDATE" | "RECRUITER" = roleParam === "RECRUITER" ? "RECRUITER" : "CANDIDATE";
+  const initialRole: "CANDIDATE" | "RECRUITER" =
+    roleParam === "RECRUITER" ? "RECRUITER" : "CANDIDATE";
 
   const [showPassword, setShowPassword] = useState(false);
   const registerMutation = useRegister();
@@ -46,13 +53,17 @@ export function RegisterForm() {
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Create an account</h1>
-        <p className="text-sm text-muted-foreground">Join DevJudge as a candidate or hiring team</p>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          Create an account
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Join DevJudge as a candidate or hiring team
+        </p>
       </div>
 
       {/* Role Picker Tabs */}
-      <form.Subscribe selector={state => state.values.role}>
-        {currentRole => (
+      <form.Subscribe selector={(state) => state.values.role}>
+        {(currentRole) => (
           <div className="grid grid-cols-2 gap-3 p-1 rounded-xl bg-muted border border-border">
             <button
               type="button"
@@ -83,7 +94,7 @@ export function RegisterForm() {
       </form.Subscribe>
 
       <form
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
@@ -92,8 +103,9 @@ export function RegisterForm() {
       >
         <FieldGroup>
           <form.Field name="name">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -107,7 +119,7 @@ export function RegisterForm() {
                     placeholder="Ada Lovelace"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={e => field.handleChange(e.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     autoComplete="name"
                     disabled={registerMutation.isPending}
@@ -119,8 +131,9 @@ export function RegisterForm() {
           </form.Field>
 
           <form.Field name="email">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -134,7 +147,7 @@ export function RegisterForm() {
                     placeholder="name@company.com"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={e => field.handleChange(e.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     aria-invalid={isInvalid}
                     autoComplete="email"
                     disabled={registerMutation.isPending}
@@ -145,16 +158,19 @@ export function RegisterForm() {
             }}
           </form.Field>
 
-          <form.Subscribe selector={state => state.values.role}>
-            {currentRole =>
+          <form.Subscribe selector={(state) => state.values.role}>
+            {(currentRole) =>
               currentRole === "RECRUITER" ? (
                 <form.Field name="companyName">
-                  {field => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  {(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
 
                     return (
                       <Field data-invalid={isInvalid}>
-                        <FieldLabel htmlFor={field.name}>Company Name</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>
+                          Company Name
+                        </FieldLabel>
                         <Input
                           id={field.name}
                           name={field.name}
@@ -162,12 +178,14 @@ export function RegisterForm() {
                           placeholder="Acme Corporation"
                           value={field.state.value}
                           onBlur={field.handleBlur}
-                          onChange={e => field.handleChange(e.target.value)}
+                          onChange={(e) => field.handleChange(e.target.value)}
                           aria-invalid={isInvalid}
                           autoComplete="organization"
                           disabled={registerMutation.isPending}
                         />
-                        {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
                       </Field>
                     );
                   }}
@@ -177,8 +195,9 @@ export function RegisterForm() {
           </form.Subscribe>
 
           <form.Field name="password">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -193,7 +212,7 @@ export function RegisterForm() {
                       placeholder="••••••••"
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={e => field.handleChange(e.target.value)}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       autoComplete="new-password"
                       className="pr-10"
@@ -202,20 +221,26 @@ export function RegisterForm() {
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-3 text-muted-foreground hover:text-foreground transition-colors"
                       type="button"
-                      onClick={() => setShowPassword(prev => !prev)}
+                      onClick={() => setShowPassword((prev) => !prev)}
                     >
-                      {showPassword ? <EyeClosed className="size-4" /> : <Eye className="size-4" />}
+                      {showPassword ? (
+                        <EyeClosed className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
                     </button>
                   </div>
-                  <FieldDescription>Must be at least 6 characters long.</FieldDescription>
+                  <FieldDescription>
+                    Must be at least 6 characters long.
+                  </FieldDescription>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}
           </form.Field>
 
-          <form.Subscribe selector={state => state.values.role}>
-            {currentRole => (
+          <form.Subscribe selector={(state) => state.values.role}>
+            {(currentRole) => (
               <Button
                 type="submit"
                 variant={currentRole === "RECRUITER" ? "cyan" : "emerald"}
@@ -236,8 +261,8 @@ export function RegisterForm() {
       </form>
 
       {/* Google OAuth Signup */}
-      <form.Subscribe selector={state => state.values.role}>
-        {currentRole => (
+      <form.Subscribe selector={(state) => state.values.role}>
+        {(currentRole) => (
           <div className="flex flex-col items-center justify-center pt-2 space-y-3">
             <div className="relative w-full flex items-center justify-center">
               <div className="absolute inset-0 flex items-center">
@@ -247,7 +272,9 @@ export function RegisterForm() {
                 Or sign up with Google as{" "}
                 <span
                   className={
-                    currentRole === "RECRUITER" ? "text-cyan-500 font-semibold" : "text-emerald-500 font-semibold"
+                    currentRole === "RECRUITER"
+                      ? "text-cyan-500 font-semibold"
+                      : "text-emerald-500 font-semibold"
                   }
                 >
                   {currentRole === "RECRUITER" ? "Recruiter" : "Candidate"}
@@ -262,7 +289,10 @@ export function RegisterForm() {
 
       <div className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-emerald-500 hover:underline">
+        <Link
+          href="/login"
+          className="font-medium text-emerald-500 hover:underline"
+        >
           Sign in
         </Link>
       </div>

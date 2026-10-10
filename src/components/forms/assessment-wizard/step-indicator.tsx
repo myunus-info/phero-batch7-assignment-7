@@ -13,20 +13,27 @@ const STEPS = [
   { num: 3 as const, label: "Review & Publish" },
 ];
 
-export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) {
+export function StepIndicator({
+  currentStep,
+  onStepClick,
+}: StepIndicatorProps) {
   return (
     <div className="flex items-center justify-between border-b border-border pb-4">
-      {STEPS.map(s => {
+      {STEPS.map((s) => {
         const isCurrent = currentStep === s.num;
         const isCompleted = currentStep > s.num;
         const canClick = isCompleted && onStepClick;
 
         return (
-          <div
+          <button
+            type="button"
             key={s.num}
+            disabled={!canClick}
             onClick={() => canClick && onStepClick(s.num)}
-            className={`flex items-center space-x-2 select-none ${
-              canClick ? "cursor-pointer hover:opacity-80 transition-opacity" : ""
+            className={`flex items-center space-x-2 select-none text-left bg-transparent border-0 p-0 ${
+              canClick
+                ? "cursor-pointer hover:opacity-80 transition-opacity"
+                : "cursor-default"
             }`}
           >
             <div
@@ -51,7 +58,7 @@ export function StepIndicator({ currentStep, onStepClick }: StepIndicatorProps) 
             >
               {s.label}
             </span>
-          </div>
+          </button>
         );
       })}
     </div>

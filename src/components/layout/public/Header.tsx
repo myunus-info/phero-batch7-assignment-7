@@ -1,15 +1,14 @@
 "use client";
 
+import { LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
-import { useGetMe, useLogout } from "@/hooks";
-import { UserRole } from "@/types";
+import { usePathname } from "next/navigation";
 import Logo from "@/assets/svg/Logo";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { LayoutDashboard, LogOut } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useGetMe, useLogout } from "@/hooks";
 import { cn } from "@/lib/utils";
+import type { UserRole } from "@/types";
 
 export default function Header() {
   const pathname = usePathname();
@@ -30,7 +29,10 @@ export default function Header() {
   const { data, isLoading } = useGetMe();
   const { mutate: logout } = useLogout();
 
-  const role = (data?.role || (data as unknown as { data?: { role: UserRole } })?.data?.role) as UserRole | undefined;
+  const role = (data?.role ||
+    (data as unknown as { data?: { role: UserRole } })?.data?.role) as
+    | UserRole
+    | undefined;
 
   const handleLogout = () => {
     logout();
@@ -47,7 +49,7 @@ export default function Header() {
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-muted-foreground">
-          {routes.map(route => {
+          {routes.map((route) => {
             const itemPath = route.url || "#";
             const itemName = route.name || "Item";
 
@@ -89,7 +91,9 @@ export default function Header() {
         <div className="flex items-center space-x-3">
           <ThemeToggle />
 
-          {isLoading && <div className="h-9 w-20 animate-pulse rounded-md bg-muted" />}
+          {isLoading && (
+            <div className="h-9 w-20 animate-pulse rounded-md bg-muted" />
+          )}
 
           {!isLoading && !data && (
             <div className="flex items-center space-x-2">
@@ -116,7 +120,12 @@ export default function Header() {
                   </Button>
                 </Link>
               )}
-              <Button onClick={handleLogout} variant="destructive" size="sm" className="gap-2">
+              <Button
+                onClick={handleLogout}
+                variant="destructive"
+                size="sm"
+                className="gap-2"
+              >
                 <LogOut className="h-4 w-4" />
                 Logout
               </Button>

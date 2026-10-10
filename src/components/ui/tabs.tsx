@@ -8,7 +8,9 @@ interface TabsContextValue {
   onValueChange: (value: string) => void;
 }
 
-const TabsContext = React.createContext<TabsContextValue | undefined>(undefined);
+const TabsContext = React.createContext<TabsContextValue | undefined>(
+  undefined,
+);
 
 export function Tabs({
   value,
@@ -28,7 +30,13 @@ export function Tabs({
   );
 }
 
-export function TabsList({ children, className }: { children: React.ReactNode; className?: string }) {
+export function TabsList({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div
       className={cn(
@@ -87,7 +95,12 @@ export function TabsContent({
   if (context.value !== value) return null;
 
   return (
-    <div className={cn("mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2", className)}>
+    <div
+      className={cn(
+        "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2",
+        className,
+      )}
+    >
       {children}
     </div>
   );

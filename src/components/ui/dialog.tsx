@@ -1,8 +1,8 @@
 "use client";
 
+import { X } from "lucide-react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 
 interface DialogProps {
   open: boolean;
@@ -32,14 +32,18 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+      <button
+        type="button"
+        aria-label="Close dialog"
+        tabIndex={-1}
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity cursor-default"
         onClick={() => onOpenChange(false)}
       />
       {/* Dialog body */}
       <div className="relative z-50 w-full max-w-lg rounded-xl border border-border bg-card p-6 shadow-2xl animate-in fade-in zoom-in-95 transition-colors duration-200">
         {children}
         <button
+          type="button"
           onClick={() => onOpenChange(false)}
           className="absolute right-4 top-4 rounded-sm text-muted-foreground opacity-70 transition-opacity hover:opacity-100 hover:text-foreground focus:outline-none"
         >
@@ -51,25 +55,53 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
   );
 }
 
-export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col space-y-1.5 text-left mb-4", className)} {...props} />;
-}
-
-export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+export function DialogHeader({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <h3
-      className={cn("text-lg font-semibold leading-none tracking-tight text-card-foreground", className)}
+    <div
+      className={cn("flex flex-col space-y-1.5 text-left mb-4", className)}
       {...props}
     />
   );
 }
 
-export function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn("text-sm text-muted-foreground", className)} {...props} />;
+export function DialogTitle({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLHeadingElement>) {
+  return (
+    <h3
+      className={cn(
+        "text-lg font-semibold leading-none tracking-tight text-card-foreground",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
-export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function DialogDescription({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6", className)} {...props} />
+    <p className={cn("text-sm text-muted-foreground", className)} {...props} />
+  );
+}
+
+export function DialogFooter({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6",
+        className,
+      )}
+      {...props}
+    />
   );
 }

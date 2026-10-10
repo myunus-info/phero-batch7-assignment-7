@@ -1,6 +1,12 @@
-import { IPaginationParams } from "./api.type";
+import type { IPaginationParams } from "./api.type";
 
-export type CreditPlanKey = "STARTER" | "GROWTH" | "ENTERPRISE" | "STARTER_PACK" | "PRO_PACK" | "ENTERPRISE_PACK";
+export type CreditPlanKey =
+  | "STARTER"
+  | "GROWTH"
+  | "ENTERPRISE"
+  | "STARTER_PACK"
+  | "PRO_PACK"
+  | "ENTERPRISE_PACK";
 
 export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED" | "REFUNDED";
 

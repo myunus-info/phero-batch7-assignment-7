@@ -1,5 +1,5 @@
 import apiClient from "@/lib/apiClient";
-import {
+import type {
   IAdminAuditLogFilters,
   IAdminUserFilters,
   IApiResponse,
@@ -19,7 +19,10 @@ export function getAllUsers(params?: IAdminUserFilters) {
   });
 }
 
-export function updateUserStatusOrRole(id: string, payload: IUpdateUserStatusOrRolePayload) {
+export function updateUserStatusOrRole(
+  id: string,
+  payload: IUpdateUserStatusOrRolePayload,
+) {
   return apiClient<IApiResponse<IUserProfile>>(`/admin/users/${id}/status`, {
     method: "PATCH",
     body: payload,

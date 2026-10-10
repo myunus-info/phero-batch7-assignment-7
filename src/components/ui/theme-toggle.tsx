@@ -1,8 +1,8 @@
 "use client";
 
-import { useTheme } from "@/providers/themeProvider";
-import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/providers/themeProvider";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, toggleTheme, isMounted } = useTheme();
@@ -37,7 +37,9 @@ export function ThemeToggle({ className }: { className?: string }) {
       ) : (
         <Moon className="h-4 w-4 text-indigo-500 transition-transform duration-200 hover:-rotate-12" />
       )}
-      <span className="sr-only">{isDark ? "Switch to light mode" : "Switch to dark mode"}</span>
+      <span className="sr-only">
+        {isDark ? "Switch to light mode" : "Switch to dark mode"}
+      </span>
     </Button>
   );
 }

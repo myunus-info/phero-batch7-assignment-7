@@ -1,9 +1,15 @@
 "use client";
 
-import { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { CheckCircle2, AlertTriangle } from "lucide-react";
 import confetti from "canvas-confetti";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface FinishDialogProps {
   open: boolean;
@@ -51,28 +57,37 @@ export function FinishDialog({
         <DialogDescription>
           {hasUnanswered ? (
             <span className="text-amber-600 dark:text-amber-300">
-              You have completed {answeredCount} out of {totalCount} problems. Submitting now means any unanswered
-              questions will receive 0 points.
+              You have completed {answeredCount} out of {totalCount} problems.
+              Submitting now means any unanswered questions will receive 0
+              points.
             </span>
           ) : (
             <span>
-              You have completed all {totalCount} problems. Are you ready to submit your assessment and compute your
-              final score?
+              You have completed all {totalCount} problems. Are you ready to
+              submit your assessment and compute your final score?
             </span>
           )}
         </DialogDescription>
       </DialogHeader>
 
       <div className="rounded-lg border border-border bg-muted/40 p-3 my-2 text-xs font-mono text-muted-foreground">
-        Once submitted, your solutions cannot be altered. Your score and performance report will be generated
-        immediately.
+        Once submitted, your solutions cannot be altered. Your score and
+        performance report will be generated immediately.
       </div>
 
       <DialogFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+        <Button
+          variant="outline"
+          onClick={() => onOpenChange(false)}
+          disabled={isSubmitting}
+        >
           Return to Assessment
         </Button>
-        <Button variant="emerald" onClick={handleFinish} isLoading={isSubmitting}>
+        <Button
+          variant="emerald"
+          onClick={handleFinish}
+          isLoading={isSubmitting}
+        >
           Yes, Submit Now
         </Button>
       </DialogFooter>

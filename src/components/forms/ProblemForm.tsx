@@ -1,17 +1,29 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useForm } from "@tanstack/react-form";
-import { useCreateProblem, useUpdateProblem } from "@/hooks";
-import { createProblemFormSchema } from "@/validations";
+import { Check, Code2, ListChecks, Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
-import { FieldGroup, Field, FieldLabel, FieldDescription, FieldError } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { DifficultyLevel, ProblemType, ITestCase, IMcqOption, IProblem } from "@/types";
-import { Plus, Trash2, Code2, ListChecks, Check } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { useCreateProblem, useUpdateProblem } from "@/hooks";
+import type {
+  DifficultyLevel,
+  IMcqOption,
+  IProblem,
+  ITestCase,
+  ProblemType,
+} from "@/types";
+import { createProblemFormSchema } from "@/validations";
 
 interface ProblemFormProps {
   initialProblem?: IProblem;
@@ -28,11 +40,12 @@ export function ProblemForm({
   const createProblemMutation = useCreateProblem();
   const updateProblemMutation = useUpdateProblem();
 
-  const isPending = createProblemMutation.isPending || updateProblemMutation.isPending;
+  const isPending =
+    createProblemMutation.isPending || updateProblemMutation.isPending;
 
   const initialTestCases: Omit<ITestCase, "id">[] =
     initialProblem?.testCases && initialProblem.testCases.length > 0
-      ? initialProblem.testCases.map(tc => ({
+      ? initialProblem.testCases.map((tc) => ({
           input: tc.input || "",
           expectedOutput: tc.expectedOutput || "",
           isHidden: !!tc.isHidden,
@@ -44,7 +57,7 @@ export function ProblemForm({
 
   const initialOptions: Omit<IMcqOption, "id">[] =
     initialProblem?.mcqOptions && initialProblem.mcqOptions.length > 0
-      ? initialProblem.mcqOptions.map(opt => ({
+      ? initialProblem.mcqOptions.map((opt) => ({
           text: opt.text || "",
           isCorrect: !!opt.isCorrect,
         }))
@@ -56,7 +69,9 @@ export function ProblemForm({
         ];
 
   const initialProblemType: ProblemType =
-    (initialProblem?.problemType as ProblemType) || (initialProblem?.type as ProblemType) || "CODING";
+    (initialProblem?.problemType as ProblemType) ||
+    (initialProblem?.type as ProblemType) ||
+    "CODING";
 
   const form = useForm({
     defaultValues: {
@@ -82,7 +97,8 @@ export function ProblemForm({
         difficulty: value.difficulty,
         problemType: value.type,
         points: Number(value.points),
-        timeLimitSeconds: value.type === "CODING" ? Number(value.timeLimit) * 60 : undefined,
+        timeLimitSeconds:
+          value.type === "CODING" ? Number(value.timeLimit) * 60 : undefined,
         testCases: value.type === "CODING" ? value.testCases : undefined,
         mcqOptions: value.type === "MCQ" ? value.options : undefined,
       };
@@ -111,7 +127,7 @@ export function ProblemForm({
 
   return (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
         form.handleSubmit();
@@ -120,12 +136,15 @@ export function ProblemForm({
     >
       {/* Basic Info */}
       <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-foreground">Problem Details</h2>
+        <h2 className="text-lg font-semibold text-foreground">
+          Problem Details
+        </h2>
 
         <FieldGroup>
           <form.Field name="title">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -137,7 +156,7 @@ export function ProblemForm({
                     name={field.name}
                     placeholder="e.g. Two Sum, Valid Parentheses, Event Loop MCQ"
                     value={field.state.value}
-                    onChange={e => field.handleChange(e.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                     aria-invalid={isInvalid}
                     required
@@ -150,7 +169,7 @@ export function ProblemForm({
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <form.Field name="type">
-              {field => (
+              {(field) => (
                 <Field>
                   <FieldLabel htmlFor={field.name} required>
                     Problem Type
@@ -159,18 +178,22 @@ export function ProblemForm({
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
-                    onChange={e => field.handleChange(e.target.value as ProblemType)}
+                    onChange={(e) =>
+                      field.handleChange(e.target.value as ProblemType)
+                    }
                   >
                     <option value="CODING">Coding (Judge0 Executable)</option>
                     <option value="MCQ">Multiple Choice Question</option>
                   </Select>
-                  <FieldDescription>Determines execution environment</FieldDescription>
+                  <FieldDescription>
+                    Determines execution environment
+                  </FieldDescription>
                 </Field>
               )}
             </form.Field>
 
             <form.Field name="difficulty">
-              {field => (
+              {(field) => (
                 <Field>
                   <FieldLabel htmlFor={field.name} required>
                     Difficulty Level
@@ -179,7 +202,9 @@ export function ProblemForm({
                     id={field.name}
                     name={field.name}
                     value={field.state.value}
-                    onChange={e => field.handleChange(e.target.value as DifficultyLevel)}
+                    onChange={(e) =>
+                      field.handleChange(e.target.value as DifficultyLevel)
+                    }
                   >
                     <option value="EASY">Easy</option>
                     <option value="MEDIUM">Medium</option>
@@ -191,8 +216,9 @@ export function ProblemForm({
             </form.Field>
 
             <form.Field name="points">
-              {field => {
-                const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              {(field) => {
+                const isInvalid =
+                  field.state.meta.isTouched && !field.state.meta.isValid;
 
                 return (
                   <Field data-invalid={isInvalid}>
@@ -205,13 +231,17 @@ export function ProblemForm({
                       type="number"
                       min={1}
                       value={field.state.value}
-                      onChange={e => field.handleChange(Number(e.target.value))}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
                       onBlur={field.handleBlur}
                       aria-invalid={isInvalid}
                       required
                     />
                     <FieldDescription>Total scorecard score</FieldDescription>
-                    {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                    {isInvalid && (
+                      <FieldError errors={field.state.meta.errors} />
+                    )}
                   </Field>
                 );
               }}
@@ -222,12 +252,15 @@ export function ProblemForm({
 
       {/* Description */}
       <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-foreground">Problem Statement</h2>
+        <h2 className="text-lg font-semibold text-foreground">
+          Problem Statement
+        </h2>
 
         <FieldGroup>
           <form.Field name="description">
-            {field => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            {(field) => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -240,12 +273,14 @@ export function ProblemForm({
                     rows={6}
                     placeholder="Provide a clear description of the problem, input format, constraints, and edge cases..."
                     value={field.state.value}
-                    onChange={e => field.handleChange(e.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
                     aria-invalid={isInvalid}
                     required
                   />
-                  <FieldDescription>Markdown syntax is supported for code blocks and tables.</FieldDescription>
+                  <FieldDescription>
+                    Markdown syntax is supported for code blocks and tables.
+                  </FieldDescription>
                   {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
@@ -255,20 +290,23 @@ export function ProblemForm({
       </div>
 
       {/* Conditional: Execution Limits for Coding Problems */}
-      <form.Subscribe selector={state => state.values.type}>
-        {problemType =>
+      <form.Subscribe selector={(state) => state.values.type}>
+        {(problemType) =>
           problemType === "CODING" ? (
             <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
               <div className="flex items-center space-x-2">
                 <Code2 className="h-5 w-5 text-emerald-500" />
-                <h2 className="text-lg font-semibold text-foreground">Execution Limits</h2>
+                <h2 className="text-lg font-semibold text-foreground">
+                  Execution Limits
+                </h2>
               </div>
 
               <FieldGroup>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <form.Field name="timeLimit">
-                    {field => {
-                      const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    {(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
 
                       return (
                         <Field data-invalid={isInvalid}>
@@ -282,21 +320,28 @@ export function ProblemForm({
                             min={1}
                             max={60}
                             value={field.state.value}
-                            onChange={e => field.handleChange(Number(e.target.value))}
+                            onChange={(e) =>
+                              field.handleChange(Number(e.target.value))
+                            }
                             onBlur={field.handleBlur}
                             aria-invalid={isInvalid}
                             required
                           />
-                          <FieldDescription>Max runtime before Time Limit Exceeded (TLE)</FieldDescription>
-                          {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                          <FieldDescription>
+                            Max runtime before Time Limit Exceeded (TLE)
+                          </FieldDescription>
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
+                          )}
                         </Field>
                       );
                     }}
                   </form.Field>
 
                   <form.Field name="memoryLimit">
-                    {field => {
-                      const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    {(field) => {
+                      const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid;
 
                       return (
                         <Field data-invalid={isInvalid}>
@@ -311,13 +356,19 @@ export function ProblemForm({
                             max={1024}
                             step={64}
                             value={field.state.value}
-                            onChange={e => field.handleChange(Number(e.target.value))}
+                            onChange={(e) =>
+                              field.handleChange(Number(e.target.value))
+                            }
                             onBlur={field.handleBlur}
                             aria-invalid={isInvalid}
                             required
                           />
-                          <FieldDescription>Allocated memory buffer per run</FieldDescription>
-                          {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                          <FieldDescription>
+                            Allocated memory buffer per run
+                          </FieldDescription>
+                          {isInvalid && (
+                            <FieldError errors={field.state.meta.errors} />
+                          )}
                         </Field>
                       );
                     }}
@@ -330,35 +381,56 @@ export function ProblemForm({
       </form.Subscribe>
 
       {/* Conditional: Test Cases for Coding Problems */}
-      <form.Subscribe selector={state => state.values.type}>
-        {problemType =>
+      <form.Subscribe selector={(state) => state.values.type}>
+        {(problemType) =>
           problemType === "CODING" ? (
             <form.Field name="testCases">
-              {field => {
+              {(field) => {
                 const testCases = field.state.value || [];
 
                 const addTestCase = () => {
-                  field.handleChange([...testCases, { input: "", expectedOutput: "", isHidden: true }]);
+                  field.handleChange([
+                    ...testCases,
+                    { input: "", expectedOutput: "", isHidden: true },
+                  ]);
                 };
 
                 const removeTestCase = (index: number) => {
-                  field.handleChange(testCases.filter((_, idx) => idx !== index));
+                  field.handleChange(
+                    testCases.filter((_, idx) => idx !== index),
+                  );
                 };
 
-                const updateTestCase = (index: number, updated: Partial<ITestCase>) => {
-                  field.handleChange(testCases.map((tc, idx) => (idx === index ? { ...tc, ...updated } : tc)));
+                const updateTestCase = (
+                  index: number,
+                  updated: Partial<ITestCase>,
+                ) => {
+                  field.handleChange(
+                    testCases.map((tc, idx) =>
+                      idx === index ? { ...tc, ...updated } : tc,
+                    ),
+                  );
                 };
 
                 return (
                   <div className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-lg font-semibold text-foreground">Automated Test Cases</h2>
+                        <h2 className="text-lg font-semibold text-foreground">
+                          Automated Test Cases
+                        </h2>
                         <p className="text-sm text-muted-foreground">
-                          Configure input and expected output pairs used by the judge.
+                          Configure input and expected output pairs used by the
+                          judge.
                         </p>
                       </div>
-                      <Button type="button" size="sm" variant="outline" onClick={addTestCase} className="gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={addTestCase}
+                        className="gap-2"
+                      >
                         <Plus className="h-4 w-4" />
                         <span>Add Test Case</span>
                       </Button>
@@ -366,7 +438,11 @@ export function ProblemForm({
 
                     <div className="space-y-4 pt-2">
                       {testCases.map((tc, index) => (
-                        <div key={index} className="p-4 rounded-lg border border-border bg-muted/40 space-y-3">
+                        <div
+                          // biome-ignore lint/suspicious/noArrayIndexKey: dynamic form fields
+                          key={index}
+                          className="p-4 rounded-lg border border-border bg-muted/40 space-y-3"
+                        >
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
                               Test Case #{index + 1}
@@ -376,7 +452,7 @@ export function ProblemForm({
                                 <input
                                   type="checkbox"
                                   checked={tc.isHidden}
-                                  onChange={e =>
+                                  onChange={(e) =>
                                     updateTestCase(index, {
                                       isHidden: e.target.checked,
                                     })
@@ -400,12 +476,14 @@ export function ProblemForm({
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                              <FieldLabel className="text-xs">Standard Input (stdin)</FieldLabel>
+                              <FieldLabel className="text-xs">
+                                Standard Input (stdin)
+                              </FieldLabel>
                               <Textarea
                                 rows={2}
                                 placeholder="Input passed via stdin"
                                 value={tc.input}
-                                onChange={e =>
+                                onChange={(e) =>
                                   updateTestCase(index, {
                                     input: e.target.value,
                                   })
@@ -415,12 +493,14 @@ export function ProblemForm({
                               />
                             </div>
                             <div>
-                              <FieldLabel className="text-xs">Expected Output (stdout)</FieldLabel>
+                              <FieldLabel className="text-xs">
+                                Expected Output (stdout)
+                              </FieldLabel>
                               <Textarea
                                 rows={2}
                                 placeholder="Exact expected stdout"
                                 value={tc.expectedOutput}
-                                onChange={e =>
+                                onChange={(e) =>
                                   updateTestCase(index, {
                                     expectedOutput: e.target.value,
                                   })
@@ -442,11 +522,11 @@ export function ProblemForm({
       </form.Subscribe>
 
       {/* Conditional: MCQ Options */}
-      <form.Subscribe selector={state => state.values.type}>
-        {problemType =>
+      <form.Subscribe selector={(state) => state.values.type}>
+        {(problemType) =>
           problemType === "MCQ" ? (
             <form.Field name="options">
-              {field => {
+              {(field) => {
                 const options = field.state.value || [];
 
                 const addOption = () => {
@@ -463,8 +543,15 @@ export function ProblemForm({
                   field.handleChange(options.filter((_, idx) => idx !== index));
                 };
 
-                const updateOption = (index: number, updated: Partial<IMcqOption>) => {
-                  field.handleChange(options.map((opt, idx) => (idx === index ? { ...opt, ...updated } : opt)));
+                const updateOption = (
+                  index: number,
+                  updated: Partial<IMcqOption>,
+                ) => {
+                  field.handleChange(
+                    options.map((opt, idx) =>
+                      idx === index ? { ...opt, ...updated } : opt,
+                    ),
+                  );
                 };
 
                 const setCorrectOption = (correctIndex: number) => {
@@ -482,13 +569,22 @@ export function ProblemForm({
                       <div className="flex items-center space-x-2">
                         <ListChecks className="h-5 w-5 text-cyan-500" />
                         <div>
-                          <h2 className="text-lg font-semibold text-foreground">Multiple Choice Options</h2>
+                          <h2 className="text-lg font-semibold text-foreground">
+                            Multiple Choice Options
+                          </h2>
                           <p className="text-sm text-muted-foreground">
-                            Specify candidate answer choices and mark the correct answer.
+                            Specify candidate answer choices and mark the
+                            correct answer.
                           </p>
                         </div>
                       </div>
-                      <Button type="button" size="sm" variant="outline" onClick={addOption} className="gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={addOption}
+                        className="gap-2"
+                      >
                         <Plus className="h-4 w-4" />
                         <span>Add Option</span>
                       </Button>
@@ -497,6 +593,7 @@ export function ProblemForm({
                     <div className="space-y-3 pt-2">
                       {options.map((opt, index) => (
                         <div
+                          // biome-ignore lint/suspicious/noArrayIndexKey: dynamic form fields
                           key={index}
                           className="flex items-center space-x-3 p-3 rounded-lg border border-border bg-muted/40"
                         >
@@ -515,7 +612,9 @@ export function ProblemForm({
 
                           <Input
                             value={opt.text}
-                            onChange={e => updateOption(index, { text: e.target.value })}
+                            onChange={(e) =>
+                              updateOption(index, { text: e.target.value })
+                            }
                             placeholder={`Choice ${String.fromCharCode(65 + index)}`}
                             className="flex-1 bg-background"
                             required
@@ -543,7 +642,12 @@ export function ProblemForm({
 
       {/* Submit Button */}
       <div className="flex justify-end space-x-4">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={isPending}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => router.back()}
+          disabled={isPending}
+        >
           Cancel
         </Button>
         <Button
@@ -554,7 +658,8 @@ export function ProblemForm({
         >
           {isPending ? (
             <>
-              <Spinner size="sm" /> {mode === "edit" ? "Saving Changes..." : "Creating Problem..."}
+              <Spinner size="sm" />{" "}
+              {mode === "edit" ? "Saving Changes..." : "Creating Problem..."}
             </>
           ) : mode === "edit" ? (
             "Save Changes"

@@ -1,13 +1,13 @@
 "use client";
 
-import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetDashboardStats } from "@/hooks";
-import { KpiCards } from "@/components/admin/KpiCards";
-import { RevenueChart } from "@/components/admin/RevenueChart";
-import { PassRateChart } from "@/components/admin/PassRateChart";
+import { ArrowRight, Plus, ShieldAlert, Users } from "lucide-react";
 import Link from "next/link";
+import { KpiCards } from "@/components/admin/KpiCards";
+import { PassRateChart } from "@/components/admin/PassRateChart";
+import { RevenueChart } from "@/components/admin/RevenueChart";
+import { RoleGuard } from "@/components/auth/RoleGuard";
 import { Button } from "@/components/ui/button";
-import { Plus, Users, ShieldAlert, ArrowRight } from "lucide-react";
+import { useGetDashboardStats } from "@/hooks";
 
 export default function AdminDashboardPage() {
   const { data: statsData, isLoading } = useGetDashboardStats();
@@ -18,7 +18,9 @@ export default function AdminDashboardPage() {
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">System Administration</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              System Administration
+            </h1>
             <p className="text-sm text-muted-foreground">
               DevJudge platform health, revenue metrics, and user management.
             </p>
@@ -43,8 +45,11 @@ export default function AdminDashboardPage() {
         {/* KPI Cards */}
         {isLoading || !stats ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-28 rounded-xl bg-muted animate-pulse border border-border" />
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-28 rounded-xl bg-muted animate-pulse border border-border"
+              />
             ))}
           </div>
         ) : (
@@ -72,8 +77,12 @@ export default function AdminDashboardPage() {
                 <ShieldAlert className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-foreground">Security & Audit Logs</h4>
-                <p className="text-xs text-muted-foreground">Review system actions and administrative events</p>
+                <h4 className="text-sm font-semibold text-foreground">
+                  Security & Audit Logs
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  Review system actions and administrative events
+                </p>
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-muted-foreground" />
@@ -88,8 +97,12 @@ export default function AdminDashboardPage() {
                 <Plus className="h-5 w-5" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-foreground">Problem Repository</h4>
-                <p className="text-xs text-muted-foreground">Author and manage coding and MCQ test cases</p>
+                <h4 className="text-sm font-semibold text-foreground">
+                  Problem Repository
+                </h4>
+                <p className="text-xs text-muted-foreground">
+                  Author and manage coding and MCQ test cases
+                </p>
               </div>
             </div>
             <ArrowRight className="h-4 w-4 text-muted-foreground" />

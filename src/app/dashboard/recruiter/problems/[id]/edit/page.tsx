@@ -1,14 +1,18 @@
 "use client";
 
-import { use } from "react";
+import { ArrowLeft, Edit3 } from "lucide-react";
 import Link from "next/link";
+import { use } from "react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import { useGetProblemById } from "@/hooks";
 import { ProblemForm } from "@/components/forms/ProblemForm";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Edit3 } from "lucide-react";
+import { useGetProblemById } from "@/hooks";
 
-export default function RecruiterEditProblemPage({ params }: { params: Promise<{ id: string }> }) {
+export default function RecruiterEditProblemPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const { data: problemData, isLoading } = useGetProblemById(resolvedParams.id);
   const problem = problemData?.data;
@@ -29,7 +33,9 @@ export default function RecruiterEditProblemPage({ params }: { params: Promise<{
     return (
       <RoleGuard allowedRoles={["RECRUITER", "ADMIN"]}>
         <div className="p-8 text-center space-y-4">
-          <p className="text-muted-foreground">Problem not found or could not be loaded.</p>
+          <p className="text-muted-foreground">
+            Problem not found or could not be loaded.
+          </p>
           <Link href="/dashboard/recruiter/problems">
             <Button variant="outline" size="sm">
               Back to Problem Studio
@@ -45,7 +51,11 @@ export default function RecruiterEditProblemPage({ params }: { params: Promise<{
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <Link href={`/dashboard/recruiter/problems/${problem.id}`}>
-            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-muted-foreground hover:text-foreground"
+            >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Problem Details</span>
             </Button>
@@ -58,7 +68,8 @@ export default function RecruiterEditProblemPage({ params }: { params: Promise<{
             <span>Edit Problem: {problem.title}</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Update problem details, difficulty, points, execution limits, and test cases.
+            Update problem details, difficulty, points, execution limits, and
+            test cases.
           </p>
         </div>
 

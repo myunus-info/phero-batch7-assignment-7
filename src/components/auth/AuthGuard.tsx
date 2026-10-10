@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetMe } from "@/hooks/auth.hook";
 import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
+import { useGetMe } from "@/hooks/auth.hook";
 import AuthLoading from "./AuthLoading";
 
 export function AuthGuard({ children }: { children: ReactNode }) {

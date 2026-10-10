@@ -1,9 +1,9 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { RoleGuard } from "@/components/auth/RoleGuard";
 import { AssessmentWizard } from "@/components/forms/AssessmentWizard";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 export default function CreateAssessmentPage() {
   return (
@@ -17,9 +17,12 @@ export default function CreateAssessmentPage() {
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Back to Assessments</span>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Create Assessment Campaign</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Create Assessment Campaign
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Configure test parameters, select problem sets, and set benchmark cutoffs.
+            Configure test parameters, select problem sets, and set benchmark
+            cutoffs.
           </p>
         </div>
 

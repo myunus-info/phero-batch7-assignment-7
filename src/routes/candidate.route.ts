@@ -1,5 +1,5 @@
-import { SidebarItems } from "@/types";
 import { LayoutDashboard, UserCheck } from "lucide-react";
+import type { SidebarItems } from "@/types";
 
 export const candidateRoutes: SidebarItems = [
   {

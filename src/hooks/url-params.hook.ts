@@ -16,7 +16,10 @@ function useUrlParams() {
   );
 
   const setParams = useCallback(
-    (params: Record<string, string | number | undefined | null>, resetPage = false) => {
+    (
+      params: Record<string, string | number | undefined | null>,
+      resetPage = false,
+    ) => {
       const current = new URLSearchParams(Array.from(searchParams.entries()));
 
       if (resetPage) {
@@ -24,7 +27,12 @@ function useUrlParams() {
       }
 
       Object.entries(params).forEach(([key, value]) => {
-        if (value === undefined || value === null || value === "" || value === "ALL") {
+        if (
+          value === undefined ||
+          value === null ||
+          value === "" ||
+          value === "ALL"
+        ) {
           current.delete(key);
         } else {
           current.set(key, String(value));

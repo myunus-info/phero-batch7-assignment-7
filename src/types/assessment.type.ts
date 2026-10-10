@@ -1,8 +1,12 @@
-import { IPaginationParams } from "./api.type";
-import { IProblem } from "./problem.type";
+import type { IPaginationParams } from "./api.type";
+import type { IProblem } from "./problem.type";
 
 export type AssessmentStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
-export type CandidateAssessmentStatus = "INVITED" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED";
+export type CandidateAssessmentStatus =
+  | "INVITED"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "EXPIRED";
 
 export interface IAssessmentProblem {
   id?: string;
@@ -82,7 +86,9 @@ export interface ICreateAssessmentPayload {
   scheduleStart?: string;
   scheduleEnd?: string;
   status?: AssessmentStatus;
-  problemIds: string[] | Array<{ problemId: string; orderIndex?: number; customPoints?: number }>;
+  problemIds:
+    | string[]
+    | Array<{ problemId: string; orderIndex?: number; customPoints?: number }>;
 }
 
 export interface IInviteCandidatePayload {

@@ -1,15 +1,18 @@
 "use client";
 
+import { CheckCircle2, Clock, XCircle } from "lucide-react";
 import { useState } from "react";
-import { ISubmitProblemResponse } from "@/types";
-import { CheckCircle2, XCircle, Clock } from "lucide-react";
+import type { ISubmitProblemResponse } from "@/types";
 
 interface TestResultsPanelProps {
   results: ISubmitProblemResponse | null;
   isSubmitting?: boolean;
 }
 
-export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProps) {
+export function TestResultsPanel({
+  results,
+  isSubmitting,
+}: TestResultsPanelProps) {
   const [activeTab, setActiveTab] = useState<number>(0);
 
   if (isSubmitting) {
@@ -17,7 +20,9 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
       <div className="flex h-48 items-center justify-center border-t border-border bg-card p-6 text-muted-foreground">
         <div className="flex flex-col items-center space-y-2">
           <div className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-          <p className="text-sm font-mono">Running test cases on remote judge...</p>
+          <p className="text-sm font-mono">
+            Running test cases on remote judge...
+          </p>
         </div>
       </div>
     );
@@ -33,7 +38,8 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
 
   const score = results.score ?? results.scoreAwarded ?? 0;
   const testResults = results.testResults || [];
-  const testCasesPassed = results.testCasesPassed ?? testResults.filter(t => t.passed).length;
+  const testCasesPassed =
+    results.testCasesPassed ?? testResults.filter((t) => t.passed).length;
   const totalTestCases = results.totalTestCases ?? testResults.length;
   const status = String(results.status || "WRONG_ANSWER");
   const isAccepted = status === "ACCEPTED" || status === "PASSED";
@@ -51,7 +57,9 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
           ) : (
             <div className="flex items-center space-x-1.5 text-red-600 dark:text-red-400">
               <XCircle className="h-5 w-5" />
-              <span className="text-sm font-bold tracking-tight">{status || "Wrong Answer"}</span>
+              <span className="text-sm font-bold tracking-tight">
+                {status || "Wrong Answer"}
+              </span>
             </div>
           )}
 
@@ -62,7 +70,8 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
           </span>
 
           <span className="text-xs font-mono text-muted-foreground">
-            Score: <span className="font-semibold text-foreground">{score} pts</span>
+            Score:{" "}
+            <span className="font-semibold text-foreground">{score} pts</span>
           </span>
         </div>
       </div>
@@ -74,6 +83,7 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
           <div className="flex items-center space-x-2 overflow-x-auto pb-1">
             {testResults.map((tc, idx) => (
               <button
+                type="button"
                 key={tc.testCaseId || idx}
                 onClick={() => setActiveTab(idx)}
                 className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-colors ${
@@ -110,13 +120,20 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
                 </span>
 
                 <div className="flex items-center space-x-4">
-                  {(testResults[activeTab].executionTime || testResults[activeTab].executionTimeMs) && (
+                  {(testResults[activeTab].executionTime ||
+                    testResults[activeTab].executionTimeMs) && (
                     <span className="flex items-center space-x-1">
                       <Clock className="h-3.5 w-3.5" />
-                      <span>{testResults[activeTab].executionTime || testResults[activeTab].executionTimeMs} ms</span>
+                      <span>
+                        {testResults[activeTab].executionTime ||
+                          testResults[activeTab].executionTimeMs}{" "}
+                        ms
+                      </span>
                     </span>
                   )}
-                  {testResults[activeTab].memory && <span>{testResults[activeTab].memory} KB</span>}
+                  {testResults[activeTab].memory && (
+                    <span>{testResults[activeTab].memory} KB</span>
+                  )}
                 </div>
               </div>
 
@@ -131,7 +148,9 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
 
               {testResults[activeTab].expectedOutput && (
                 <div>
-                  <span className="text-muted-foreground">Expected Output:</span>
+                  <span className="text-muted-foreground">
+                    Expected Output:
+                  </span>
                   <pre className="mt-1 p-2 rounded bg-background text-emerald-600 dark:text-emerald-400 border border-border overflow-x-auto">
                     {testResults[activeTab].expectedOutput}
                   </pre>
@@ -153,11 +172,13 @@ export function TestResultsPanel({ results, isSubmitting }: TestResultsPanelProp
                 </div>
               )}
 
-              {(testResults[activeTab].errorMessage || testResults[activeTab].error) && (
+              {(testResults[activeTab].errorMessage ||
+                testResults[activeTab].error) && (
                 <div>
                   <span className="text-red-500 font-semibold">Error:</span>
                   <pre className="mt-1 p-2 rounded bg-red-500/10 text-red-600 dark:text-red-300 border border-red-500/20 overflow-x-auto">
-                    {testResults[activeTab].errorMessage || testResults[activeTab].error}
+                    {testResults[activeTab].errorMessage ||
+                      testResults[activeTab].error}
                   </pre>
                 </div>
               )}

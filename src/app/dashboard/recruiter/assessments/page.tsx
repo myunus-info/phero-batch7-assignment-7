@@ -1,18 +1,36 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import {
+  Edit3,
+  ExternalLink,
+  Plus,
+  Search,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
 import Link from "next/link";
+import { Suspense, useEffect, useState } from "react";
 import { RoleGuard } from "@/components/auth/RoleGuard";
-import useUrlParams from "@/hooks/url-params.hook";
-import { useDebounce, useGetAllAssessments, useDeleteAssessment } from "@/hooks";
 import { InviteCandidateModal } from "@/components/forms/InviteCandidateModal";
-import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { TablePagination } from "@/components/ui/table-pagination";
 import { DeleteConfirmationModal } from "@/components/ui/delete-confirmation-dialog";
-import { Plus, UserPlus, Trash2, Search, ExternalLink, Edit3 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TablePagination } from "@/components/ui/table-pagination";
+import {
+  useDebounce,
+  useDeleteAssessment,
+  useGetAllAssessments,
+} from "@/hooks";
+import useUrlParams from "@/hooks/url-params.hook";
 import { formatDate } from "@/lib/utils";
 
 function RecruiterAssessmentsContent() {
@@ -55,9 +73,12 @@ function RecruiterAssessmentsContent() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Assessment Campaigns</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              Assessment Campaigns
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Manage custom assessments, review candidate results, and dispatch invitations.
+              Manage custom assessments, review candidate results, and dispatch
+              invitations.
             </p>
           </div>
 
@@ -76,7 +97,7 @@ function RecruiterAssessmentsContent() {
             placeholder="Search by title..."
             className="pl-9"
             value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
 
@@ -96,18 +117,24 @@ function RecruiterAssessmentsContent() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell
+                  colSpan={7}
+                  className="text-center py-8 text-muted-foreground"
+                >
                   Loading assessments...
                 </TableCell>
               </TableRow>
             ) : assessments.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell
+                  colSpan={7}
+                  className="text-center py-8 text-muted-foreground"
+                >
                   No assessments found. Create your first assessment campaign!
                 </TableCell>
               </TableRow>
             ) : (
-              assessments.map(a => (
+              assessments.map((a) => (
                 <TableRow key={a.id}>
                   <TableCell>
                     <Link
@@ -116,30 +143,42 @@ function RecruiterAssessmentsContent() {
                     >
                       {a.title}
                     </Link>
-                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{a.description}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                      {a.description}
+                    </p>
                   </TableCell>
                   <TableCell>
                     <StatusBadge status={a.status} />
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-foreground">{a.durationMinutes} min</TableCell>
-                  <TableCell className="font-mono text-xs text-foreground">{a.passingMarks}%</TableCell>
+                  <TableCell className="font-mono text-xs text-foreground">
+                    {a.durationMinutes} min
+                  </TableCell>
+                  <TableCell className="font-mono text-xs text-foreground">
+                    {a.passingMarks}%
+                  </TableCell>
                   <TableCell className="font-mono text-xs text-cyan-600 dark:text-cyan-400">
                     {a._count?.candidates || 0} invited
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-muted-foreground">{formatDate(a.createdAt)}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">
+                    {formatDate(a.createdAt)}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-1">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setInviteModalData({ id: a.id, title: a.title })}
+                        onClick={() =>
+                          setInviteModalData({ id: a.id, title: a.title })
+                        }
                         className="h-8 gap-1 text-xs text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300"
                         title="Invite candidate"
                       >
                         <UserPlus className="h-3.5 w-3.5" />
                         <span>Invite</span>
                       </Button>
-                      <Link href={`/dashboard/recruiter/assessments/${a.id}/edit`}>
+                      <Link
+                        href={`/dashboard/recruiter/assessments/${a.id}/edit`}
+                      >
                         <Button
                           variant="ghost"
                           size="sm"
@@ -182,13 +221,18 @@ function RecruiterAssessmentsContent() {
           </TableBody>
         </Table>
 
-        <TablePagination page={pageParam} total={meta.total} limit={10} onPageChange={p => setParams({ page: p })} />
+        <TablePagination
+          page={pageParam}
+          total={meta.total}
+          limit={10}
+          onPageChange={(p) => setParams({ page: p })}
+        />
 
         {/* Invite Candidate Modal */}
         {inviteModalData && (
           <InviteCandidateModal
             open={Boolean(inviteModalData)}
-            onOpenChange={open => !open && setInviteModalData(null)}
+            onOpenChange={(open) => !open && setInviteModalData(null)}
             assessmentId={inviteModalData.id}
             assessmentTitle={inviteModalData.title}
           />
@@ -196,7 +240,7 @@ function RecruiterAssessmentsContent() {
 
         <DeleteConfirmationModal
           open={!!assessmentToDelete}
-          onOpenChange={open => {
+          onOpenChange={(open) => {
             if (!open) setAssessmentToDelete(null);
           }}
           itemType="assessment"
@@ -219,7 +263,11 @@ function RecruiterAssessmentsContent() {
 
 export function RecruiterAssessmentsPage() {
   return (
-    <Suspense fallback={<div className="p-6 text-muted-foreground">Loading assessments...</div>}>
+    <Suspense
+      fallback={
+        <div className="p-6 text-muted-foreground">Loading assessments...</div>
+      }
+    >
       <RecruiterAssessmentsContent />
     </Suspense>
   );

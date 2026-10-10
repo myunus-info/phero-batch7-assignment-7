@@ -1,11 +1,11 @@
-import { PublicHeader } from "@/components/layout/public/Header";
-import { PublicFooter } from "@/components/layout/public/Footer";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Features } from "@/components/home/Features";
 import { Hero } from "@/components/home/Hero";
 import { LiveJudgeDemo } from "@/components/home/LiveJudgeDemo";
-import { Features } from "@/components/home/Features";
-import Link from "next/link";
+import { PublicFooter } from "@/components/layout/public/Footer";
+import { PublicHeader } from "@/components/layout/public/Header";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -24,18 +24,26 @@ export default function HomePage() {
               Ready to Upgrade Your Engineering Hiring?
             </h2>
             <p className="mt-4 text-muted-foreground text-base leading-relaxed">
-              Join leading tech teams assessing candidates in real-time with automated code judges. Get started in
-              minutes.
+              Join leading tech teams assessing candidates in real-time with
+              automated code judges. Get started in minutes.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/register?role=recruiter">
-                <Button variant="emerald" size="lg" className="gap-2 font-semibold w-full sm:w-auto">
+                <Button
+                  variant="emerald"
+                  size="lg"
+                  className="gap-2 font-semibold w-full sm:w-auto"
+                >
                   <span>Create Recruiter Account</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/login">
-                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   Sign In with Demo Account
                 </Button>
               </Link>

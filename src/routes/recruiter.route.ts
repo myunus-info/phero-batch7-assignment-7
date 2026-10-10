@@ -1,5 +1,11 @@
-import { SidebarItems } from "@/types";
-import { LayoutDashboard, FileCode2, ClipboardList, CreditCard, Building2 } from "lucide-react";
+import {
+  Building2,
+  ClipboardList,
+  CreditCard,
+  FileCode2,
+  LayoutDashboard,
+} from "lucide-react";
+import type { SidebarItems } from "@/types";
 
 export const recruiterRoutes: SidebarItems = [
   {

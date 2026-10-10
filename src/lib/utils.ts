@@ -11,7 +11,7 @@ export function formatCurrency(amount: number, currency = "USD"): string {
 export function formatDate(date: string | Date | null | undefined): string {
   if (!date) return "-";
   const d = typeof date === "string" ? new Date(date) : date;
-  if (isNaN(d.getTime())) return "-";
+  if (Number.isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
@@ -32,7 +32,7 @@ export function getInitials(name: string): string {
   if (!name) return "DJ";
   return name
     .split(" ")
-    .map(n => n[0])
+    .map((n) => n[0])
     .join("")
     .substring(0, 2)
     .toUpperCase();

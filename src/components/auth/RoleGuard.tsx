@@ -1,9 +1,9 @@
 "use client";
 
-import { useGetMe } from "@/hooks/auth.hook";
-import { UserRole } from "@/types";
 import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
+import { useGetMe } from "@/hooks/auth.hook";
+import type { UserRole } from "@/types";
 import AccessDenied from "./AccessDenied";
 import AuthLoading from "./AuthLoading";
 
