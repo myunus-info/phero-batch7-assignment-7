@@ -21,6 +21,11 @@ export default function GoogleLoginComponent({
   const googleOAuthMutation = useGoogleOAuth();
   const { resolvedTheme } = useTheme();
 
+  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  if (!clientId || clientId.startsWith("<your_")) {
+    return null;
+  }
+
   const buttonText = text || (role ? "signup_with" : "continue_with");
   const effectiveTheme =
     theme || (resolvedTheme === "dark" ? "filled_black" : "outline");

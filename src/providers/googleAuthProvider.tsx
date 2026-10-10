@@ -8,9 +8,9 @@ export default function GoolgeAuthProvider({
 }: {
   children: ReactNode;
 }) {
-  const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
-
-  if (!clientId) return <>{children}</>;
+  const clientId =
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+    "devjudge-mock-google-client-id.apps.googleusercontent.com";
 
   return (
     <GoogleOAuthProvider clientId={clientId}>{children}</GoogleOAuthProvider>
