@@ -128,16 +128,28 @@ export default function RecruiterDashboardPage() {
                         <span>{a.durationMinutes} min</span>
                       </span>
                       <span>
-                        Passing Score: {a.passingScore ?? (a.totalMarks && a.passingMarks ? Math.round((a.passingMarks / a.totalMarks) * 100) : a.passingMarks || 70)}%
+                        Passing Score:{" "}
+                        {a.totalMarks && a.passingMarks
+                          ? Math.round((a.passingMarks / a.totalMarks) * 100)
+                          : a.passingMarks || 70}
+                        %
                       </span>
-                      <span>{a.assessmentProblems?.length || 0} Problems</span>
+                      <span>
+                        {a._count?.problems ?? a.problems?.length ?? a.assessmentProblems?.length ?? 0} Problems
+                      </span>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Link href={`/dashboard/recruiter/assessments/${a.id}`}>
                       <Button variant="outline" size="sm" className="text-xs">
-                        Submissions ({a.candidateAssessments?.length || 0})
+                        Submissions (
+                        {(() => {
+                          const candidateList = a.candidates || a.candidateAssessments || [];
+                          const completed = candidateList.filter((c: any) => c.status === "COMPLETED").length;
+                          return completed > 0 ? completed : (a._count?.candidates ?? candidateList.length);
+                        })()}
+                        )
                       </Button>
                     </Link>
                   </div>
